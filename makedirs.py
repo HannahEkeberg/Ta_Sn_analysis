@@ -2,11 +2,14 @@ import os
 
 currentPath = os.getcwd()
 
-myGeneratedFiles = currentPath + '/generatedFiles'
-calibrationFiles = myGeneratedFiles + '/calibrationFiles'
-experimentSpectra = 'experimentSpectra'
-calibrationSpectra = 'calibrationSpectra'
-peakData = myGeneratedFiles + '/peakData'
+myGeneratedFiles = currentPath + '/generatedfiles'
+calibrationFiles = myGeneratedFiles + '/calibrationfiles'
+experimentSpectra = 'experimentspectra'
+calibrationSpectra = 'calibrationspectra'
+peakData = myGeneratedFiles + '/peakdata'
+peakData_data = myGeneratedFiles + '/peakdata/data' 
+peakData_figures = myGeneratedFiles + '/peakdata/figures' 
+
 
 def checkOrMakeDirectory(dir):
     if not os.path.exists(dir):
@@ -16,6 +19,11 @@ def checkOrMakeDirectory(dir):
         print(f"Directory '{dir}' already exists.")
 
 
-checkOrMakeDirectory(myGeneratedFiles)
-checkOrMakeDirectory(calibrationFiles)
-checkOrMakeDirectory(peakData)
+
+# checkOrMakeDirectory(myGeneratedFiles)
+# checkOrMakeDirectory(calibrationFiles)
+# checkOrMakeDirectory(peakData)
+
+# checkOrMakeDirectory(peakData_data)
+# checkOrMakeDirectory(peakData_figures)
+
