@@ -43,7 +43,21 @@ def faster(foil):
     assemble('LEPS', '60cm', foil, 'calibration_leps_60.json')
 
 
-faster('Cu14')
+faster('Ta01')
+faster('Ta02')
+faster('Ta03')
+faster('Ta04')
+faster('Ta05')
+faster('Ta06')
+
+# faster('Ta07')
+# faster('Ta08')
+# faster('Ta09')
+# faster('Ta10')
+# faster('Ta11')
+# faster('Ta12')
+# faster('Ta13')
+# faster('Ta14')
 
 
 

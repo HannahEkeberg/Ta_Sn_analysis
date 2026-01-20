@@ -22,9 +22,7 @@ df_sn = pd.read_csv('./generatedfiles/arealdensity/areal_density_Sn.csv')
 ad_cu = df_cu['arealdensity g/cm2']*1e3; ad_ni = df_ni['arealdensity g/cm2']*1e3; ad_ta = df_ta['arealdensity g/cm2']*1e3; ad_sn = df_sn['arealdensity g/cm2']*1e3
 save_stack_dir = './generatedfiles/stack/'
 
-
-
-def variance_min(listOfPercentages):
+def variance_min(i):
     x_kapton = 0.013
     x_silicone = 0.013
     ad_degrader_a = 599.   #2.24 mm
@@ -34,18 +32,15 @@ def variance_min(listOfPercentages):
     ad_degrader_e = 68.3   #0.256 mm
     ad_degrader_h = 33.8
     ad_be_backing = 4.425     #23.9130435 microns
-
-    i = 0.075 # 5 percent decrease
     
     ad_degrader_a = i * ad_degrader_a
     ad_degrader_b = i * ad_degrader_b
     ad_degrader_e = i * ad_degrader_e
     return ad_degrader_a, ad_degrader_b, ad_degrader_c, ad_degrader_e
 
-ad_degrader_a, ad_degrader_b, ad_degrader_c, ad_degrader_e = variance_min([])
+ad_degrader_a, ad_degrader_b, ad_degrader_c, ad_degrader_e = variance_min(i=1)
 
-def stack_55(E_p):
-    stack = [
+stack_55MeV = stack = [
         #compartment01
        {'compound':'Ni', 'name':'Ni01', 'ad':ad_ni[0]},  # ad in mg/cm^2
        {'compound':'Sn', 'name':'Sn01', 'ad':ad_sn[0]},
@@ -88,11 +83,8 @@ def stack_55(E_p):
        {'compound':'Ta', 'name':'Ta07', 'ad':ad_ta[6]},
        {'compound':'Cu', 'name':'Cu07', 'ad':ad_cu[6]},
     ]
-    full_stack = ci.Stack(stack, E0=E_p, particle='p', dE0=0.55, N=1E4, max_steps=100)
-    return full_stack
 
-def stack_30(E_p):
-    stack = [
+stack_30MeV = [
         #compartment08
        {'compound':'Ni', 'name':'Ni08', 'ad':ad_ni[7]},
        {'compound':'Sn', 'name':'Sn08', 'ad':ad_sn[7]},
@@ -136,89 +128,48 @@ def stack_30(E_p):
        {'compound':'Cu', 'name':'Cu14', 'ad':ad_cu[13]},
     #    {'compound':'Al', 'name':'Al_degrader_E14', 'ad':ad_degrader_e},
     ]
-    full_stack = ci.Stack(stack, E0=E_p, particle='p', dE0=0.55, N=1E4, max_steps=100)
+
+def stack(stack, E_p, dp=1):
+    full_stack = ci.Stack(stack, E0=E_p, particle='p', dE0=0.45, N=1E6, max_steps=100)
     return full_stack
 
-# def getAverageStackEnergy(stack, foil, numberOfFoils):
-#     # st = stack(beamEnergy)
-#     foils = []; E = []
-#     for i in range(numberOfFoils):
-#         foilNumber =  foil + '0' + str(i+1)
-#         foils.append(foilNumber)
-#         av_E = np.mean(stack.get_flux(foilNumber)[0])
-#         E.append(int(av_E))
-#     data = [foils, E]
-#     return data
+# stack_55 = stack_55(55)
+# stack_30 = stack_30(30)
+# st = ci.Stack(stack_30MeV, E0=30, dE0 = 0.45, N=1e6, particle='d', dp = dp)
 
-
-# def areal_density_Ga(properties):
-#     #properties = {'Ga08': ['diameter', 'weight'], 'Ga09': ['diameter', 'weight']}
-#     areal_densities = {}
-#     for key,value in properties.items():
-#         diameter = value[0]/10; weight = value[1]*1000 # mm-->cm, g-->mg
-#         radius = diameter/2.0
-#         area = np.pi * radius**2
-#         areal_density = (weight/area) # mg/cm^2
-#         areal_densities[key] = areal_density
-
-#     return areal_densities
-
-
-# areal_density_Ga = areal_density_Ga(
-#     {'Ga1': [22.30, 0.0615],'Ga2' : [22.05, 0.2379], 'Ga3': [22.11, 0.4085], 'Ga4' : [22.05, 0.2154],'Ga5' : [16.14, 0.1067],'Ga6': [16.07, 0.0438], 'Ga7': [21.70, 0.7679], 'Ga8' : [22.59, 0.0814] ,
-#         'Ga08_frame': [21.92, 0.3843],'Ga09_frame': [21.96, 0.0859],'Ga10': [22.10, 0.2713], 'Ga11': [22.46, 0.1014],'Ga12': [22.23, 0.6328],'Ga13': [1, 0], 'Ga14': [22.19, 0.2169]}
-#     )
-
-
-
-# ad_bare_kapton = 3.546473206 #mg/cm^2
-# ad_poly = 6.668393219
-# ad_kapton_dot = 8.169806242
-
-# print(areal_density_Ga)
-
-# subtract_from_Ga = [2*ad_bare_kapton, 2*ad_bare_kapton, 2*ad_bare_kapton, 2*ad_bare_kapton, 2*ad_bare_kapton, 2*ad_bare_kapton, 0, 1*ad_kapton_dot+1*ad_poly, 0, 0, 0, 0,0,0]
-
-# print(subtract_from_Ga)
-# # subtracted_ad = {}
-
-# # for key,value in areal_density_Ga.items():
-# #     subtracted_ad[key] = value - 2*ad_bare_kapton
-    
-
-
-
-
-
-
-
-# E_55 = 55; E_30 = 30
-# E_Ni_55 = getAverageStackEnergy(stack_55, 'Ni', 7)
-# E_Ni_30 = getAverageStackEnergy(stack_30, 'Ni', 7)
-# E_Cu_55 = getAverageStackEnergy(stack_55, 'Cu', 7)
-# E_Cu_30 = getAverageStackEnergy(stack_30, 'Cu', 7)
-# print(E_Ni_55[1], E_Ni_30[1])
-# print(E_Cu_55[1], E_Cu_30[1])
-
-# print(stack_55.summarize())
-# stack_30.plot('Ga')
-# print(stack_30.summarize())
-# stack_30.saveas('lbnl_TaSn_stack_30MeV.db')
-
-# print(stack_55.summarize())
-# print(type(stack_55))
-# stack_55.saveas('analysis_TaSn_stack_55MeV.db')
-
-# full_stack = pd.concat([stack_55, stack_30], ignore_index=True)
-# full_stack.saveas('lbnl_TaSn_full_stack_55_30.db')
-
-
-
-stack_55 = stack_55(55)
-stack_30 = stack_30(30)
 # print(stack_30.summarize())
 # stack_55.saveas(save_stack_dir + 'TaSn_stack_55MeV_-5%.csv')
-stack_55.saveas(save_stack_dir + 'TaSn_stack_55MeV_-25%.csv')
+# stack_55.saveas(save_stack_dir + 'TaSn_stack_55MeV_-25%.csv')
 # stack_30.saveas(save_stack_dir + 'TaSn_stack_30MeV_-5%.csv')
-stack_30.saveas(save_stack_dir + 'TaSn_stack_30MeV_-25%.csv')
+# stack_30.saveas(save_stack_dir + 'TaSn_stack_30MeV_-25%.csv')
+dp_array = np.arange(0.90, 1.10, 0.01)
+# dp_array = np.arange(0.90, 0.91, 0.01)
+print(dp_array)
+index=0
+
+for dp in dp_array:
+    index += 1
+    print('__________________________________________')
+    print(f'Running stack calculation for dp = {dp:.3f}')
+
+    st_30 = stack(stack_30MeV, 30, dp)
+    st_55 = stack(stack_55MeV, 55, dp)
+    # st_55 = ci.Stack(stack_30MeV, E0=30, dE0 = 0.45, N=1e6, particle='d', dp = dp)
+    # st_30.saveas(f'stack_30MeV_dp_{dp:.3f}.csv')
+    # st_55.saveas(f'stack_30MeV_dp_{dp:.3f}.csv')
+
+    percentage = f'{dp:.3f}'
+    # if dp< 1:
+    #     percentage = str( -dp*100 )+'%'
+    # elif dp > 1:
+    #     percentage = str( +dp*100 )+'%'
+    # elif dp == 1:
+    #     percentage = str( dp*100 )+'%'
+    # print(save_stack_dir + 'TaSn_stack_30MeV_dp_' + percentage + '%.csv')
+    st_30.saveas(save_stack_dir + 'TaSn_stack_30MeV_dp_' + percentage + '%.csv')
+    st_55.saveas(save_stack_dir + 'TaSn_stack_55MeV_dp_' +  percentage + '%.csv')
+
+    percent_done = index/len(dp_array)*100
+    print(f'{percent_done:.3f}% of the calculation is done')
+    print('__________________________________________\n')
 

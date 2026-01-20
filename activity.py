@@ -33,6 +33,7 @@ class Acitivity:
         self.decayrate_to_activity(filter_peak_data, eob)
 
         if fitByA:
+            print(peak_data)
             isotopes, fit, cov = self.fitByA(eob, peak_data, isotope, guess, units, plot)
         else:
             isotopes, fit, cov = self.fitByR(eob, peak_data, isotope, None, units, plot)
@@ -45,7 +46,10 @@ class Acitivity:
     def getA0_mulitple_isotopes(self, listOfIsotopes, foil, listOfPeakDataSummaries=None, guess=3.7e5, units = 'h', fitByA=True, plot=True, overwriteData=True, saveDecayChain=False):
         if listOfPeakDataSummaries==None:
             listOfPeakDataSummaries = self.listOfPeakSummaries(foil)
-        peak_data = self.concat_peakData(listOfPeakDataSummaries)
+        if listOfPeakDataSummaries:
+            peak_data = self.concat_peakData(listOfPeakDataSummaries)
+        else:
+            peak_data = pd.DataFrame(columns=['filename','isotope','energy','counts','unc_counts','intensity','unc_intensity','efficiency','unc_efficiency','decays','unc_decays','decay_rate','unc_decay_rate','chi2','start_time','live_time','real_time'])
         if not listOfIsotopes:
             # listOfIsotopes = getListOfIsotopesPerFoil(foil)
             listOfIsotopes = peak_data['isotope'].unique().tolist()
@@ -61,17 +65,22 @@ class Acitivity:
                     isotopes, fit, cov = self.fitByR(eob, peak_data, isotope, None, units, plot)
             except:
                 print("Did not get any activitites for isotope: " + isotope)
+                isotopes = None
+            # if isotopes:
+            #     for i in range(len(isotopes)):
+            #         data.append([foil, isotopes[i], fit[i], cov[i]])
 
-            for i in range(len(isotopes)):
-                data.append([foil, isotopes[i], fit[i], cov[i]])
+            # print(foil, isotopes)
 
-            df = self.eob_activity_dataframe(foil, isotopes, fit, cov, saveDecayChain)
-            dfs.append(df)
+            if isotopes:
+                df = self.eob_activity_dataframe(foil, isotopes, fit, cov, saveDecayChain)
+                dfs.append(df)
 
-        df_concat = pd.concat(dfs, axis=0)
-        if overwriteData:
-            df_concat.to_csv(pathToActivityFiles + foil + '_all_isotopes.csv')
-        return df
+        if dfs:
+            df_concat = pd.concat(dfs, axis=0)
+            if overwriteData:
+                df_concat.to_csv(pathToActivityFiles + foil + '_all_isotopes.csv')
+        # return df
 
     def fitByR(self, eob, peak_data, isotope, R_guess=[[1e4, 1]], units='h', plot=False):
         dc = ci.DecayChain(parent_isotope=isotope, R=R_guess, units=units)
@@ -188,8 +197,8 @@ class Acitivity:
         dataframes = []
         for i in peakDataSummaries:
             dataframes.append(pd.read_csv(pathToPeakFiles + i))
-        df_concat = pd.concat(dataframes, axis=0)
-        return df_concat
+        return pd.concat(dataframes, axis=0)
+        # return df_concat
     
     def listOfPeakSummaries(self, foil):
         root = os.getcwd() + '/generatedfiles/peakdata/data/'
@@ -221,23 +230,77 @@ class Acitivity:
             print(df)
             print("****")
 
+    def eob_activity_from_files(self, foils, isotope):
+        root = os.getcwd() + '/generatedfiles/activity/data/'
+        eob_activity = np.zeros(len(foils)); cov_eob_activity = np.zeros(len(foils))
+        for i, foil in enumerate(foils):
+            for filename in os.listdir(root):
+                if foil in filename and 'all_isotopes' in filename:
+                    df = pd.read_csv(root + filename)
+                    df_isotope = df[df['isotope'].astype(str).str.contains(isotope, case=False, na=False)]
+                    if df_isotope.empty:
+                        eob_activity[i] = 0.0; cov_eob_activity[i]=0.0
+                    else:
+                        # TODO add if test for array length > 1 
+                        if len(df_isotope['fit'].values) > 1:
+                            pass
+                        else:
+                            eob_activity[i] = df_isotope['fit'].values[0]
+                            if eob_activity[i] == 0:
+                                cov_eob_activity[i]  = 0
+                            else:
+                                cov_eob_activity[i] = df_isotope['cov'].values[0]
+        return eob_activity, cov_eob_activity
+
+    def clean_up_activity_files(self):
+        pass
+        # TODO() 
+
 
 # listOfIsotopes = getListOfIsotopesPerFoil('Cu01')
 
-Acitivity().getA0_mulitple_isotopes(None, 'Cu01', units='h', plot=False, guess=1e6, fitByA=True)
-Acitivity().getA0_mulitple_isotopes(None, 'Cu02', units='h', plot=False, guess=1e6, fitByA=True)
-Acitivity().getA0_mulitple_isotopes(None, 'Cu03', units='h', plot=False, guess=1e6, fitByA=True)
-Acitivity().getA0_mulitple_isotopes(None, 'Cu04', units='h', plot=False, guess=1e6, fitByA=True)
-Acitivity().getA0_mulitple_isotopes(None, 'Cu05', units='h', plot=False, guess=1e6, fitByA=True)
-Acitivity().getA0_mulitple_isotopes(None, 'Cu06', units='h', plot=False, guess=1e6, fitByA=True)
-Acitivity().getA0_mulitple_isotopes(None, 'Cu07', units='h', plot=False, guess=1e6, fitByA=True)
-Acitivity().getA0_mulitple_isotopes(None, 'Cu08', units='h', plot=False, guess=1e6, fitByA=True)
-Acitivity().getA0_mulitple_isotopes(None, 'Cu09', units='h', plot=False, guess=1e6, fitByA=True)
-Acitivity().getA0_mulitple_isotopes(None, 'Cu10', units='h', plot=False, guess=1e6, fitByA=True)
-Acitivity().getA0_mulitple_isotopes(None, 'Cu11', units='h', plot=False, guess=1e6, fitByA=True)
-Acitivity().getA0_mulitple_isotopes(None, 'Cu12', units='h', plot=False, guess=1e6, fitByA=True)
-Acitivity().getA0_mulitple_isotopes(None, 'Cu13', units='h', plot=False, guess=1e6, fitByA=True)
-Acitivity().getA0_mulitple_isotopes(None, 'Cu14', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Ni01', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Ni02', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Ni03', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Ni04', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Ni05', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Ni06', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Ni07', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Ni08', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Ni09', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Ni10', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Ni11', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Ni12', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Ni13', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Ni14', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Ta01', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Ta02', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Ta03', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Ta04', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Ta05', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Ta06', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Ta07', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Ta08', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Ta09', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Ta10', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Ta11', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Ta12', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Ta13', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Ta14', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Cu01', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Cu02', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Cu03', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Cu04', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Cu05', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Cu06', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Cu07', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Cu08', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Cu09', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Cu10', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Cu11', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Cu12', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Cu13', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Cu14', units='h', plot=False, guess=1e6, fitByA=True)
 
 # listOfPeakDataSummaries = ['HA10242025_Det2_Cu01_10cm_job_peak_data.csv','BR09242025_Cu01_52cm_IDM_peak_data.csv', 'BY09242025_Cu01_52cm_IDM_peak_data.csv', 'CM09242025_Cu01_40cm_IDM_peak_data.csv', 'DA09252025_Cu01_30cm_IDM_peak_data.csv', 'EL09262025_Cu01_10cm_IDM_peak_data.csv', 'FH09282025_Cu01_10cm_IDM_peak_data.csv']
 # Acitivity().getA0('65ZN', listOfPeakDataSummaries)

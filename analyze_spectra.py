@@ -31,7 +31,7 @@ class AnalyzeSpectrum:
             sp.fit_config = {'SNR_min':3.5, 'dE_511':9.0}
             sp.saveas(pathToPeakData + '/data/' + spectrumName + '_peak_data.csv', replace=False)
             sp.saveas(pathToPeakData + '/figures/' + spectrumName + '_peak_data.pdf')
-            sp.plot()
+            # sp.plot()
         except AttributeError:
             print("Most likely no peaks...")
 
@@ -52,7 +52,7 @@ class AnalyzeSpectrum:
         summed_spectrum.cb = cb
         summed_spectrum.isotopes = listOfIsotopes
         summed_spectrum.fit_config = {'SNR_min':3.5}
-        summed_spectrum.plot()
+        # summed_spectrum.plot()
         try:
             summed_spectrum.saveas('generatedFiles/peakData/data/' + peakSummaryFilename + '_peak_data.csv', replace=False)
             summed_spectrum.saveas('generatedFiles/peakData/figures/' + peakSummaryFilename + '_peak_data.pdf')
