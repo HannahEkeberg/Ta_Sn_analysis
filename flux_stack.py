@@ -12,28 +12,20 @@ from nuclearanalysistools.tools import *
 
 class WeightedAverageFlux:
 
-    def __init__(self, stack_55_fluxes, stack_30_fluxes, stack_55, stack_30):
+    def __init__(self, stack_fluxes, full_stack, stack, dp=None):
         self.root = os.getcwd() + '/generatedfiles/stack/'
-        self.stack_55_fluxes = pd.read_csv(self.root + stack_55_fluxes)
-        self.stack_30_fluxes = pd.read_csv(self.root + stack_30_fluxes)
-        self.stack_55       = pd.read_csv(self.root + stack_55)
-        self.stack_30       = pd.read_csv(self.root + stack_30)
+        self.stack_fluxes = pd.read_csv(self.root + stack_fluxes)
+        self.full_stack   = pd.read_csv(self.root + full_stack)
+        self.stack        = stack # 55_MeV, 30_MeV
+        self.dp           = dp # Whatever var min running... 
 
-
-        
-
-    def get_stack(self, element):
-        stack_55 = self.stack_55[self.stack_55['compound'] == element]
-        stack_30 = self.stack_30[self.stack_30['compound'] == element]
-        E_55 = stack_55['mu_E'].values; E_30 = stack_30['mu_E'].values
-        return np.concatenate((E_55, E_30))
-    
     def get_flux_energy_stack(self, element):
         flux = []; energy = []
-        foils = self.foils(element)
-        total_stack = pd.concat([self.stack_55_fluxes, self.stack_30_fluxes], ignore_index=True)
+        foils = self.foils(element, self.stack)
+        # total_stack = pd.concat([self.stack_55_fluxes, self.stack_30_fluxes], ignore_index=True)
+        
         for foil in foils:
-            filtered_stack = total_stack[total_stack['name'] == foil]
+            filtered_stack = self.stack_fluxes[self.stack_fluxes['name'] == foil]
             E = filtered_stack['energy'].values; F = filtered_stack['flux'].values
             energy.append(E); flux.append(F)
 
@@ -42,9 +34,20 @@ class WeightedAverageFlux:
             if flux[-1][i] > flux[-1][i+1]:
                 flux[-1][i] = 0
         return energy, flux
-
+    
+    def foils(self, element, stack):
+        if stack == 'stack_55_MeV':
+            stack_numbs = ['01', '02', '03', '04', '05', '06', '07']
+        elif stack == 'stack_30_MeV':
+            stack_numbs = ['08', '09','10', '11', '12', '13', '14']
+        else:
+            raise Exception('Not a valid stack: ' + stack + '. Must be stack_30_MeV or stack_55_MeV')
+        # stack_numbs = ['01', '02', '03', '04', '05', '06', '07', '08', '09','10', '11', '12', '13', '14']
+        foils = [element + number for number in stack_numbs]
+        return foils
+    
     def plot_flux_distributions(self, element):
-        foils = self.foils(element)
+        foils = self.foils(element, self.stack)
         energy, flux = self.get_flux_energy_stack(element)
         colors = Tools().colors()
         mean_energy, unc_energy_left, unc_energy_right = self.flux_weighted_average_energy(energy, flux)
@@ -55,16 +58,14 @@ class WeightedAverageFlux:
             fwhm_left = mean_energy[i] - unc_energy_left[i]; fwhm_right = mean_energy[i] + unc_energy_right[i]
             plt.vlines(mean_energy[i], ymin=0.0, ymax = np.max(flux[i]), linewidth=0.4, color=colors[i], linestyle='--')#, label=r'$\mu=${}'.format(mu))
             plt.plot([fwhm_left, fwhm_right], [half_max_flux, half_max_flux],  color=colors[i], linewidth=0.8, label=foils[i]+ ' - {0:.2f}'.format(mean_energy[i])  + ' MeV (fwhm: {0:.2f})'.format(fwhm))
-        
+            if self.dp:
+                plt.title('Stack simulation for: ' + element + ', dp: ' + self.dp + ' - ' +self.stack)
+            else:
+                plt.title('Stack simulation for: ' + element + ' - ' +self.stack)
         plt.legend(fontsize='xx-small')
         plt.show()
 
-    def foils(self, element):
-        stack_numbs = ['01', '02', '03', '04', '05', '06', '07', '08', '09','10', '11', '12', '13', '14']
-        foils = [element + number for number in stack_numbs]
-        return foils
-    
-    def flux_weighted_average_energy(self, energy, flux):
+    def flux_weighted_average_energy(self, energy, flux, element=None):
         unc_energy_left = np.zeros(len(energy)); unc_energy_right = np.zeros(len(energy))
         fwhm = np.zeros(len(energy)); half_max = []; mean_energy = np.zeros(len(energy))
         for i in range(len(energy)):
@@ -85,6 +86,14 @@ class WeightedAverageFlux:
             mean_energy[i] = np.trapezoid(flux[i]*energy[i], energy[i])/np.trapezoid(flux[i],energy[i])
             fwhm[i] = half_max_flux_energy[1]-half_max_flux_energy[0]
             unc_energy_left[i] = mean_energy[i]-half_max_flux_energy[0]; unc_energy_right[i] = half_max_flux_energy[1]-mean_energy[i]   #left and right uncertainty in energy
+        
+        if element:
+            data = []
+            for i in range(len(mean_energy)):
+                data.append([mean_energy[i], unc_energy_left[i], unc_energy_right[i]])
+            df = pd.DataFrame(data, columns=['wabe', 'unc wabe left', 'unc wabe right'])
+            
+            df.to_csv(os.getcwd () + '/generatedfiles/fluxweightedaverageenergy/' + self.stack + '_' + element + '_weighted_average_beam_energy.csv')
 
         return mean_energy, unc_energy_left, unc_energy_right
     
@@ -109,7 +118,7 @@ class WeightedAverageFlux:
             useFile=True
         elif element == 'Ni' and 'isotope' == '55CO':
             useFile=False
-        
+        # print(element, isotope)
         energy = np.loadtxt(monitor_file, usecols=[0], skiprows=6)
         cs = np.loadtxt(monitor_file, usecols=[1], skiprows=6)
         unc_cs = np.loadtxt(monitor_file, usecols=[2], skiprows=6)
@@ -125,16 +134,33 @@ class WeightedAverageFlux:
         # TODO for remaining, fit experimental data to pade parameters from https://doi.org/10.1007/s10967-024-09513-7
         return energy, cs, unc_cs, tck, sigma_tck
     
-    def plot_monitor_reaction(self, element, isotope, label='IAEA recommended data'):
+    def plot_monitor_reaction(self, element, isotope, label=None):
         energy, cs, unc_cs, tck, sigma_tck = self.monitor_data(element, isotope)
-        plt.plot(energy, cs, label=label)
+        plt.plot(energy, cs, label=label, color='royalblue')
         plt.fill_between(energy, cs+unc_cs, cs-unc_cs, color='blue', alpha=0.1)
-        plt.legend()
-        plt.show()
+        
+        energy, flux = self.get_flux_energy_stack(element)
+        mean_energy, unc_energy_left, unc_energy_right = self.flux_weighted_average_energy(energy, flux)
+        flux_weighted_average_cross_section, unc_flux_weighted_average_cross_section = self.monitor_flux_weighted_average_cross_section(element, isotope)
+        plt.errorbar(mean_energy, flux_weighted_average_cross_section*1e27, marker='P', color='peru',linewidth=0.0001,
+            xerr=[unc_energy_left, unc_energy_right], yerr=unc_flux_weighted_average_cross_section, elinewidth=1.0, capthick=1.0, capsize=3.0,
+            label=None, linestyle='none')
+            # label='flux weighted average monitor cross section', linestyle='none')
+        # plt.plot(mean_energy, flux_weighted_average_cross_section*1e27, 'o')
+        # plt.legend()
+        plt.title(element + isotope)
+        plt.title(element + '(p,x)' + isotope)
+        plt.xlabel('Energy (MeV)')
+        plt.ylabel('Cross section (mb)')
+        plt.xlim(0,80)
+        # plt.show()
 
     def monitor_flux_weighted_average_cross_section(self, element, isotope):
         mon_energy, mon_cs, mon_unc_cs, tck, sigma_tck = self.monitor_data(element, isotope)
         energy, flux = self.get_flux_energy_stack(element)
+        print('***')
+        print(len(energy))
+        print(energy)
         flux_weighted_average_cross_section = np.zeros(len(energy))
         unc_flux_weighted_average_cross_section = np.zeros(len(energy))
         interpolated_cs_list = []
@@ -143,13 +169,25 @@ class WeightedAverageFlux:
             interpolated_cs_list.append(interpolated_cs)
             interpolated_unc_cs = interpolate.splev(energy[i], sigma_tck, der=0) * 1e-27
             flux_weighted_average_cross_section[i] = np.trapezoid(flux[i]*interpolated_cs, energy[i])/np.trapezoid(flux[i],energy[i])
-            unc_flux_weighted_average_cross_section[i] = np.trapezoid(flux[i] * interpolated_unc_cs, energy[i])/np.trapezoid(flux[i],energy[i])    
+            unc_flux_weighted_average_cross_section[i] = np.trapezoid(flux[i] * interpolated_unc_cs, energy[i])/np.trapezoid(flux[i],energy[i])
+            
+            
+            minimum_cross_section = 1e-28
+
+            flux_weighted_average_cross_section[i] = max(flux_weighted_average_cross_section[i], 0.0)
+            unc_flux_weighted_average_cross_section[i] = max(unc_flux_weighted_average_cross_section[i], 0.0)
+            if flux_weighted_average_cross_section[i] < minimum_cross_section:
+                flux_weighted_average_cross_section[i] = 0.0
+                unc_flux_weighted_average_cross_section[i] = 0.0
+            
         return flux_weighted_average_cross_section, unc_flux_weighted_average_cross_section
     
-
-# wa = WeightedAverageFlux('TaSn_stack_55MeV_fluxes.csv', 'TaSn_stack_30MeV_fluxes.csv', 'TaSn_stack_55MeV.csv','TaSn_stack_30MeV.csv')
-# cs = wa.monitor_flux_weighted_average_cross_section('Cu', '63ZN')
-# print(cs)
-
-# wa.plot_monitor_reaction(element='Cu', isotope='63ZN', label = 'recommended data 63Zn')
-# wa.plot_flux_distributions('Cu')
+"""
+wa = WeightedAverageFlux('TaSn_stack_30MeV_dp_1.000%_fluxes.csv', 'TaSn_stack_30MeV_dp_1.000%.csv', 'stack_30_MeV')
+wa_2 = WeightedAverageFlux('TaSn_stack_55MeV_dp_1.000%_fluxes.csv', 'TaSn_stack_55MeV_dp_1.000%.csv', 'stack_55_MeV')
+wa.plot_flux_distributions('Ni')
+wa.plot_monitor_reaction(element='Cu', isotope='62ZN', label=None)
+# plt.legend()
+wa_2.plot_monitor_reaction(element='Cu', isotope='62ZN', label=None)
+plt.show()
+"""    

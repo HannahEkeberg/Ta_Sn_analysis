@@ -20,16 +20,18 @@ pathToActivityFiles = os.getcwd() + '/generatedfiles/activity/data/'
 class Acitivity:
           
     def __init__(self):
-        self.eob_stack30 = '09/23/2025 18:35:00'
-        self.eob_stack55 = '09/24/2025 14:43:00'
+        # self.eob_stack30 = '09/23/2025 18:35:00'
+        self.eob_stack30 = '09/23/2025 18:40:00'
+        # self.eob_stack55 = '09/24/2025 14:43:00'
+        self.eob_stack55 = '09/24/2025 15:45:00'
 
-    def getA0_single_isotope(self, isotope, foil, listOfPeakDataSummaries=None, guess=3.7e5, units = 'h', fitByA=True, plot=True, overwriteData=True, saveDecayChain=False):
+    def getA0_single_isotope(self, isotope, foil, listOfPeakDataSummaries=None, guess=3.7e5, units = 'h', fitByA=True, plot=True, overwriteData=False, saveDecayChain=False):
         if listOfPeakDataSummaries==None:
             listOfPeakDataSummaries = self.listOfPeakSummaries(foil)
         peak_data = self.concat_peakData(listOfPeakDataSummaries)
         eob = self.getEob(foil)
         filter_peak_data = peak_data[peak_data['isotope'].astype(str).str.contains(isotope, case=False, na=False)]
-
+        print(filter_peak_data)
         self.decayrate_to_activity(filter_peak_data, eob)
 
         if fitByA:
@@ -115,6 +117,7 @@ class Acitivity:
     def extractActivityManually(self, foil):
         peakDataSummaries = self.listOfPeakSummaries(foil)
         peak_data = self.concat_peakData(peakDataSummaries)
+        print(peak_data)
         data = []
         for index, row in peak_data.iterrows():
             isotope = row['isotope']
@@ -135,40 +138,40 @@ class Acitivity:
             A, dA = self.activity(Nc, d_Nc, eps, d_eps, I_gamma,d_I_gamma, countTime, delayTime, isotope)
             data.append([isotope, foilName, E, A, dA, Nc, I_gamma, eps, delayTime, countTime ])
         
-        new_df = pd.DataFrame(data, columns = ['isotope', 'foil', 'E gamma', 'A', 'dA', 'Nc', 'I gamma', 'efficiency', 'delay time', 'count time'])
+        new_df = pd.DataFrame(data, columns = ['isotope', 'foil', 'E gamma (keV)', 'A (Bq)', 'dA (Bq)', 'Nc', 'I gamma', 'efficiency', 'delay time (s)', 'count time (s)'])
+        print(new_df[new_df['isotope'] == '63ZNg'])
         return new_df
     
     def plotActivityManually(self, isotope, foil, data=None):
-        self.lamb = ci.Isotope(isotope).decay_const()
+        self.decay_const = ci.Isotope(isotope).decay_const()
         if data == None:
             data = self.extractActivityManually(foil)
         data_isotope = data[data['isotope'].str.contains(isotope)]
         print(data_isotope)
-        A = data_isotope['A'].values; dA = data_isotope['dA'].values; delay_time = data_isotope['delay time'].values
-        popt, pcov = curve_fit(self.singleDecayCurve, delay_time, A, p0=1e6, sigma=dA, absolute_sigma=True)
-        # print(popt)
-        time = np.max(delay_time)
-        xplot = np.linspace(0,time,1000)
-        
-        A0_estimated = self.singleDecayCurve(popt, 0)
-        print(A0_estimated)
-        sigma_activity_estimated = np.sqrt(np.diagonal(pcov))   #Uncertainty in the fitting parameters# print(A_est)
-
-        plt.plot(xplot,self.singleDecayCurve(xplot*3600,*popt),'r-', color='red')
-        # print(A, delay_time/3600)
-        plt.plot(delay_time, A, '.')
-        plt.errorbar(delay_time, A, color='green', linewidth=0.001,yerr=dA, elinewidth=0.5, ecolor='k', capthick=0.5)   # cap thickness for error bar color='blue')
-        # plt.show()
+        # A = data_isotope['A (Bq)'].values; dA = data_isotope['dA (Bq)'].values; delay_time = data_isotope['delay time (s)'].values
+        # popt, pcov = curve_fit(self.singleDecayCurve, delay_time, A, p0=1e6, sigma=dA, absolute_sigma=True)
+        # time = np.max(delay_time)/3600 # hours
+        # xplot = np.linspace(0,time,1000)
+        # A0_estimated = self.singleDecayCurve(0, popt)
+        # sigma_activity_estimated = np.sqrt(np.diagonal(pcov))   #Uncertainty in the fitting parameters# print(A_est)
+        # plt.plot(xplot,self.singleDecayCurve(xplot*3600,*popt), color='tan', linewidth=0.9, label='fit')
+        # plt.errorbar(delay_time/3600, A, color='darkolivegreen', linewidth=0.001,yerr=dA, elinewidth=0.5, ecolor='k', capthick=0.5,marker='*', label='activity')   # cap thickness for error bar color='blue')
+        # plt.errorbar(0, A0_estimated, color='darkblue', linewidth=0.001,yerr=sigma_activity_estimated, elinewidth=0.5, ecolor='k', capthick=0.5,marker='+', label='eob activity: %.2f MBq' %(A0_estimated*1e-6 ))   # cap thickness for error bar color='blue')
+        # plt.xlabel('Time since eob (h)')
+        # plt.ylabel('Activity (Bq)')
+        # plt.legend()
+        # plt.title(foil + ' - ' + isotope)
+        # plt.savefig('test.png')
+        plt.show()
 
     def activity(self, Nc, dNc, eps, deps, I_gamma, dI_gamma, t_count, t_delay, isotope):
-        lamb = np.log(2) / ci.Isotope(isotope).half_life()
-        corr = (1 - np.exp(-lamb * t_count)) * np.exp(-lamb * t_delay)
-        activity = Nc / (eps * I_gamma * corr)
+        decay_const = ci.Isotope(isotope).decay_const()
+        activity = (Nc*decay_const) / (eps * I_gamma * (1-np.exp(-decay_const*t_count)) * np.exp(-decay_const * t_delay)    )
         sigma_activity = activity * np.sqrt((dNc/Nc)**2  + (deps/eps)**2 + (dI_gamma/I_gamma)**2 )
         return activity, sigma_activity
     
-    def singleDecayCurve(self, A0_guess, t):
-        A_est = A0_guess * np.exp(-self.lamb*t)
+    def singleDecayCurve(self, t, A0_guess):
+        A_est = A0_guess * np.exp(-self.decay_const*t)
         return A_est
 
     def decayrate_to_activity(self, peak_data, eob):
@@ -218,8 +221,7 @@ class Acitivity:
         elif foil in [element + number for number in stack2_numbs]:
             return self.eob_stack30
         else:
-            raise ValueError("No valid foil: " + foil)
-        
+            raise ValueError("No valid foil: " + foil)    
 
     def printActivitiesInFoils(self, element, isotope, units='h'):
         stack_numbs = ['01', '02', '03', '04', '05', '06', '07', '08', '09','10', '11', '12', '13', '14']
@@ -258,6 +260,14 @@ class Acitivity:
 
 
 # listOfIsotopes = getListOfIsotopesPerFoil('Cu01')
+
+
+# Acitivity().getA0_single_isotope(isotope='65ZN', foil='Cu12', plot=True)
+# Acitivity().getA0_single_isotope(isotope='65ZN', foil='Cu13', plot=True)
+# Acitivity().getA0_single_isotope(isotope='65ZN', foil='Cu14', plot=True)
+Acitivity().plotActivityManually('57NI', 'Ni01')
+
+
 
 # Acitivity().getA0_mulitple_isotopes(None, 'Ni01', units='h', plot=False, guess=1e6, fitByA=True)
 # Acitivity().getA0_mulitple_isotopes(None, 'Ni02', units='h', plot=False, guess=1e6, fitByA=True)
@@ -301,6 +311,20 @@ class Acitivity:
 # Acitivity().getA0_mulitple_isotopes(None, 'Cu12', units='h', plot=False, guess=1e6, fitByA=True)
 # Acitivity().getA0_mulitple_isotopes(None, 'Cu13', units='h', plot=False, guess=1e6, fitByA=True)
 # Acitivity().getA0_mulitple_isotopes(None, 'Cu14', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Sn01', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Sn02', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Sn03', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Sn04', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Sn05', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Sn06', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Sn07', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Sn08', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Sn09', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Sn10', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Sn11', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Sn12', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Sn13', units='h', plot=False, guess=1e6, fitByA=True)
+# Acitivity().getA0_mulitple_isotopes(None, 'Sn14', units='h', plot=False, guess=1e6, fitByA=True)
 
 # listOfPeakDataSummaries = ['HA10242025_Det2_Cu01_10cm_job_peak_data.csv','BR09242025_Cu01_52cm_IDM_peak_data.csv', 'BY09242025_Cu01_52cm_IDM_peak_data.csv', 'CM09242025_Cu01_40cm_IDM_peak_data.csv', 'DA09252025_Cu01_30cm_IDM_peak_data.csv', 'EL09262025_Cu01_10cm_IDM_peak_data.csv', 'FH09282025_Cu01_10cm_IDM_peak_data.csv']
 # Acitivity().getA0('65ZN', listOfPeakDataSummaries)
@@ -311,7 +335,7 @@ class Acitivity:
 # Acitivity().getA0('58CO', 'Cu01', units='d', guess=1e2)
 
 
-# Acitivity().plotActivityManually('62ZN', 'Cu09')
+
 # Acitivity().getA0('65ZN', 'Cu01', units='h', plot=True, guess=1e6, fitByR=False)
 # Acitivity().getA0('65ZN', 'Cu02', units='h', plot=True, guess=1e6, fitByR=False)
 # Acitivity().getA0('65ZN', 'Cu03', units='h', plot=True, guess=1e6, fitByR=False)

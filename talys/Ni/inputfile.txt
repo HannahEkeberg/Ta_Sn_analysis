@@ -1,0 +1,4 @@
+element Ni
+mass 0
+projectile p
+energy n0-55.grid

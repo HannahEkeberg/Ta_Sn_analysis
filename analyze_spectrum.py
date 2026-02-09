@@ -1,6 +1,7 @@
 from analyze_spectra import *
             
 def assemble(detector, distance, foil, calibrationfile):
+    print('Analyzing detector ' + detector + ' at distance ' + distance + ' foil: ' + foil)
     listOfIsotopes = getListOfIsotopesPerFoil(foil)
     analyze_spec = AnalyzeSpectrum(detector=detector, calibrationFile=calibrationfile)
     spectra =  get_spectra(detector, distance, foil)
@@ -43,12 +44,12 @@ def faster(foil):
     assemble('LEPS', '60cm', foil, 'calibration_leps_60.json')
 
 
-faster('Ta01')
-faster('Ta02')
-faster('Ta03')
-faster('Ta04')
-faster('Ta05')
-faster('Ta06')
+# faster('Ta01')
+# faster('Ta02')
+# faster('Ta03')
+# faster('Ta04')
+# faster('Ta05')
+# faster('Ta06')
 
 # faster('Ta07')
 # faster('Ta08')
@@ -58,6 +59,24 @@ faster('Ta06')
 # faster('Ta12')
 # faster('Ta13')
 # faster('Ta14')
+
+
+# faster('Sn01')
+# faster('Sn02')
+# faster('Sn03')
+# faster('Sn04')
+# faster('Sn05')
+# faster('Sn06')
+# faster('Sn07')
+# faster('Sn08')
+# faster('Sn09')
+# faster('Sn10')
+# faster('Sn11')
+# faster('Sn12')
+# faster('Sn13')
+# faster('Sn14')
+
+
 
 
 

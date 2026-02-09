@@ -1,6 +1,5 @@
 import numpy as np 
 import pandas as pd
-import curie as ci
 import matplotlib.pyplot as plt 
 import os
 import sys
@@ -8,6 +7,7 @@ import sys
 
 sys.path.append('/opt/homebrew/lib/python3.13/site-packages')
 from nuclearanalysistools.Tendl import *
+import curie as ci
 
 pathToSpectra = os.getcwd() + '/spectra/'
 pathToCalibrationFiles = os.getcwd() + '/generatedfiles/calibrationfiles/'
@@ -18,7 +18,7 @@ class AnalyzeSpectrum:
         self.calibrationFile = calibrationFile
         self.detector = detector
         
-    def analyze(self, spectrumFileName, listOfIsotopes):
+    def analyze(self, spectrumFileName, listOfIsotopes, x_rays=False):
         spectrumFileName = spectrumFileName
         if spectrumFileName is not None:
             spectrumName = spectrumFileName.replace(".Spe", "")
@@ -28,10 +28,13 @@ class AnalyzeSpectrum:
             sp = ci.Spectrum(pathToSpectra + self.detector + '/' + spectrumFileName)
             sp.cb = cb
             sp.isotopes = listOfIsotopes
-            sp.fit_config = {'SNR_min':3.5, 'dE_511':9.0}
-            sp.saveas(pathToPeakData + '/data/' + spectrumName + '_peak_data.csv', replace=False)
-            sp.saveas(pathToPeakData + '/figures/' + spectrumName + '_peak_data.pdf')
-            # sp.plot()
+            if x_rays:
+                sp.fit_config = {'xrays':True, 'E_min':20}
+            else:
+                sp.fit_config = {'SNR_min':3.5, 'dE_511':9.0}
+            # sp.saveas(pathToPeakData + '/data/' + spectrumName + '_peak_data.csv', replace=False)
+            # sp.saveas(pathToPeakData + '/figures/' + spectrumName + '_peak_data.pdf')
+            sp.plot()
         except AttributeError:
             print("Most likely no peaks...")
 
@@ -177,3 +180,14 @@ def get_spectra(detector_folder, distance, foil, file_ending='.Spe'):
     for f in sorted(filenames):
         d.setdefault(f[:2], []).append(f)
     return [v[0] if len(v) == 1 else v for _, v in sorted(d.items())]
+
+def split_peak_data_into_isotope_files(foil):
+
+    pass
+
+# split_peak_data_into_isotope_files('generatedfiles/peakdata/data/EL09262025_Cu01_10cm_IDM_peak_data.csv')
+# ansp = AnalyzeSpectrum(detector='LEPS', calibrationFile='calibration_leps_20.json')
+# ansp.analyze('BR09242025_Sn06_30cm_LEPS.Spe', getListOfIsotopesPerFoil('Sn06'))
+# ansp.analyze('BR09242025_Sn06_30cm_LEPS.Spe', ['119SB'])
+
+# print(getListOfIsotopesPerFoil('Sn06'))

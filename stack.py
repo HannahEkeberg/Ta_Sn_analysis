@@ -40,6 +40,12 @@ def variance_min(i):
 
 ad_degrader_a, ad_degrader_b, ad_degrader_c, ad_degrader_e = variance_min(i=1)
 
+print(ad_degrader_e*2)
+print(0.256*2)
+print(ad_degrader_e*3)
+print(0.256*3)
+
+
 stack_55MeV = stack = [
         #compartment01
        {'compound':'Ni', 'name':'Ni01', 'ad':ad_ni[0]},  # ad in mg/cm^2
@@ -130,7 +136,7 @@ stack_30MeV = [
     ]
 
 def stack(stack, E_p, dp=1):
-    full_stack = ci.Stack(stack, E0=E_p, particle='p', dE0=0.45, N=1E6, max_steps=100)
+    full_stack = ci.Stack(stack, E0=E_p, particle='p', dE0=0.45, N=1E6, max_steps=100, dp=dp)
     return full_stack
 
 # stack_55 = stack_55(55)
@@ -142,11 +148,12 @@ def stack(stack, E_p, dp=1):
 # stack_55.saveas(save_stack_dir + 'TaSn_stack_55MeV_-25%.csv')
 # stack_30.saveas(save_stack_dir + 'TaSn_stack_30MeV_-5%.csv')
 # stack_30.saveas(save_stack_dir + 'TaSn_stack_30MeV_-25%.csv')
-dp_array = np.arange(0.90, 1.10, 0.01)
+dp_array = np.arange(0.95, 1.11, 0.01) # run this later with 0.01....
 # dp_array = np.arange(0.90, 0.91, 0.01)
 print(dp_array)
 index=0
 
+"""
 for dp in dp_array:
     index += 1
     print('__________________________________________')
@@ -172,4 +179,5 @@ for dp in dp_array:
     percent_done = index/len(dp_array)*100
     print(f'{percent_done:.3f}% of the calculation is done')
     print('__________________________________________\n')
+"""
 

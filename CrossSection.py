@@ -2,8 +2,10 @@
 import numpy as np
 from get_variables import *
 from flux_stack import WeightedAverageFlux
+from beamcurrent import BeamCurrent
 import curie as ci
 import matplotlib.pyplot as plt
+from scipy.constants import elementary_charge
 
 import sys
 sys.path.append('/opt/homebrew/lib/python3.13/site-packages')
@@ -13,32 +15,48 @@ from nuclearanalysistools.tools import *
 class CrossSection:
 
     def __init__(self):
-        self.wa = WeightedAverageFlux('TaSn_stack_55MeV_fluxes.csv', 'TaSn_stack_30MeV_fluxes.csv', 'TaSn_stack_55MeV.csv','TaSn_stack_30MeV.csv')
+        pass
 
     def cross_section(self, element, isotope):
         foils, areal_density, unc_areal_density = areal_density_from_files(element)
         eob_activities, cov_eob_activities = eob_activity_from_files(foils, isotope)
         unc_eob_activity = np.sqrt(cov_eob_activities)
-        energy, flux = self.wa.get_flux_energy_stack(element)
-        flux_weighted_average_energy, unc_energy_left, unc_energy_right = self.wa.flux_weighted_average_energy(energy, flux)
-        # flux_weighted_average_cross_section, unc_flux_weighted_average_cross_section = self.wa.monitor_flux_weighted_average_cross_section(element, isotope)
-        protons_per_second = beam_current_from_files()
+        beam_current, unc_beam_current = weighted_average_beam_current()
+        energy, unc_left, unc_right = weighted_average_beam_energy(element)
         decay_constant = ci.Isotope(isotope).decay_const()
         irradiation_time = 3600; unc_irradiation_time = 1  # s
         std_eob_activity = np.where(
             eob_activities > 0,
             (unc_eob_activity / eob_activities)**2,
             0.0)
-        eob_activities = eob_activity_from_files(foils, isotope)
-        cross_section = eob_activities / (np.array(areal_density) * (1- np.exp (-decay_constant * irradiation_time))  * protons_per_second)
-        plt.plot(flux_weighted_average_energy, cross_section[0]*1e27, 'o')
-        cu_target = {'Cu63': 0.6915, 'Cu65':0.3085}
-        # ta_target = {"Ta181": 1.0}
-        # Tendl({"Ta181": 1.0}, 'proton').plotTendl23Unique(productZ='74', productA='177', isomerLevel = None, color=None, lineStyle=None, label=None, semilog_y=False)
-        Tendl(cu_target, 'proton').plotTendl23Unique(productZ='29', productA='63', isomerLevel = None, color=None, lineStyle=None, label=None, semilog_y=False)
-        # plt.show()
+        cross_section = eob_activities / (np.array(areal_density) * (1- np.exp (-decay_constant * irradiation_time))  * beam_current)
+        unc_cross_section = cross_section * np.sqrt(
+            std_eob_activity
+            + (unc_areal_density/areal_density)**2 
+            + (unc_irradiation_time/irradiation_time)**2 
+            + (unc_beam_current/beam_current)**2
+        )
+        mask = cross_section>0
+        return energy[mask], unc_left[mask], unc_right[mask], cross_section[mask]*1e27, unc_cross_section[mask]*1e27
+         
+    def substract_cross_section(self, element, isotope_product, isotope_feeder, branching_ratio):
+        #energy, unc_left, unc_right, cross_section, unc_cross_section
+        i_cs = 3; i_unc_cs = 4
+        product_cumulative = self.cross_section(element, isotope_product)
+        product_feeding = self.cross_section(element, isotope_feeder)
+        cs_independent = product_cumulative[i_cs] - product_feeding[i_cs] * branching_ratio
+        unc_cs_independent = product_cumulative[i_unc_cs] - product_feeding[i_unc_cs] * branching_ratio
+        return 
+        pass
 
-CrossSection().cross_section('Cu', '63ZN')
-wa = WeightedAverageFlux('TaSn_stack_55MeV_fluxes.csv', 'TaSn_stack_30MeV_fluxes.csv', 'TaSn_stack_55MeV.csv','TaSn_stack_30MeV.csv')
-wa.plot_monitor_reaction('Cu', '63ZN')
-plt.show()
+
+    def monitor_cross_section(self,element,isotope):
+        wa_55, wa_30 = get_wa_from_stack_files()
+        wa_55.plot_monitor_reaction(element, isotope, label='IAEA recommended data')
+        wa_30.plot_monitor_reaction(element, isotope)
+
+    def plot(self, element, isotope):
+        energy, unc_left, unc_right, cross_section, unc_cross_section = self.cross_section(element, isotope)
+        plt.errorbar(energy, cross_section, marker='P', color='darkred',linewidth=0.0001,
+        xerr=[unc_left, unc_right], yerr=unc_cross_section, elinewidth=1.0, capthick=1.0, capsize=3.0,
+        label='flux weighted average cross section', linestyle='none')
