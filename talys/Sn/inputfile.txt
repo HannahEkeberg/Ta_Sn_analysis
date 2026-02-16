@@ -1,0 +1,4 @@
+element Sn
+mass 0
+projectile p
+energy n0-60.grid

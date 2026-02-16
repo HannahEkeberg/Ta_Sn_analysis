@@ -40,20 +40,14 @@ class BeamCurrent:
 
     def beam_current(self, element, isotope):
         foils, areal_density, unc_areal_density = areal_density_from_files(element, self.stack)
-        eob_activities, cov_eob_activities = eob_activity_from_files(foils, isotope)
-        unc_eob_activity = np.sqrt(cov_eob_activities)
+        eob_activitiy, std_eob_activity = eob_activity(element, isotope, self.stack)
         energy, flux = self.wa.get_flux_energy_stack(element)
         flux_weighted_average_energy, unc_energy_left, unc_energy_right = self.wa.flux_weighted_average_energy(energy, flux)
         flux_weighted_average_cross_section, unc_flux_weighted_average_cross_section = self.wa.monitor_flux_weighted_average_cross_section(element, isotope)
         decay_constant = ci.Isotope(isotope).decay_const()
         irradiation_time = 3600; unc_irradiation_time = 1  # s
-        with np.errstate(divide='ignore', invalid='ignore'):
-            std_eob_activity = np.where(
-                eob_activities > 0,
-                (unc_eob_activity / eob_activities)**2,
-                0.0
-            )
-        protons_per_second = eob_activities / (np.array(areal_density) * (1- np.exp (-decay_constant * irradiation_time))  * flux_weighted_average_cross_section)
+        # print(eob_activitiy.shape, areal_density.shape, flux_weighted_average_cross_section.shape)
+        protons_per_second = eob_activitiy / (np.array(areal_density) * (1- np.exp (-decay_constant * irradiation_time))  * flux_weighted_average_cross_section)
         unc_protons_per_second = protons_per_second * np.sqrt(
               std_eob_activity
             + (unc_areal_density/areal_density)**2 
@@ -63,20 +57,10 @@ class BeamCurrent:
         beam_current = protons_per_second * elementary_charge * 1e9 # nano ampere
         unc_beam_current = unc_protons_per_second * elementary_charge * 1e9
         data = []
-        test_A0, test_beam_current, test_protons_per_second, test_cs, test_areal_density = self.test_eob_activity(decay_constant, areal_density, flux_weighted_average_cross_section)
-        for i in range(len(beam_current)):
-            data.append([foils[i], beam_current[i], unc_beam_current[i], protons_per_second[i], unc_protons_per_second[i], eob_activities[i]*1e-6, areal_density[i], flux_weighted_average_energy[i], [flux_weighted_average_cross_section[i]*1e27]])
-        df = pd.DataFrame(data, columns=['foil', 'beam current (nA)', 'unc beam current (nA)', 'protons/s',' unc protons/s', 'eob activity (MBq)', 'areal density (nuclei/cm2)', 'flux weighted average energy (MeV)', 'flux weighted average cross section (mb)'])
-        data2 = []
-
-        for i in range(len(beam_current)):
-            # data2.append([foils[i], flux_weighted_average_energy[i], beam_current[i], test_beam_current, protons_per_second[i], test_protons_per_second, eob_activities[i]*1e-6, test_A0[i]*1e-6, areal_density[i], test_areal_density[i], [flux_weighted_average_cross_section[i]*1e27], test_cs[i]*1e27])
-            data2.append([foils[i], flux_weighted_average_energy[i], beam_current[i], test_beam_current, eob_activities[i]*1e-6, test_A0[i]*1e-6, test_A0[i]/eob_activities[i]])
-        # df2 = pd.DataFrame(data2, columns=['foil', 'energy MeV', 'beam current (nA)', 'test beam current (nA)', 'protons/s', 'test protons/s', 'eob activity (MBq)', 'test eob activity (MBq)', 'areal density (nuclei/cm2)', 'test areal density (nuclei/cm2)', 'flux cross section (mb)', 'test cross section (mb)'])
-        # df2 = pd.DataFrame(data2, columns=['foil', 'energy MeV', 'beam current (nA)', 'test beam current (nA)', 'eob activity (MBq)', 'test eob activity (MBq)', 'ratio'])
-        # print(df2)
+        # for i in range(len(beam_current)):
+            # data.append([foils[i], beam_current[i], unc_beam_current[i], protons_per_second[i], unc_protons_per_second[i], eob_activity[i]*1e-6, areal_density[i], flux_weighted_average_energy[i], [flux_weighted_average_cross_section[i]*1e27]])
+        # df = pd.DataFrame(data, columns=['foil', 'beam current (nA)', 'unc beam current (nA)', 'protons/s',' unc protons/s', 'eob activity (MBq)', 'areal density (nuclei/cm2)', 'flux weighted average energy (MeV)', 'flux weighted average cross section (mb)'])
         # df.to_csv(save_beam_current_to + 'beam_current_' + element +  '_' + isotope + '.csv')
-        # df2.to_csv('test_beam_current.csv')
         return flux_weighted_average_energy, unc_energy_left, unc_energy_right, beam_current, unc_beam_current, protons_per_second, unc_protons_per_second
 
     def test_eob_activity(self, lamb, areal_density=None, cs=None):
@@ -85,11 +69,15 @@ class BeamCurrent:
         A0 = protons_per_second * cs * areal_density * (1-np.exp(-lamb * 3600))
         return A0, beam_current, protons_per_second, cs, areal_density
 
-    def plot_beam_current_isotope(self, element, isotope, color, label, compartments=None):
+    def plot_beam_current_isotope(self, element, isotope, color, label, compartments=None, remove_zeros=True):
         flux_weighted_average_energy, unc_energy_left, unc_energy_right, beam_current, unc_beam_current, protons_per_second, unc_protons_per_second = self.beam_current(element, isotope)
         indices = self.get_compartment_indices(compartments) if compartments else slice(None)
-
-        plt.errorbar(flux_weighted_average_energy[indices], beam_current[indices], color=color, marker='.', linewidth=0.001, xerr=[unc_energy_left[indices], unc_energy_right[indices]], yerr=np.abs(unc_beam_current[indices]), elinewidth=0.5, capthick=0.5, capsize=3.0,label=label)
+        if compartments:
+            label = element + ' ' + isotope + ' %.1f' %beam_current[indices][0]
+        # if beam_current[indices]>0
+        if remove_zeros:
+            indices = beam_current[indices] >0
+        plt.errorbar(flux_weighted_average_energy[indices], beam_current[indices], color=color, marker='.', ls = '',linewidth=0.001, xerr=[unc_energy_left[indices], unc_energy_right[indices]], yerr=np.abs(unc_beam_current[indices]), elinewidth=0.5, capthick=0.5, capsize=3.0,label=label)
         plt.xlabel('Energy MeV')
         plt.ylabel('Beam current nA')
 
@@ -151,7 +139,7 @@ class BeamCurrent:
 
         return average_energy, average_beam_current, average_protons_per_second, average_unc_protons_per_second
 
-    def plot_all(self):
+    def plot_all(self, title=None):
         colors = Tools().colors()
         # self.plot_beam_current_isotope('Cu', '63ZN', color=colors[0], label=r'$^{63}$Zn')
         reactions=self.monitor_reactions
@@ -169,13 +157,13 @@ class BeamCurrent:
                 self.plot_beam_current_isotope('Cu', '56CO', color=colors[4], label=r'$^{56}$Co')
             if isotope=='57NI': 
                 self.plot_beam_current_isotope('Ni', '57NI', color=colors[5], label=r'$^{57}$Ni')
-
         wa_energy, wa_beamcurrent, wa_protons_per_second, wa_unc_protons_per_second = self.average_beam_current(reactions)
         weighted_bc, unc_weighted_bc = self.get_average_and_unc()
-        plt.errorbar(wa_energy, weighted_bc, color='darkblue', marker='^', linewidth=0.001, yerr=np.abs(unc_weighted_bc), elinewidth=0.5, capthick=0.5, capsize=5.0, markersize=5,label='weighted average')
-        plt.errorbar(wa_energy, wa_beamcurrent, color='peru', marker='D', linewidth=0.001, yerr=np.abs(unc_weighted_bc), elinewidth=0.5, capthick=0.5, capsize=5.0, markersize=5,label='average')
-
-        plt.axhline(y=100, color=colors[-1], linestyle='--', linewidth=0.5, label = '100 nA')
+        plt.errorbar(wa_energy, weighted_bc, color='darkblue', marker='^', linewidth=0.001, yerr=np.abs(unc_weighted_bc), ls='', elinewidth=0.5, capthick=0.5, capsize=5.0, markersize=5,label='weighted average')
+        # plt.errorbar(wa_energy, wa_beamcurrent, color='peru', marker='D', linewidth=0.001, yerr=np.abs(unc_weighted_bc), elinewidth=0.5, capthick=0.5, capsize=5.0, markersize=5,label='average')
+        if title:
+            plt.title(title)
+        # plt.axhline(y=100, color=colors[-1], linestyle='--', linewidth=0.5, label = '100 nA')
         # plt.ylim(0,500)
 
     def average_value(self, values, unc_values):

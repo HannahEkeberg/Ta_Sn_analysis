@@ -15,7 +15,9 @@ from nuclearanalysistools.Tendl import *
 from nuclearanalysistools.tools import *
 
 pathToPeakFiles = os.getcwd() + '/generatedfiles/peakdata/data/'
+pathToPeakFiles_isotope = os.getcwd() + '/generatedfiles/peakdata/data_isotope/'
 pathToActivityFiles = os.getcwd() + '/generatedfiles/activity/data/'
+pathToActivityFiles_isotope = os.getcwd() + '/generatedfiles/activity/data_isotope/'
 
 class Acitivity:
           
@@ -24,6 +26,8 @@ class Acitivity:
         self.eob_stack30 = '09/23/2025 18:40:00'
         # self.eob_stack55 = '09/24/2025 14:43:00'
         self.eob_stack55 = '09/24/2025 15:45:00'
+        self.R_stack30 = [1.0, 1]
+        self.R_stack55 = [1.0, 1]
 
     def getA0_single_isotope(self, isotope, foil, listOfPeakDataSummaries=None, guess=3.7e5, units = 'h', fitByA=True, plot=True, overwriteData=False, saveDecayChain=False):
         if listOfPeakDataSummaries==None:
@@ -31,11 +35,11 @@ class Acitivity:
         peak_data = self.concat_peakData(listOfPeakDataSummaries)
         eob = self.getEob(foil)
         filter_peak_data = peak_data[peak_data['isotope'].astype(str).str.contains(isotope, case=False, na=False)]
-        print(filter_peak_data)
+        # print(filter_peak_data)
         self.decayrate_to_activity(filter_peak_data, eob)
 
         if fitByA:
-            print(peak_data)
+            # print(peak_data)
             isotopes, fit, cov = self.fitByA(eob, peak_data, isotope, guess, units, plot)
         else:
             isotopes, fit, cov = self.fitByR(eob, peak_data, isotope, None, units, plot)
@@ -44,7 +48,50 @@ class Acitivity:
         if overwriteData:
             df.to_csv(pathToActivityFiles + foil + '_' + isotope + '_' + '.csv')
         return df
-    
+
+    def getA0(self, element, isotope, plot_=False, compartment=None):
+        foils = self.foils(element)
+        eob_activity_list = []
+        # generatedfiles/peakdata/data_isotope/Cu01_63ZNg_gammas.csv
+        # generatedfiles/peakdata/data_isotope/Cu05_63ZN_gammas.csv
+        for foil in foils:
+            str = foil + '_' + isotope + '_gammas.csv'
+            peak_data = pathToPeakFiles_isotope + str
+            eob = self.getEob(foil)
+            if not os.path.exists(peak_data):
+                # if run == 0:
+                    # isotope=isotope + 'g'
+                # run +=1
+                str = foil + '_' + isotope + 'g_gammas.csv'
+                peak_data = pathToPeakFiles_isotope + str
+            try:
+                df = pd.read_csv(peak_data, comment="#")
+                if compartment and compartment in foil and not plot_:
+                    e = df['energy'].values; counts = df['counts'].values; unc_counts = df['unc_counts'].values; file = df['filename'].values
+                    for i in range(len(e)):
+                        print(e[i], unc_counts[i]/counts[i]*100, file[i])
+                    plot=True
+                else:
+                    plot=plot_
+                isotopes, fit, cov = self.fitByA(eob, df, isotope, plot=plot)
+                eob_activity = fit[0]; unc_eob_activity = cov[0][0]
+                if not np.isfinite(eob_activity) or not np.isfinite(unc_eob_activity):
+                    eob_activity = 0; unc_eob_activity = 0
+                data = [foil, isotope, eob_activity, unc_eob_activity]
+                # df_activity = self.eob_activity_dataframe(foil, isotopes, fit, cov, saveDecayChain=saveDecayChain)
+                eob_activity_list.append(data)
+            except:
+                print('no peak data found in foil ' + foil + ' for isotope ' + isotope)
+                data = [foil, isotope, 0, 0]
+                eob_activity_list.append(data)
+        df_eob = pd.DataFrame(eob_activity_list, columns=['foil', 'isotope', 'fit', 'cov'])
+        # if (df_eob["fit"] != 0.0).any():
+        df_eob.to_csv(pathToActivityFiles_isotope +  element + '_' + isotope + '.csv') 
+
+    def foils(self, element):
+        n=14
+        return [f"{element}{i:02d}" for i in range(1, n+1)]
+
     def getA0_mulitple_isotopes(self, listOfIsotopes, foil, listOfPeakDataSummaries=None, guess=3.7e5, units = 'h', fitByA=True, plot=True, overwriteData=True, saveDecayChain=False):
         if listOfPeakDataSummaries==None:
             listOfPeakDataSummaries = self.listOfPeakSummaries(foil)
@@ -56,8 +103,6 @@ class Acitivity:
             # listOfIsotopes = getListOfIsotopesPerFoil(foil)
             listOfIsotopes = peak_data['isotope'].unique().tolist()
         eob = self.getEob(foil)
-
-        data = []
         dfs = []
         for idx, isotope in enumerate(listOfIsotopes):
             try:
@@ -68,12 +113,6 @@ class Acitivity:
             except:
                 print("Did not get any activitites for isotope: " + isotope)
                 isotopes = None
-            # if isotopes:
-            #     for i in range(len(isotopes)):
-            #         data.append([foil, isotopes[i], fit[i], cov[i]])
-
-            # print(foil, isotopes)
-
             if isotopes:
                 df = self.eob_activity_dataframe(foil, isotopes, fit, cov, saveDecayChain)
                 dfs.append(df)
@@ -93,8 +132,8 @@ class Acitivity:
             dc.plot()
         return isotopes, fit, cov
     
-    def fitByA(self, eob, peak_data, isotope, A0_guess=1e4, units='h', plot=False):
-        dc = ci.DecayChain(parent_isotope=isotope, A0=A0_guess, units=units)
+    def fitByA(self, eob, peak_data, isotope, production_rate=1e6, units='h', plot=False):
+        dc = ci.DecayChain(parent_isotope=isotope, A0=production_rate, units=units)
         dc.get_counts(spectra='', EoB=eob, peak_data=peak_data)
         isotopes, fit, cov = dc.fit_A0()
         A0 = dc.activity(isotope, time=0)
@@ -106,7 +145,7 @@ class Acitivity:
         data = []
         if len(fit)>1 and saveDecayChain:
             for i in range(len(isotopes)):
-                data.append([foil, isotopes[i], fit[i], cov[i]])
+                data.append([foil, isotopes[i], fit[i], cov[i][i]])
         else:
             data.append([foil, isotopes[0], fit[0], cov[0][0]])
         df = pd.DataFrame(data, columns=['foil', 'isotope', 'fit', 'cov'] )
@@ -117,7 +156,7 @@ class Acitivity:
     def extractActivityManually(self, foil):
         peakDataSummaries = self.listOfPeakSummaries(foil)
         peak_data = self.concat_peakData(peakDataSummaries)
-        print(peak_data)
+        # print(peak_data)
         data = []
         for index, row in peak_data.iterrows():
             isotope = row['isotope']
@@ -139,7 +178,7 @@ class Acitivity:
             data.append([isotope, foilName, E, A, dA, Nc, I_gamma, eps, delayTime, countTime ])
         
         new_df = pd.DataFrame(data, columns = ['isotope', 'foil', 'E gamma (keV)', 'A (Bq)', 'dA (Bq)', 'Nc', 'I gamma', 'efficiency', 'delay time (s)', 'count time (s)'])
-        print(new_df[new_df['isotope'] == '63ZNg'])
+        # print(new_df[new_df['isotope'] == '63ZNg'])
         return new_df
     
     def plotActivityManually(self, isotope, foil, data=None):
@@ -147,7 +186,7 @@ class Acitivity:
         if data == None:
             data = self.extractActivityManually(foil)
         data_isotope = data[data['isotope'].str.contains(isotope)]
-        print(data_isotope)
+        # print(data_isotope)
         # A = data_isotope['A (Bq)'].values; dA = data_isotope['dA (Bq)'].values; delay_time = data_isotope['delay time (s)'].values
         # popt, pcov = curve_fit(self.singleDecayCurve, delay_time, A, p0=1e6, sigma=dA, absolute_sigma=True)
         # time = np.max(delay_time)/3600 # hours
@@ -175,7 +214,7 @@ class Acitivity:
         return A_est
 
     def decayrate_to_activity(self, peak_data, eob):
-        print(peak_data)
+        # print(peak_data)
         # Decay rate = counts / live_time * 1 / (efficiency_gamma * I_gamma)  
         decay_rate = peak_data['decay_rate'].values
         counts = peak_data['counts'].values
@@ -194,7 +233,7 @@ class Acitivity:
             time_since_eob = Tools().date_diff(eob, start_time[i], units=None)
             data.append([isotope[i], time_since_eob, A[i], decay_rate[i], E[i], I[i]])
         df = pd.DataFrame(data, columns=['isotope','time since eob', 'activity', 'decay rate', 'E gamma', 'I gamma (%)'])
-        print(df)
+        # print(df)
 
     def concat_peakData(self, peakDataSummaries):
         dataframes = []
@@ -254,18 +293,14 @@ class Acitivity:
                                 cov_eob_activity[i] = df_isotope['cov'].values[0]
         return eob_activity, cov_eob_activity
 
-    def clean_up_activity_files(self):
-        pass
-        # TODO() 
-
-
 # listOfIsotopes = getListOfIsotopesPerFoil('Cu01')
 
 
 # Acitivity().getA0_single_isotope(isotope='65ZN', foil='Cu12', plot=True)
 # Acitivity().getA0_single_isotope(isotope='65ZN', foil='Cu13', plot=True)
 # Acitivity().getA0_single_isotope(isotope='65ZN', foil='Cu14', plot=True)
-Acitivity().plotActivityManually('57NI', 'Ni01')
+# Acitivity().plotActivityManually('57NI', 'Ni01')
+# Acitivity().getA0('Cu', '63ZN')
 
 
 

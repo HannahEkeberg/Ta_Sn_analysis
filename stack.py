@@ -41,9 +41,16 @@ def variance_min(i):
 ad_degrader_a, ad_degrader_b, ad_degrader_c, ad_degrader_e = variance_min(i=1)
 
 print(ad_degrader_e*2)
-print(0.256*2)
-print(ad_degrader_e*3)
-print(0.256*3)
+# print(0.256*2)
+# print(ad_degrader_e*3)
+# print(0.256*3)
+
+print('2e:  ' + str(2*ad_degrader_e))
+print('2e:  ' + str(2*ad_degrader_e))
+print('2e:  ' + str(2*ad_degrader_e))
+print('2e:  ' + str(2*ad_degrader_e))
+print('e:  ' +  str(1*ad_degrader_e))
+print('e:  ' +  str(1*ad_degrader_e))
 
 
 stack_55MeV = stack = [

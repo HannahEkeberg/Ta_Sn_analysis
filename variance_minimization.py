@@ -122,7 +122,7 @@ class VarianceMinimization:
         x = np.array(x_data)
         if method == 'p0':
             print('p0')
-            print(len(y_data))
+            # print(len(y_data))
             true = self.fit_p0(x_data, y_data, unc_y_data)
             true_array = np.zeros(len(y_data))
             true_array.fill(true)
@@ -199,7 +199,7 @@ class VarianceMinimization:
         flux_weighted_average_energy, unc_energy_left, unc_energy_right = wa.flux_weighted_average_energy(energy, flux)
         flux_weighted_average_cross_section, unc_flux_weighted_average_cross_section = wa.monitor_flux_weighted_average_cross_section(element, isotope)
         flux_weighted_average_energy, unc_energy_left, unc_energy_right, beam_current, unc_beam_current, protons_per_second, unc_protons_per_second = bc.beam_current(element, isotope)
-        print(isotope, beam_current[indices])
+        # print(isotope, beam_current[indices])
         return flux_weighted_average_energy[indices], beam_current[indices], unc_beam_current[indices]
 
     def plot_chi2(self, dp_array, chi2_array, smooth_curve=True, title=None, label=None, color='saddlebrown'):
@@ -243,6 +243,7 @@ class VarianceMinimization:
 
         energies = np.asarray(energies)
         beam_currents = np.asarray(beam_currents)
+        # print(beam_currents)
         unc_beam_currents = np.asarray(unc_beam_currents)
         mask = (
             np.isfinite(energies) &
@@ -295,13 +296,13 @@ class VarianceMinimization:
     def plot_fitted_bc(self, stack, wa, bc, compartments, dp=None):
         energies, beam_currents, unc_beam_currents = self.get_beam_current_data(stack, wa, bc, compartments)
         x, y_data, true_array, unc_y_data, dgf = self.get_data_chi_squared(energies, beam_currents, unc_beam_currents, method='p0')
-        x_array = np.linspace(x[0]-1, x[-1]+1, len(true_array))
-        plt.plot(x_array, true_array, label='fit p0')
-        plt.plot(x_array, true_array, label='fit p0')
-        x, y_data, true_array, unc_y_data, dgf = self.get_data_chi_squared(energies, beam_currents, unc_beam_currents, method='p1')
-        x_array = np.linspace(x[0]-1, x[-1]+1, len(true_array))
-        plt.plot(x_array, true_array, label='fit p1')
-        plt.plot(x_array, true_array, label='fit p1')
+        x_array = np.linspace(x[0]-2, x[-1]+2, len(true_array))
+        plt.plot(x_array, true_array, label='fit p0 %.1f nA' %true_array[0])
+        # plt.plot(x_array, true_array, label='fit p0')
+        # x, y_data, true_array, unc_y_data, dgf = self.get_data_chi_squared(energies, beam_currents, unc_beam_currents, method='p1')
+        # x_array = np.linspace(np.min(x), np.max(x), len(true_array))
+        # plt.plot(x_array, true_array, label='fit p1')
+        # plt.plot(x_array, true_array, label='fit p1')
         color_idx=0
         for i in self.monitor_reactions:
             element = i[0]; isotope= i[1]
@@ -319,6 +320,10 @@ class VarianceMinimization:
             full_stack, flux_stack = self.get_files(dp, stack)
             wa = WeightedAverageFlux(flux_stack, full_stack, stack)
             bc = BeamCurrent(wa, stack, self.monitor_reactions)
+            if method == 'plot bc':
+                bc.plot_all(dp)
+                plt.legend()
+                plt.show()
             if method == 'p0' or method == 'p1':
                 energy, chi2, red_chi2 = self.get_chi2_values(stack, wa, bc, compartments, method)
                 chi2s.append(chi2)
@@ -353,7 +358,7 @@ class VarianceMinimization:
                     element = isotope[0]; isotope=isotope[1]
                     # print(dp, isotope) 
                     bc.beam_current(element, isotope)
-            elif  method == 'test2':
+            elif  method == 'plot bc compartment':
                 self.plot_fitted_bc(stack, wa, bc, compartments, dp)
                 plt.show()
             elif method == 'test3':
@@ -370,19 +375,30 @@ class VarianceMinimization:
             plt.show()
         elif method == 'p0' or method =='p1':
             self.plot_chi2(self.dp_array, red_chi2s,False, title_plot, method,'saddlebrown')
+            plt.title('Compartment ' + compartments[0])
+            name = method + '_comparment' + compartments[0] + '.pdf'
+            plt.savefig(os.getcwd() + '/generatedfiles/varianceminimization/' + name)
             plt.show()
 
 
 zn65 = ('Cu', '65ZN'); zn63 = ('Cu', '63ZN'); zn62 = ('Cu', '62ZN')
 co58 = ('Cu', '58CO'); co56 = ('Cu', '56CO'); ni57 = ('Ni', '57NI')
 varmin = VarianceMinimization(dp_array, [zn65, zn62,zn63, co58, co56, ni57])
-# varmin = VarianceMinimization(dp_array, [zn65, zn62,co58, co56, ni57])
-# varmin.plot_chi_squared('stack_55_MeV', method='p0 and p1', compartments=['07'])
-varmin.plot_chi_squared('stack_30_MeV', method='p0', compartments=['14'])
-# varmin.plot_chi_squared('stack_55_MeV', method='test2', compartments=['07'])
+# varmin = VarianceMinimization(dp_array, [zn65, zn62, zn63, ni57])
+
+
+
+
+varmin.plot_chi_squared('stack_30_MeV', method='plot bc', compartments=None)
+# varmin.plot_chi_squared('stack_30_MeV', method='plot bc compartment', compartments=['13']) # 1.01
+# varmin.plot_chi_squared('stack_30_MeV', method='p0', compartments=['13']) # 1.01
+# varmin.plot_chi_squared('stack_55_MeV', method='p0', compartments=['03']) # 1.02
+# varmin.plot_chi_squared('stack_55_MeV', method='p0', compartments=['07']) # 1.02
+# varmin.plot_chi_squared('stack_55_MeV', method='p0', compartments=['06']) # 1.02
+# plt.show()
 # varmin.plot_chi_squared('stack_30_MeV', method='p0 and p1', compartments=['11'])
 # varmin.plot_chi_squared('stack_55_MeV', method='p0', compartments=['07'])
 # varmin.plot_chi_squared('stack_55_MeV', method='test3')
-# varmin.plot_chi_squared('stack_30_MeV', method='test3')
-plt.show()
+# varmin.plot_chi_squared('stack_30_MeV', method='test2')
+# plt.show()
 

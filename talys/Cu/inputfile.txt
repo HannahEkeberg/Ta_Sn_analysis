@@ -1,0 +1,4 @@
+element Cu
+mass 0
+projectile p
+energy n0-60.grid

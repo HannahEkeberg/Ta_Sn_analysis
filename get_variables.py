@@ -4,6 +4,22 @@ import numpy as np
 from scipy.constants import elementary_charge
 from flux_stack import *
 
+def eob_activity(element, isotope, stack=None):
+    root = os.getcwd() + '/generatedfiles/activity/data_isotope/'
+    filename = element + '_' + isotope + '.csv'
+    df = pd.read_csv(root + filename)
+    eob_activity = df['fit'].values
+    cov_eob_activity = df['cov'].values
+    unc_eob_activity = np.sqrt(cov_eob_activity)
+    std_eob_activity = np.where(
+            eob_activity > 0,
+            (unc_eob_activity / eob_activity)**2,
+            0.0)
+    if stack:
+        start_idx, end_idx = get_indexes_stack(stack)
+        return eob_activity[start_idx:end_idx], std_eob_activity[start_idx:end_idx]
+    else:
+        return eob_activity, std_eob_activity
 
 def eob_activity_from_files(foils, isotope):
     root = os.getcwd() + '/generatedfiles/activity/data/'
@@ -41,6 +57,7 @@ def areal_density_from_files(element, stack=None):
     return foils, areal_density, unc_areal_density
 
 def weighted_average_beam_energy(element):
+    # run when flux stack. 
     root = os.getcwd() + '/generatedfiles/fluxweightedaverageenergy/'
     if element == 'Ni':
         stack_30 = 'stack_30_MeV_Ni_weighted_average_beam_energy.csv'
@@ -66,6 +83,7 @@ def weighted_average_beam_energy(element):
     return energy, unc_left, unc_right
 
 def weighted_average_beam_current():
+    # run when plotting....
     root = os.getcwd() + '/generatedfiles/beamcurrent/'
     stack_30 = 'beam_current_stack_30_MeV.csv'
     stack_55 = 'beam_current_stack_55_MeV.csv'
@@ -74,7 +92,7 @@ def weighted_average_beam_current():
     df = pd.concat([df_55, df_30])
     beam_current = df['beam current (nA)'].values
     unc_beam_current = df['unc beam current (nA)'].values
-    #conver to protons/s:
+    #convert to protons/s:
     beam_current *= 1e-9/elementary_charge
     unc_beam_current *= 1e-9/elementary_charge
     return beam_current, unc_beam_current
@@ -90,7 +108,12 @@ def get_indexes_stack(stack):
 
 def get_wa_from_stack_files():
     stack_fluxes_30 = 'TaSn_stack_30MeV_dp_1.010%_fluxes.csv'; full_stack_30 = 'TaSn_stack_30MeV_dp_1.010%.csv'
-    stack_fluxes_55 = 'TaSn_stack_55MeV_dp_1.010%_fluxes.csv'; full_stack_55 = 'TaSn_stack_55MeV_dp_1.010%.csv'
+    stack_fluxes_55 = 'TaSn_stack_55MeV_dp_1.020%_fluxes.csv'; full_stack_55 = 'TaSn_stack_55MeV_dp_1.010%.csv'
     wa_55 = WeightedAverageFlux(stack_fluxes = stack_fluxes_55, full_stack = full_stack_55, stack = 'stack_55_MeV')
     wa_30 = WeightedAverageFlux(stack_fluxes = stack_fluxes_30, full_stack = full_stack_30, stack = 'stack_30_MeV')
     return wa_55, wa_30
+
+def update_weighted_average_beam_current():
+    pass
+def update_weighted_average_beam_energy():
+    pass

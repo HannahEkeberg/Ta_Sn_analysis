@@ -15,7 +15,7 @@ class WeightedAverageFlux:
     def __init__(self, stack_fluxes, full_stack, stack, dp=None):
         self.root = os.getcwd() + '/generatedfiles/stack/'
         self.stack_fluxes = pd.read_csv(self.root + stack_fluxes)
-        self.full_stack   = pd.read_csv(self.root + full_stack)
+        # self.full_stack   = pd.read_csv(self.root + full_stack) # Not actually used
         self.stack        = stack # 55_MeV, 30_MeV
         self.dp           = dp # Whatever var min running... 
 
@@ -61,8 +61,11 @@ class WeightedAverageFlux:
             if self.dp:
                 plt.title('Stack simulation for: ' + element + ', dp: ' + self.dp + ' - ' +self.stack)
             else:
-                plt.title('Stack simulation for: ' + element + ' - ' +self.stack)
+                stack_split_string = self.stack.split("_")
+                plt.title(element + ' - ' + stack_split_string[1] + ' ' + stack_split_string[2])
+        # generatedfiles/fluxweightedaverageenergy/stack_30_MeV_Cu_weighted_average_beam_energy.csv
         plt.legend(fontsize='xx-small')
+        plt.savefig(os.getcwd() + '/generatedfiles/fluxweightedaverageenergy/' + self.stack + '.pdf')
         plt.show()
 
     def flux_weighted_average_energy(self, energy, flux, element=None):
@@ -142,12 +145,12 @@ class WeightedAverageFlux:
         energy, flux = self.get_flux_energy_stack(element)
         mean_energy, unc_energy_left, unc_energy_right = self.flux_weighted_average_energy(energy, flux)
         flux_weighted_average_cross_section, unc_flux_weighted_average_cross_section = self.monitor_flux_weighted_average_cross_section(element, isotope)
+        """
         plt.errorbar(mean_energy, flux_weighted_average_cross_section*1e27, marker='P', color='peru',linewidth=0.0001,
             xerr=[unc_energy_left, unc_energy_right], yerr=unc_flux_weighted_average_cross_section, elinewidth=1.0, capthick=1.0, capsize=3.0,
             label=None, linestyle='none')
+        """
             # label='flux weighted average monitor cross section', linestyle='none')
-        # plt.plot(mean_energy, flux_weighted_average_cross_section*1e27, 'o')
-        # plt.legend()
         plt.title(element + isotope)
         plt.title(element + '(p,x)' + isotope)
         plt.xlabel('Energy (MeV)')
@@ -158,9 +161,6 @@ class WeightedAverageFlux:
     def monitor_flux_weighted_average_cross_section(self, element, isotope):
         mon_energy, mon_cs, mon_unc_cs, tck, sigma_tck = self.monitor_data(element, isotope)
         energy, flux = self.get_flux_energy_stack(element)
-        print('***')
-        print(len(energy))
-        print(energy)
         flux_weighted_average_cross_section = np.zeros(len(energy))
         unc_flux_weighted_average_cross_section = np.zeros(len(energy))
         interpolated_cs_list = []

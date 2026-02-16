@@ -1,0 +1,2 @@
+,filename,isotope,energy,counts,unc_counts,intensity,unc_intensity,efficiency,unc_efficiency,decays,unc_decays,decay_rate,unc_decay_rate,chi2,start_time,live_time,real_time
+11,/Users/hannah.ekeberg/PhD/Ta_Sn_analysis/spectra/Det2/GR10172025_Det2_Ni03_10cm_000.Spe,51CRg,320.0824,3663.4434526271616,336.5515842823782,0.0991,0.0001,0.0083915109881684,0.0001206330546346,4509951.876314434,425952.73655492585,70.42398307798929,6.651354412163115,1.0289103365139385,10/17/2025 18:10:29,62554.0,64040.0

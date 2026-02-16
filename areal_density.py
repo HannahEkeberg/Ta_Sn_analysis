@@ -12,15 +12,15 @@ def areal_density_squarefoils(side1, side2, thickness, weight):
     """
     side1_mean = np.mean(side1) / 10 # mm --> cm
     side2_mean = np.mean(side2) / 10 # mm --> cm
-    thickness_mean = np.mean(thickness) # mm
     weight_mean = np.mean(weight) # g
 
     side1_std = np.std(side1) / 10 # mm --> cm
     side2_std = np.std(side2) / 10 # mm --> cm
+    thickness_mean = np.mean(thickness) # mm
     thickness_std = np.std(thickness) # mm
     weight_std = np.std(weight) # g
 
-    print(side1_mean, side2_mean, weight_mean, thickness_mean*1e3)
+    # print(side1_mean, side2_mean, weight_mean, thickness_mean*1e3)
 
     areal_density_mean = weight_mean / (side1_mean * side2_mean) # g/cm^2
     areal_density_std = np.sqrt(
@@ -63,7 +63,7 @@ def assembleDataframe(listOfFoilProperties, element):
     for i in range(len(listOfFoilProperties)):
         data.append(listOfFoilProperties[i])
     df = pd.DataFrame(data, columns=['foil', 'nuclei/cm2', 'unc nuclei/cm2', 'arealdensity g/cm2', 'unc arealdensity g/cm2'])
-    df.to_csv('./generatedfiles/arealdensity/areal_density_' + element + '.csv')
+    # df.to_csv('./generatedfiles/arealdensity/areal_density_' + element + '.csv')
 
 
 def Cu01():
@@ -75,7 +75,9 @@ def Cu01():
     weight = [0.1398,0.1398,0.1397] # mg
     areal_density, unc_areal_density = areal_density_squarefoils(side1, side2, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 
 def Cu02():
@@ -87,7 +89,9 @@ def Cu02():
     weight = [0.1428,0.1427,0.1427]
     areal_density, unc_areal_density = areal_density_squarefoils(side1, side2, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 def Cu03():
     foilshape = 'square'
@@ -98,7 +102,9 @@ def Cu03():
     weight = [0.1430,0.1429,0.1429]
     areal_density, unc_areal_density = areal_density_squarefoils(side1, side2, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 def Cu04():
     foilshape = 'square'
@@ -109,7 +115,9 @@ def Cu04():
     weight = [0.1439,0.1440,0.1440]
     areal_density, unc_areal_density = areal_density_squarefoils(side1, side2, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 def Cu05():
     foilshape = 'square'
@@ -120,7 +128,9 @@ def Cu05():
     weight = [0.1432,0.1430,0.1430] 
     areal_density, unc_areal_density = areal_density_squarefoils(side1, side2, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 def Cu06():
     foilshape = 'square'
@@ -131,7 +141,9 @@ def Cu06():
     weight = [0.1396,0.1395,0.1394] 
     areal_density, unc_areal_density = areal_density_squarefoils(side1, side2, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 def Cu07():
     foilshape = 'square'
@@ -142,7 +154,9 @@ def Cu07():
     weight = [0.1438,0.1438,0.1438] 
     areal_density, unc_areal_density = areal_density_squarefoils(side1, side2, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 def Cu08():
     foilshape = 'square'
@@ -153,7 +167,9 @@ def Cu08():
     weight = [0.1407,0.1408,0.1408] 
     areal_density, unc_areal_density = areal_density_squarefoils(side1, side2, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 def Cu09():
     foilshape = 'square'
@@ -164,7 +180,9 @@ def Cu09():
     weight = [0.1390,0.1389,0.1388] 
     areal_density, unc_areal_density = areal_density_squarefoils(side1, side2, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 def Cu10():
     foilshape = 'square'
@@ -175,7 +193,9 @@ def Cu10():
     weight = [0.1430,0.1430,0.1431] 
     areal_density, unc_areal_density = areal_density_squarefoils(side1, side2, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 def Cu11():
     foilshape = 'square'
@@ -186,7 +206,9 @@ def Cu11():
     weight = [0.1375,0.1375,0.1375] 
     areal_density, unc_areal_density = areal_density_squarefoils(side1, side2, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 def Cu12():
     foilshape = 'square'
@@ -197,7 +219,9 @@ def Cu12():
     weight = [0.1388,0.1385,0.1386] 
     areal_density, unc_areal_density = areal_density_squarefoils(side1, side2, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 def Cu13():
     foilshape = 'square'
@@ -208,7 +232,9 @@ def Cu13():
     weight = [0.1369,0.1369,0.1370] 
     areal_density, unc_areal_density = areal_density_squarefoils(side1, side2, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 def Cu14():
     foilshape = 'square'
@@ -219,7 +245,9 @@ def Cu14():
     weight = [0.1376,0.1376,0.1376] 
     areal_density, unc_areal_density = areal_density_squarefoils(side1, side2, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 def Ni01():
     foilshape = 'square'
@@ -230,7 +258,9 @@ def Ni01():
     weight = [0.1447,0.1446,0.1447,0.1447] 
     areal_density, unc_areal_density = areal_density_squarefoils(side1, side2, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 def Ni02():
     foilshape = 'square'
@@ -241,7 +271,9 @@ def Ni02():
     weight = [0.1467,0.1467,0.1468,0.1468] 
     areal_density, unc_areal_density = areal_density_squarefoils(side1, side2, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 def Ni03():
     foilshape = 'square'
@@ -252,7 +284,9 @@ def Ni03():
     weight = [0.1432,0.1431,0.1432,0.1431]
     areal_density, unc_areal_density = areal_density_squarefoils(side1, side2, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 def Ni04():
     foilshape = 'square'
@@ -263,7 +297,9 @@ def Ni04():
     weight = [0.1431,0.1431,0.143,0.143]
     areal_density, unc_areal_density = areal_density_squarefoils(side1, side2, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 def Ni05():
     foilshape = 'square'
@@ -274,7 +310,9 @@ def Ni05():
     weight = [0.1447,0.1447,0.1447,0.1448]
     areal_density, unc_areal_density = areal_density_squarefoils(side1, side2, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 def Ni06():
     foilshape = 'square'
@@ -285,7 +323,9 @@ def Ni06():
     weight = [0.1416,0.1417,0.1417,0.1416]
     areal_density, unc_areal_density = areal_density_squarefoils(side1, side2, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 def Ni07():
     foilshape = 'square'
@@ -296,7 +336,9 @@ def Ni07():
     weight = [0.1428,0.1428,0.1428,0.1427]
     areal_density, unc_areal_density = areal_density_squarefoils(side1, side2, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 def Ni08():
     foilshape = 'square'
@@ -307,7 +349,9 @@ def Ni08():
     weight = [0.1461,0.1461,0.1461,0.1461]
     areal_density, unc_areal_density = areal_density_squarefoils(side1, side2, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 def Ni09():
     foilshape = 'square'
@@ -318,7 +362,9 @@ def Ni09():
     weight = [0.1423,0.1424,0.1424,0.1424]
     areal_density, unc_areal_density = areal_density_squarefoils(side1, side2, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 def Ni10():
     foilshape = 'square'
@@ -329,7 +375,9 @@ def Ni10():
     weight = [0.1453,0.1454,0.1454,0.1454]
     areal_density, unc_areal_density = areal_density_squarefoils(side1, side2, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 def Ni11():
     foilshape = 'square'
@@ -340,7 +388,9 @@ def Ni11():
     weight = [0.1445,0.1444,0.1444,0.1444]
     areal_density, unc_areal_density = areal_density_squarefoils(side1, side2, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 def Ni12():
     foilshape = 'square'
@@ -351,7 +401,9 @@ def Ni12():
     weight = [0.146,0.146,0.146,0.1461]
     areal_density, unc_areal_density = areal_density_squarefoils(side1, side2, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 def Ni13():
     foilshape = 'square'
@@ -362,7 +414,9 @@ def Ni13():
     weight = [0.1459,0.1459,0.1458,0.1458]
     areal_density, unc_areal_density = areal_density_squarefoils(side1, side2, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 def Ni14():
     foilshape = 'square'
@@ -373,7 +427,9 @@ def Ni14():
     weight = [0.1463,0.1464,0.1463,0.1463]
     areal_density, unc_areal_density = areal_density_squarefoils(side1, side2, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 def Ta01():
     foilshape = 'square'
@@ -384,7 +440,9 @@ def Ta01():
     weight = [0.1737,0.1736,0.1737]
     areal_density, unc_areal_density = areal_density_squarefoils(side1, side2, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 def Ta02():
     foilshape = 'square'
@@ -395,7 +453,9 @@ def Ta02():
     weight = [0.1741,0.1742,0.1742]
     areal_density, unc_areal_density = areal_density_squarefoils(side1, side2, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 def Ta03():
     foilshape = 'square'
@@ -406,7 +466,9 @@ def Ta03():
     weight = [0.1774,0.1773,0.1773]
     areal_density, unc_areal_density = areal_density_squarefoils(side1, side2, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 def Ta04():
     foilshape = 'square'
@@ -417,7 +479,9 @@ def Ta04():
     weight = [0.176,0.176,0.1761]
     areal_density, unc_areal_density = areal_density_squarefoils(side1, side2, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 def Ta05():
     foilshape = 'square'
@@ -428,7 +492,9 @@ def Ta05():
     weight = [0.1799,0.18,0.18]
     areal_density, unc_areal_density = areal_density_squarefoils(side1, side2, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 def Ta06():
     foilshape = 'square'
@@ -439,7 +505,9 @@ def Ta06():
     weight = [0.1777,0.1777,0.1777]
     areal_density, unc_areal_density = areal_density_squarefoils(side1, side2, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 def Ta07():
     foilshape = 'square'
@@ -450,7 +518,9 @@ def Ta07():
     weight = [0.1755,0.1754,0.1754]
     areal_density, unc_areal_density = areal_density_squarefoils(side1, side2, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 def Ta08():
     foilshape = 'square'
@@ -461,7 +531,9 @@ def Ta08():
     weight = [0.1786,0.1786,0.1786]
     areal_density, unc_areal_density = areal_density_squarefoils(side1, side2, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 def Ta09():
     foilshape = 'square'
@@ -472,7 +544,9 @@ def Ta09():
     weight = [0.1768,0.1768,0.1769]
     areal_density, unc_areal_density = areal_density_squarefoils(side1, side2, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 def Ta10():
     foilshape = 'square'
@@ -483,7 +557,9 @@ def Ta10():
     weight = [0.1706,0.1706,0.1705]
     areal_density, unc_areal_density = areal_density_squarefoils(side1, side2, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 def Ta11():
     foilshape = 'square'
@@ -494,7 +570,9 @@ def Ta11():
     weight = [0.1733,0.1732,0.1732]
     areal_density, unc_areal_density = areal_density_squarefoils(side1, side2, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 def Ta12():
     foilshape = 'square'
@@ -505,7 +583,9 @@ def Ta12():
     weight = [0.1821,0.1821,0.1821]
     areal_density, unc_areal_density = areal_density_squarefoils(side1, side2, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 def Ta13():
     foilshape = 'square'
@@ -516,7 +596,9 @@ def Ta13():
     weight = [0.1746,0.1745,0.1747]
     areal_density, unc_areal_density = areal_density_squarefoils(side1, side2, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 def Ta14():
     foilshape = 'square'
@@ -527,7 +609,9 @@ def Ta14():
     weight = [0.176,0.1761,0.176]
     areal_density, unc_areal_density = areal_density_squarefoils(side1, side2, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 
 def Sn01():
@@ -539,7 +623,9 @@ def Sn01():
     side2 = [24.92, 24.94, 24.88, 24.94]
     areal_density, unc_areal_density = areal_density_squarefoils(side1, side2, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 def Sn02():
     foilshape = 'square'
@@ -550,7 +636,9 @@ def Sn02():
     side2 = [26.04, 26.09, 26.04, 26.18]
     areal_density, unc_areal_density = areal_density_squarefoils(side1, side2, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 def Sn03():
     foilshape = 'square'
@@ -561,7 +649,9 @@ def Sn03():
     side2 = [25.30, 25.39, 25.26, 25.22]
     areal_density, unc_areal_density = areal_density_squarefoils(side1, side2, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 def Sn04():
     foilshape = 'square'
@@ -572,7 +662,9 @@ def Sn04():
     side2 = [24.98, 24.93, 24.86, 24.88]
     areal_density, unc_areal_density = areal_density_squarefoils(side1, side2, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 def Sn05():
     foilshape = 'circle'
@@ -582,7 +674,9 @@ def Sn05():
     diameter = [24.96, 24.89, 24.97, 25.00]
     areal_density, unc_areal_density = areal_density_cirlefoils(diameter, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 def Sn06():
     foilshape = 'circle'
@@ -592,7 +686,9 @@ def Sn06():
     diameter = [24.87, 24.97, 24.92, 25.02]
     areal_density, unc_areal_density = areal_density_cirlefoils(diameter, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 def Sn07():
     foilshape = 'circle'
@@ -602,7 +698,9 @@ def Sn07():
     diameter = [24.95, 25.01, 24.91, 24.99]
     areal_density, unc_areal_density = areal_density_cirlefoils(diameter, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 def Sn08():
     foilshape = 'circle'
@@ -612,7 +710,9 @@ def Sn08():
     diameter = [24.98, 24.99, 24.94, 24.90]
     areal_density, unc_areal_density = areal_density_cirlefoils(diameter, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 def Sn09():
     foilshape = 'circle'
@@ -622,7 +722,9 @@ def Sn09():
     diameter = [24.98, 24.99, 24.98, 24.98]
     areal_density, unc_areal_density = areal_density_cirlefoils(diameter, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 def Sn10():
     foilshape = 'circle'
@@ -632,7 +734,9 @@ def Sn10():
     diameter = [25.02, 25.01, 25.02, 25.00]
     areal_density, unc_areal_density = areal_density_cirlefoils(diameter, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 def Sn11():
     foilshape = 'circle'
@@ -642,7 +746,9 @@ def Sn11():
     diameter = [24.89, 25.00, 24.98, 24.93]
     areal_density, unc_areal_density = areal_density_cirlefoils(diameter, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 def Sn12():
     foilshape = 'circle'
@@ -652,7 +758,9 @@ def Sn12():
     weight = [0.039,0.0392,0.0391,0.0391]
     areal_density, unc_areal_density = areal_density_cirlefoils(diameter, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 def Sn13():
     foilshape = 'circle'
@@ -662,7 +770,9 @@ def Sn13():
     weight = [0.0361,0.036,0.0359,0.0359]
     areal_density, unc_areal_density = areal_density_cirlefoils(diameter, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 def Sn14():
     foilshape = 'circle'
@@ -672,7 +782,9 @@ def Sn14():
     weight = [0.0374,0.0374,0.0373,0.0373]
     areal_density, unc_areal_density = areal_density_cirlefoils(diameter, thickness, weight)
     numb_of_target_nuclei, unc_numb_of_target_nuclei = areal_density_to_number_of_target_nuclei(areal_density, unc_areal_density, element)
-    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density
+    thickness_mean = np.mean(thickness) # mm
+    thickness_std = np.std(thickness) # mm
+    return foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std
 
 
 
@@ -682,3 +794,22 @@ def Sn14():
 # assembleDataframe([Sn01(), Sn02(), Sn03(), Sn04(), Sn05(), Sn06(),Sn07(), Sn08(), Sn09(), Sn10(), Sn11(), Sn12(), Sn13(), Sn14()], 'Sn')
 
 # Cu01()
+
+
+# assembleDataframe([Cu01(), Cu02(), Cu03(), Cu04(), Cu05(), Cu06(),Cu07(), Cu08(), Cu09(), Cu10(), Cu11(), Cu12(), Cu13(), Cu14()], 'Cu')
+
+
+def get_table_format(func):
+    foil, numb_of_target_nuclei, unc_numb_of_target_nuclei, areal_density, unc_areal_density, thickness_mean, thickness_std = func
+    areal_density *= 1000; unc_areal_density *= 1000
+    thickness_mean *= 1000; thickness_std *= 1000
+    areal_density = '%.3f' %areal_density; unc_areal_density = '%.3f' %unc_areal_density
+    thickness = '%.1f' %thickness_mean; unc_thickness = '%.1f' %thickness_std
+    s = rf"\makecell{{{foil}}} & \makecell{{{areal_density} $\pm$ {unc_areal_density}}}  & \makecell{{{thickness} $\pm$ {unc_thickness}}}\\"
+    print(s)
+    # print(str)
+
+get_table_format(Ni14())
+get_table_format(Sn14())
+get_table_format(Ta14())
+get_table_format(Cu14())

@@ -181,13 +181,39 @@ def get_spectra(detector_folder, distance, foil, file_ending='.Spe'):
         d.setdefault(f[:2], []).append(f)
     return [v[0] if len(v) == 1 else v for _, v in sorted(d.items())]
 
-def split_peak_data_into_isotope_files(foil):
+def split_peak_data_into_isotope_files(foil, isotope=None):
+    path_to_data = pathToPeakData + '/data/'
+    files = [f for f in os.listdir(path_to_data) if foil in f]
+    dfs = []
+    for f in files:
+        df = pd.read_csv(path_to_data + f)
+        dfs.append(df)
+    total_df = pd.concat(dfs, ignore_index=True)
+    isotopes = total_df["isotope"].dropna().unique()
+    path = os.getcwd() + '/generatedfiles/peakdata/data_isotope/'
+    if isotope:
+        df_filtered = total_df[total_df['isotope'].eq(isotope)]
+        str = foil + '_' + isotope + '_gammas.csv'
+        df_filtered.to_csv(path + str)
+    else:
+        for i in isotopes:
+            df_filtered = total_df[total_df['isotope'].eq(i)]
+            path = os.getcwd() + '/generatedfiles/peakdata/data_isotope/'
+            str = foil + '_' + i + '_gammas.csv'
+            df_filtered.to_csv(path + str)
 
-    pass
 
-# split_peak_data_into_isotope_files('generatedfiles/peakdata/data/EL09262025_Cu01_10cm_IDM_peak_data.csv')
-# ansp = AnalyzeSpectrum(detector='LEPS', calibrationFile='calibration_leps_20.json')
-# ansp.analyze('BR09242025_Sn06_30cm_LEPS.Spe', getListOfIsotopesPerFoil('Sn06'))
-# ansp.analyze('BR09242025_Sn06_30cm_LEPS.Spe', ['119SB'])
-
-# print(getListOfIsotopesPerFoil('Sn06'))
+# split_peak_data_into_isotope_files('Sn01')
+# split_peak_data_into_isotope_files('Cu12', '65ZNg')
+# split_peak_data_into_isotope_files('Sn03')
+# split_peak_data_into_isotope_files('Sn04')
+# split_peak_data_into_isotope_files('Sn05')
+# split_peak_data_into_isotope_files('Sn06')
+# split_peak_data_into_isotope_files('Sn07')
+# split_peak_data_into_isotope_files('Sn08')
+# split_peak_data_into_isotope_files('Sn09')
+# split_peak_data_into_isotope_files('Sn10')
+# split_peak_data_into_isotope_files('Sn11')
+# split_peak_data_into_isotope_files('Sn12')
+# split_peak_data_into_isotope_files('Sn13')
+# split_peak_data_into_isotope_files('Sn14')

@@ -19,17 +19,12 @@ class CrossSection:
 
     def cross_section(self, element, isotope):
         foils, areal_density, unc_areal_density = areal_density_from_files(element)
-        eob_activities, cov_eob_activities = eob_activity_from_files(foils, isotope)
-        unc_eob_activity = np.sqrt(cov_eob_activities)
+        eob_activitiy, std_eob_activity = eob_activity(element, isotope)
         beam_current, unc_beam_current = weighted_average_beam_current()
         energy, unc_left, unc_right = weighted_average_beam_energy(element)
         decay_constant = ci.Isotope(isotope).decay_const()
         irradiation_time = 3600; unc_irradiation_time = 1  # s
-        std_eob_activity = np.where(
-            eob_activities > 0,
-            (unc_eob_activity / eob_activities)**2,
-            0.0)
-        cross_section = eob_activities / (np.array(areal_density) * (1- np.exp (-decay_constant * irradiation_time))  * beam_current)
+        cross_section = eob_activitiy / (np.array(areal_density) * (1- np.exp (-decay_constant * irradiation_time))  * beam_current)
         unc_cross_section = cross_section * np.sqrt(
             std_eob_activity
             + (unc_areal_density/areal_density)**2 
@@ -38,6 +33,17 @@ class CrossSection:
         )
         mask = cross_section>0
         return energy[mask], unc_left[mask], unc_right[mask], cross_section[mask]*1e27, unc_cross_section[mask]*1e27
+    
+    def cross_section_subtract(self, element, isotope_parent, isotope_daughter, branching_ratio):
+        idx_energy = 0; idx_unc_left=1; idx_unc_right=2; idx_cs = 3; idx_unc_cs = 4; 
+        daugher_cumulative = self.cross_section(element, isotope_daughter)
+        parent_independent = self.cross_section(element, isotope_parent)
+        energy = daugher_cumulative[idx_energy]
+        unc_left = daugher_cumulative[idx_unc_left]; unc_right = daugher_cumulative[idx_unc_right]
+        daughter_independent = daugher_cumulative[idx_cs] - parent_independent[idx_cs]*branching_ratio
+        unc_daughter_independent = daugher_cumulative[idx_unc_cs] - parent_independent[idx_unc_cs]*branching_ratio
+        mask = daughter_independent>0
+        return energy[mask], unc_left[mask], unc_right[mask], daughter_independent[mask], unc_daughter_independent[mask]*1e27
          
     def substract_cross_section(self, element, isotope_product, isotope_feeder, branching_ratio):
         #energy, unc_left, unc_right, cross_section, unc_cross_section
@@ -49,7 +55,6 @@ class CrossSection:
         return 
         pass
 
-
     def monitor_cross_section(self,element,isotope):
         wa_55, wa_30 = get_wa_from_stack_files()
         wa_55.plot_monitor_reaction(element, isotope, label='IAEA recommended data')
@@ -60,3 +65,6 @@ class CrossSection:
         plt.errorbar(energy, cross_section, marker='P', color='darkred',linewidth=0.0001,
         xerr=[unc_left, unc_right], yerr=unc_cross_section, elinewidth=1.0, capthick=1.0, capsize=3.0,
         label='flux weighted average cross section', linestyle='none')
+
+    # def plot_subtracted(self, element, isotope_parent, isotope_daughter, branching_ratio):
+        # energy[mask], unc_left[mask], unc_right[mask], daughter_independent[mask], unc_daughter_independent[mask]*1e27
