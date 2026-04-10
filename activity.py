@@ -6,7 +6,7 @@ import pandas as pd
 from datetime import datetime
 from scipy import interpolate
 from scipy.optimize import curve_fit
-from analyze_spectra import *
+# from analyze_spectra import *
 
 
 import sys
@@ -26,8 +26,8 @@ class Acitivity:
         self.eob_stack30 = '09/23/2025 18:40:00'
         # self.eob_stack55 = '09/24/2025 14:43:00'
         self.eob_stack55 = '09/24/2025 15:45:00'
-        self.R_stack30 = [1.0, 1]
-        self.R_stack55 = [1.0, 1]
+        self.R_stack30 = [[1.0, 1]]
+        self.R_stack55 = [[1.0, 1]]
 
     def getA0_single_isotope(self, isotope, foil, listOfPeakDataSummaries=None, guess=3.7e5, units = 'h', fitByA=True, plot=True, overwriteData=False, saveDecayChain=False):
         if listOfPeakDataSummaries==None:
@@ -37,7 +37,6 @@ class Acitivity:
         filter_peak_data = peak_data[peak_data['isotope'].astype(str).str.contains(isotope, case=False, na=False)]
         # print(filter_peak_data)
         self.decayrate_to_activity(filter_peak_data, eob)
-
         if fitByA:
             # print(peak_data)
             isotopes, fit, cov = self.fitByA(eob, peak_data, isotope, guess, units, plot)
@@ -51,6 +50,7 @@ class Acitivity:
 
     def getA0(self, element, isotope, plot_=False, compartment=None):
         foils = self.foils(element)
+        # print(foils)
         eob_activity_list = []
         # generatedfiles/peakdata/data_isotope/Cu01_63ZNg_gammas.csv
         # generatedfiles/peakdata/data_isotope/Cu05_63ZN_gammas.csv
@@ -66,6 +66,7 @@ class Acitivity:
                 peak_data = pathToPeakFiles_isotope + str
             try:
                 df = pd.read_csv(peak_data, comment="#")
+                # print(peak_data)
                 if compartment and compartment in foil and not plot_:
                     e = df['energy'].values; counts = df['counts'].values; unc_counts = df['unc_counts'].values; file = df['filename'].values
                     for i in range(len(e)):
@@ -133,13 +134,19 @@ class Acitivity:
         return isotopes, fit, cov
     
     def fitByA(self, eob, peak_data, isotope, production_rate=1e6, units='h', plot=False):
+        # production_rate=[[1,3600]]
         dc = ci.DecayChain(parent_isotope=isotope, A0=production_rate, units=units)
+        # dc = ci.DecayChain(parent_isotope=isotope, R=production_rate, units=units)
         dc.get_counts(spectra='', EoB=eob, peak_data=peak_data)
         isotopes, fit, cov = dc.fit_A0()
+        # isotopes, fit, cov = 
+        # dc.fit_R()
+        # A0 = dc.activity(isotope, time=0)
         A0 = dc.activity(isotope, time=0)
         if plot:
             dc.plot()
         return isotopes, fit, cov
+        # return 0,0,0
 
     def eob_activity_dataframe(self, foil, isotopes, fit, cov, saveDecayChain=False):
         data = []
@@ -186,15 +193,17 @@ class Acitivity:
         if data == None:
             data = self.extractActivityManually(foil)
         data_isotope = data[data['isotope'].str.contains(isotope)]
-        # print(data_isotope)
-        # A = data_isotope['A (Bq)'].values; dA = data_isotope['dA (Bq)'].values; delay_time = data_isotope['delay time (s)'].values
+        print(data_isotope)
+        A = data_isotope['A (Bq)'].values; dA = data_isotope['dA (Bq)'].values; delay_time = data_isotope['delay time (s)'].values
+        for i in range(len(A)):
+            print(A[i], delay_time[i]/3600, delay_time[i])
         # popt, pcov = curve_fit(self.singleDecayCurve, delay_time, A, p0=1e6, sigma=dA, absolute_sigma=True)
         # time = np.max(delay_time)/3600 # hours
         # xplot = np.linspace(0,time,1000)
         # A0_estimated = self.singleDecayCurve(0, popt)
         # sigma_activity_estimated = np.sqrt(np.diagonal(pcov))   #Uncertainty in the fitting parameters# print(A_est)
         # plt.plot(xplot,self.singleDecayCurve(xplot*3600,*popt), color='tan', linewidth=0.9, label='fit')
-        # plt.errorbar(delay_time/3600, A, color='darkolivegreen', linewidth=0.001,yerr=dA, elinewidth=0.5, ecolor='k', capthick=0.5,marker='*', label='activity')   # cap thickness for error bar color='blue')
+        plt.errorbar(delay_time/3600, A, color='darkolivegreen', linewidth=0.001,yerr=dA, elinewidth=0.5, ecolor='k', capthick=0.5,marker='*', label='activity')   # cap thickness for error bar color='blue')
         # plt.errorbar(0, A0_estimated, color='darkblue', linewidth=0.001,yerr=sigma_activity_estimated, elinewidth=0.5, ecolor='k', capthick=0.5,marker='+', label='eob activity: %.2f MBq' %(A0_estimated*1e-6 ))   # cap thickness for error bar color='blue')
         # plt.xlabel('Time since eob (h)')
         # plt.ylabel('Activity (Bq)')
@@ -277,7 +286,8 @@ class Acitivity:
         for i, foil in enumerate(foils):
             for filename in os.listdir(root):
                 if foil in filename and 'all_isotopes' in filename:
-                    df = pd.read_csv(root + filename)
+                    # df = pd.read_csv(peak_data, comment="#")
+                    df = pd.read_csv(root + filename, comment='#')
                     df_isotope = df[df['isotope'].astype(str).str.contains(isotope, case=False, na=False)]
                     if df_isotope.empty:
                         eob_activity[i] = 0.0; cov_eob_activity[i]=0.0
@@ -298,8 +308,9 @@ class Acitivity:
 
 # Acitivity().getA0_single_isotope(isotope='65ZN', foil='Cu12', plot=True)
 # Acitivity().getA0_single_isotope(isotope='65ZN', foil='Cu13', plot=True)
-# Acitivity().getA0_single_isotope(isotope='65ZN', foil='Cu14', plot=True)
-# Acitivity().plotActivityManually('57NI', 'Ni01')
+# Acitivity().getA0_single_isotope(isotope='180TA', foil='Ta01', plot=True)
+# Acitivity().plotActivityManually('180TA', 'Ta01')
+# Acitivity().plotActivityManually('61CU', 'Ni07')
 # Acitivity().getA0('Cu', '63ZN')
 
 

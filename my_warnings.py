@@ -15,3 +15,10 @@ warnings.filterwarnings(
     message="divide by zero encountered in divide",
     category=RuntimeWarning
 )
+
+warnings.filterwarnings(
+    "ignore",
+    # message="invalid escape sequence '\h'",
+    category=SyntaxWarning
+)
+# SyntaxWarning: invalid escape sequence '\h'7

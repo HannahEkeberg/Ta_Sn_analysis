@@ -40,13 +40,14 @@ class BeamCurrent:
 
     def beam_current(self, element, isotope):
         foils, areal_density, unc_areal_density = areal_density_from_files(element, self.stack)
-        eob_activitiy, std_eob_activity = eob_activity(element, isotope, self.stack)
+        eob_activitiy, std_eob_activity = eob_activity_manually(element, isotope, independent=None, stack=self.stack)
+        # eob_activitiy, std_eob_activity = eob_activity_curie(element, isotope, self.stack)
         energy, flux = self.wa.get_flux_energy_stack(element)
         flux_weighted_average_energy, unc_energy_left, unc_energy_right = self.wa.flux_weighted_average_energy(energy, flux)
         flux_weighted_average_cross_section, unc_flux_weighted_average_cross_section = self.wa.monitor_flux_weighted_average_cross_section(element, isotope)
         decay_constant = ci.Isotope(isotope).decay_const()
         irradiation_time = 3600; unc_irradiation_time = 1  # s
-        # print(eob_activitiy.shape, areal_density.shape, flux_weighted_average_cross_section.shape)
+        print(eob_activitiy.shape, areal_density.shape, flux_weighted_average_cross_section.shape)
         protons_per_second = eob_activitiy / (np.array(areal_density) * (1- np.exp (-decay_constant * irradiation_time))  * flux_weighted_average_cross_section)
         unc_protons_per_second = protons_per_second * np.sqrt(
               std_eob_activity
@@ -76,8 +77,11 @@ class BeamCurrent:
             label = element + ' ' + isotope + ' %.1f' %beam_current[indices][0]
         # if beam_current[indices]>0
         if remove_zeros:
-            indices = beam_current[indices] >0
-        plt.errorbar(flux_weighted_average_energy[indices], beam_current[indices], color=color, marker='.', ls = '',linewidth=0.001, xerr=[unc_energy_left[indices], unc_energy_right[indices]], yerr=np.abs(unc_beam_current[indices]), elinewidth=0.5, capthick=0.5, capsize=3.0,label=label)
+            indices = beam_current[indices] > 0
+        try:
+            plt.errorbar(flux_weighted_average_energy[indices], beam_current[indices], color=color, marker='.', ls = '',linewidth=0.001, xerr=[unc_energy_left[indices], unc_energy_right[indices]], yerr=np.abs(unc_beam_current[indices]), elinewidth=0.5, capthick=0.5, capsize=3.0,label=label)
+        except:
+            print("not plotting bc for " + element +'_'+ isotope)
         plt.xlabel('Energy MeV')
         plt.ylabel('Beam current nA')
 
@@ -92,7 +96,6 @@ class BeamCurrent:
             return [int(c) - 1 for c in compartments]
         else:
             return None
-
 
     def reactions(self):
         return [
@@ -216,7 +219,7 @@ class BeamCurrent:
             'unc beam current (%)': percentage_dI_average
         })
 
-        df.to_csv(save_beam_current_to + 'beam_current_' + self.stack + '.csv')
+        # df.to_csv(save_beam_current_to + 'beam_current_' + self.stack + '.csv')
         return I_average, dI_average
 
 

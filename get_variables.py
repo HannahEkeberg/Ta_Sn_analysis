@@ -4,9 +4,55 @@ import numpy as np
 from scipy.constants import elementary_charge
 from flux_stack import *
 
-def eob_activity(element, isotope, stack=None):
+def cross_sections(element, isotope, independent):
+    root = os.getcwd() + '/generatedfiles/crossections/data_manual/'
+    if independent:
+        filename = filename = element + '_' + isotope + '_ind.csv'
+    elif independent==False:
+        filename = filename = element + '_' + isotope + '_cum.csv'
+    else:
+        filename = filename = element + '_' + isotope + '.csv'
+    df = pd.read_csv(root + filename, comment='#')
+    cross_sections = df['cross_section'].values
+    unc_cross_sections = df['unc_cross_section'].values
+    energy = df['energy'].values
+    unc_left = df['unc_left'].values
+    unc_right = df['unc_right'].values
+    return energy, unc_left, unc_right, cross_sections, unc_cross_sections
+
+def eob_activity_manually(element, isotope, independent, stack=None):
+    root = os.getcwd() + '/generatedfiles/activity/data_isotope2/'
+    if independent==True:
+        filename = element + '_' + isotope + '_ind.csv'
+    elif independent==False:
+        filename = element + '_' + isotope + '_cum.csv'
+    else:
+        filename = element + '_' + isotope + '.csv'
+    print(filename)
+    df = pd.read_csv(root + filename)
+    # print(df)
+    eob_activity = df['fit'].values
+    cov_eob_activity = df['cov'].values
+    unc_eob_activity = np.sqrt(cov_eob_activity)
+    std_eob_activity = np.where(
+            eob_activity > 0,
+            (unc_eob_activity / eob_activity)**2,
+            0.0)
+    print(stack)
+    if stack:
+        start_idx, end_idx = get_indexes_stack(stack)
+        return eob_activity[start_idx:end_idx], std_eob_activity[start_idx:end_idx]
+    else:
+        return eob_activity, std_eob_activity
+
+def eob_activity_curie(element, isotope, stack=None, independent=None):
     root = os.getcwd() + '/generatedfiles/activity/data_isotope/'
-    filename = element + '_' + isotope + '.csv'
+    if independent==True:
+        filename = element + '_' + isotope + '_ind.csv'
+    elif independent==False:
+        filename = element + '_' + isotope + '_cum.csv'
+    else:
+        filename = element + '_' + isotope + '.csv'
     df = pd.read_csv(root + filename)
     eob_activity = df['fit'].values
     cov_eob_activity = df['cov'].values
@@ -92,6 +138,7 @@ def weighted_average_beam_current():
     df = pd.concat([df_55, df_30])
     beam_current = df['beam current (nA)'].values
     unc_beam_current = df['unc beam current (nA)'].values
+    print(beam_current)
     #convert to protons/s:
     beam_current *= 1e-9/elementary_charge
     unc_beam_current *= 1e-9/elementary_charge
@@ -103,6 +150,7 @@ def get_indexes_stack(stack):
     elif stack == 'stack_30_MeV':
         start_idx = 7; end_idx = 14
     else:
+        print(stack)
         raise Exception('Not a valid stack: ' + stack + '. Must be stack_30_MeV or stack_55_MeV')
     return start_idx, end_idx
 
@@ -117,3 +165,6 @@ def update_weighted_average_beam_current():
     pass
 def update_weighted_average_beam_energy():
     pass
+
+# i, di = weighted_average_beam_current()
+# print(i)

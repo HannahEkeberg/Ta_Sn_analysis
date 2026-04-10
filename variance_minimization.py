@@ -145,7 +145,8 @@ class VarianceMinimization:
     def get_data_cross_section(self, element, isotope, stack, wa, bc, compartments, plot=False):
         foils, areal_density, unc_areal_density = areal_density_from_files(element, stack)
         indices = self.get_compartment_indices(foils, compartments) if compartments else slice(None)
-        eob_activities, cov_eob_activities = eob_activity_from_files(foils, isotope)
+        # eob_activities, cov_eob_activities = eob_activity_from_files(foils, isotope)
+        eob_activities, cov_eob_activities = eob_activity_manually(foils, isotope)
         energy, flux = wa.get_flux_energy_stack(element)
         flux_weighted_average_energy, unc_energy_left, unc_energy_right = wa.flux_weighted_average_energy(energy, flux)
         flux_weighted_average_cross_section, unc_flux_weighted_average_cross_section = wa.monitor_flux_weighted_average_cross_section(element, isotope)
@@ -317,12 +318,15 @@ class VarianceMinimization:
         chi2s = []; red_chi2s = []; energies = []; chi2s_2=[]; red_chi2s_2=[]
         for dp in self.dp_array:
             print("dp: "+ str(dp))
+            dp_str = '%.2f' %dp
             full_stack, flux_stack = self.get_files(dp, stack)
             wa = WeightedAverageFlux(flux_stack, full_stack, stack)
             bc = BeamCurrent(wa, stack, self.monitor_reactions)
             if method == 'plot bc':
-                bc.plot_all(dp)
-                plt.legend()
+                bc.plot_all(dp_str)
+                # plt.legend(loc='upper right')
+                plt.ylim(0,250)
+                plt.savefig(os.getcwd() + '/generatedfiles/varianceminimization/beam_current_figs/' + stack + '_' + str(dp_str) +'.pdf')
                 plt.show()
             if method == 'p0' or method == 'p1':
                 energy, chi2, red_chi2 = self.get_chi2_values(stack, wa, bc, compartments, method)
@@ -383,15 +387,18 @@ class VarianceMinimization:
 
 zn65 = ('Cu', '65ZN'); zn63 = ('Cu', '63ZN'); zn62 = ('Cu', '62ZN')
 co58 = ('Cu', '58CO'); co56 = ('Cu', '56CO'); ni57 = ('Ni', '57NI')
-varmin = VarianceMinimization(dp_array, [zn65, zn62,zn63, co58, co56, ni57])
+varmin_30 = VarianceMinimization(dp_array, [zn65, zn62,zn63, ni57])
+# varmin50 = VarianceMinimization(dp_array, [zn65, zn62,zn63, co58, co56, ni57])
+varmin50 = VarianceMinimization(dp_array, [zn65, zn62,zn63, co58, ni57])
 # varmin = VarianceMinimization(dp_array, [zn65, zn62, zn63, ni57])
 
 
 
 
-varmin.plot_chi_squared('stack_30_MeV', method='plot bc', compartments=None)
+# varmin_30.plot_chi_squared('stack_30_MeV', method='plot bc', compartments=None)
+# varmin50.plot_chi_squared('stack_55_MeV', method='plot bc', compartments=None)
 # varmin.plot_chi_squared('stack_30_MeV', method='plot bc compartment', compartments=['13']) # 1.01
-# varmin.plot_chi_squared('stack_30_MeV', method='p0', compartments=['13']) # 1.01
+# varmin.plot_chi_squared('stack_30_MeV', method='p0', compartments=['11']) # 1.01
 # varmin.plot_chi_squared('stack_55_MeV', method='p0', compartments=['03']) # 1.02
 # varmin.plot_chi_squared('stack_55_MeV', method='p0', compartments=['07']) # 1.02
 # varmin.plot_chi_squared('stack_55_MeV', method='p0', compartments=['06']) # 1.02
