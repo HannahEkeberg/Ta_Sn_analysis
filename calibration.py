@@ -43,6 +43,13 @@ class Calibration:
         letters = ''.join(ch for ch in name if ch.isalpha())
         return letters.capitalize() + digits
 
+    def Ba133_uio(self):
+        return {'isotope':'133BA', 'A0':4.08480e4, 'ref_date':'01/11/2011 12:00:00'} # todo fix, from uio
+
+    def Co60_uio(self):
+        return {'isotope':'60CO', 'A0':3.3859E4, 'ref_date':'03/01/2019 12:00:00'} # todo fix, from uio
+
+
     def Ba133(self):
         return {'isotope':'133BA', 'A0':3.3859E4, 'ref_date':'03/01/2019 12:00:00'}
     

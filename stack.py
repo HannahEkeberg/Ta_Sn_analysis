@@ -155,16 +155,20 @@ def stack(stack, E_p, dp=1):
 # stack_55.saveas(save_stack_dir + 'TaSn_stack_55MeV_-25%.csv')
 # stack_30.saveas(save_stack_dir + 'TaSn_stack_30MeV_-5%.csv')
 # stack_30.saveas(save_stack_dir + 'TaSn_stack_30MeV_-25%.csv')
-dp_array = np.arange(0.95, 1.11, 0.01) # run this later with 0.01....
-# dp_array = np.arange(0.90, 0.91, 0.01)
-print(dp_array)
+# dp_array = np.arange(0.95, 1.11, 0.01) # run this later with 0.01....
+
+# dp_array = np.arange(0.990, 1.030, 0.001)
+# # dp_array = np.arange(0.90, 0.91, 0.01)
+# print(dp_array)
 index=0
 
-"""
+dp_array = np.arange(0.990, 1.030, 0.001)
 for dp in dp_array:
     index += 1
     print('__________________________________________')
     print(f'Running stack calculation for dp = {dp:.3f}')
+    # percentage = f'{dp:.3f}'
+    # print('TaSn_stack_30MeV_dp_' + percentage + '%.csv')
 
     st_30 = stack(stack_30MeV, 30, dp)
     st_55 = stack(stack_55MeV, 55, dp)
@@ -186,5 +190,4 @@ for dp in dp_array:
     percent_done = index/len(dp_array)*100
     print(f'{percent_done:.3f}% of the calculation is done')
     print('__________________________________________\n')
-"""
 

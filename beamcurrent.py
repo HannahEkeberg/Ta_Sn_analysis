@@ -14,7 +14,6 @@ sys.path.append('/opt/homebrew/lib/python3.13/site-packages')
 from nuclearanalysistools.Tendl import *
 from nuclearanalysistools.tools import *
 
-
 save_beam_current_to = './generatedfiles/beamcurrent/'
 
 class BeamCurrent:
@@ -45,22 +44,26 @@ class BeamCurrent:
         energy, flux = self.wa.get_flux_energy_stack(element)
         flux_weighted_average_energy, unc_energy_left, unc_energy_right = self.wa.flux_weighted_average_energy(energy, flux)
         flux_weighted_average_cross_section, unc_flux_weighted_average_cross_section = self.wa.monitor_flux_weighted_average_cross_section(element, isotope)
-        decay_constant = ci.Isotope(isotope).decay_const()
-        irradiation_time = 3600; unc_irradiation_time = 1  # s
-        print(eob_activitiy.shape, areal_density.shape, flux_weighted_average_cross_section.shape)
+        decay_constant, unc_decay_constant = ci.Isotope(isotope).decay_const(unc=True)
+        # irradiation_time = 3600; unc_irradiation_time = 1  # s
+        irradiation_time, unc_irradiation_time = get_irradiation_time(self.stack)
+        # print(eob_activitiy.shape, areal_density.shape, flux_weighted_average_cross_section.shape)
         protons_per_second = eob_activitiy / (np.array(areal_density) * (1- np.exp (-decay_constant * irradiation_time))  * flux_weighted_average_cross_section)
         unc_protons_per_second = protons_per_second * np.sqrt(
-              std_eob_activity
+              std_eob_activity*1e-6
             + (unc_areal_density/areal_density)**2 
             + (unc_irradiation_time/irradiation_time)**2 
+            + (unc_decay_constant/decay_constant)**2 
             + (unc_flux_weighted_average_cross_section/flux_weighted_average_cross_section)**2)
         protons_per_second = np.nan_to_num(protons_per_second, nan=0.0, posinf=0.0, neginf=0.0); unc_protons_per_second = np.nan_to_num(unc_protons_per_second, nan=0.0, posinf=0.0, neginf=0.0)
         beam_current = protons_per_second * elementary_charge * 1e9 # nano ampere
         unc_beam_current = unc_protons_per_second * elementary_charge * 1e9
         data = []
-        # for i in range(len(beam_current)):
-            # data.append([foils[i], beam_current[i], unc_beam_current[i], protons_per_second[i], unc_protons_per_second[i], eob_activity[i]*1e-6, areal_density[i], flux_weighted_average_energy[i], [flux_weighted_average_cross_section[i]*1e27]])
-        # df = pd.DataFrame(data, columns=['foil', 'beam current (nA)', 'unc beam current (nA)', 'protons/s',' unc protons/s', 'eob activity (MBq)', 'areal density (nuclei/cm2)', 'flux weighted average energy (MeV)', 'flux weighted average cross section (mb)'])
+        for i in range(len(beam_current)):
+            data.append([foils[i], beam_current[i], unc_beam_current[i], protons_per_second[i], unc_protons_per_second[i], eob_activitiy[i]*1e-6, areal_density[i], flux_weighted_average_energy[i], [flux_weighted_average_cross_section[i]*1e27]])
+        print(element, isotope)
+        df = pd.DataFrame(data, columns=['foil', 'beam current (nA)', 'unc beam current (nA)', 'protons/s',' unc protons/s', 'eob activity (MBq)', 'areal density (nuclei/cm2)', 'flux weighted average energy (MeV)', 'flux weighted average cross section (mb)'])
+        print(df)
         # df.to_csv(save_beam_current_to + 'beam_current_' + element +  '_' + isotope + '.csv')
         return flux_weighted_average_energy, unc_energy_left, unc_energy_right, beam_current, unc_beam_current, protons_per_second, unc_protons_per_second
 
@@ -148,18 +151,30 @@ class BeamCurrent:
         reactions=self.monitor_reactions
         for i in range(len(reactions)):
             reaction = reactions[i]; element = reaction[0]; isotope = reaction[1]
-            if isotope=='62ZN': 
-                self.plot_beam_current_isotope('Cu', '62ZN', color=colors[2], label=r'$^{62}$Zn')
-            if isotope=='65ZN': 
-                self.plot_beam_current_isotope('Cu', '65ZN', color=colors[1], label=r'$^{65}$Zn')
-            if isotope=='63ZN': 
-                self.plot_beam_current_isotope('Cu', '63ZN', color=colors[0], label=r'$^{63}$Zn')
-            if isotope=='58CO': 
-                self.plot_beam_current_isotope('Cu', '58CO', color=colors[3], label=r'$^{58}$Co')
-            if isotope=='56CO': 
-                self.plot_beam_current_isotope('Cu', '56CO', color=colors[4], label=r'$^{56}$Co')
-            if isotope=='57NI': 
-                self.plot_beam_current_isotope('Ni', '57NI', color=colors[5], label=r'$^{57}$Ni')
+            if element=='Cu' and isotope=='62ZN': 
+                self.plot_beam_current_isotope('Cu', '62ZN', color=colors[2], label=r'Cu(p,x)$^{62}$Zn')
+            if element=='Cu' and isotope=='65ZN': 
+                self.plot_beam_current_isotope('Cu', '65ZN', color=colors[1], label=r'Cu(p,x)$^{65}$Zn')
+            if element=='Cu' and isotope=='63ZN': 
+                self.plot_beam_current_isotope('Cu', '63ZN', color=colors[0], label=r'Cu(p,x)$^{63}$Zn')
+            if element=='Cu' and isotope=='61CU': 
+                self.plot_beam_current_isotope('Cu', '61CU', color=colors[6], label=r'Cu(p,x)$^{61}$Cu')
+            if element=='Cu' and isotope=='58CO': 
+                self.plot_beam_current_isotope('Cu', '58CO', color=colors[3], label=r'Cu(p,x)$^{58}$Co')
+            if element=='Cu' and isotope=='56CO': 
+                self.plot_beam_current_isotope('Cu', '56CO', color=colors[4], label=r'Cu(p,x)$^{56}$Co')
+            if element=='Ni' and isotope=='57NI': 
+                self.plot_beam_current_isotope('Ni', '57NI', color=colors[5], label=r'Ni(p,x)$^{57}$Ni')
+            if element=='Ni' and isotope=='56NI': 
+                self.plot_beam_current_isotope('Ni', '56NI', color=colors[7], label=r'Ni(p,x)$^{56}$Ni')
+            if element=='Ni' and isotope=='55CO': 
+                self.plot_beam_current_isotope('Ni', '55CO', color=colors[8], label=r'Ni(p,x)$^{55}$Co')
+            if element=='Ni' and isotope=='56CO': 
+                self.plot_beam_current_isotope('Ni', '56CO', color=colors[9], label=r'Ni(p,x)$^{56}$Co')
+            if element=='Ni' and isotope=='57CO': 
+                self.plot_beam_current_isotope('Ni', '57CO', color=colors[12], label=r'Ni(p,x)$^{57}$Co')
+            if element=='Ni' and isotope=='58CO': 
+                self.plot_beam_current_isotope('Ni', '58CO', color=colors[11], label=r'Ni(p,x)$^{58}$Co')
         wa_energy, wa_beamcurrent, wa_protons_per_second, wa_unc_protons_per_second = self.average_beam_current(reactions)
         weighted_bc, unc_weighted_bc = self.get_average_and_unc()
         plt.errorbar(wa_energy, weighted_bc, color='darkblue', marker='^', linewidth=0.001, yerr=np.abs(unc_weighted_bc), ls='', elinewidth=0.5, capthick=0.5, capsize=5.0, markersize=5,label='weighted average')
@@ -187,23 +202,58 @@ class BeamCurrent:
         i_bc = 3; i_unc_bc = 4
         for i in range(len(reactions)):
             reaction = reactions[i]; element = reaction[0]; isotope = reaction[1]
-            if isotope=='62ZN':
+            # if isotope=='62ZN':
+            # if isotope=='65ZN': 
+            #     variable = self.beam_current(element='Cu', isotope='65ZN')
+            #     I.append(variable[i_bc]); dI.append(variable[i_unc_bc])
+            # if isotope=='63ZN': 
+            #     variable = self.beam_current(element='Cu', isotope='63ZN')
+            #     I.append(variable[i_bc]); dI.append(variable[i_unc_bc])
+            # if isotope=='58CO': 
+            #     variable = self.beam_current(element='Cu', isotope='58CO')
+            #     I.append(variable[i_bc]); dI.append(variable[i_unc_bc])
+            # if isotope=='56CO': 
+            #     variable = self.beam_current(element='Cu', isotope='56CO')
+            #     I.append(variable[i_bc]); dI.append(variable[i_unc_bc])
+            # if isotope=='57NI': 
+            #     variable = self.beam_current(element='Ni', isotope='57NI')
+            #     I.append(variable[i_bc]); dI.append(variable[i_unc_bc])
+
+            if element=='Cu' and isotope=='62ZN': 
                 variable = self.beam_current(element='Cu', isotope='62ZN')
                 I.append(variable[i_bc]); dI.append(variable[i_unc_bc])
-            if isotope=='65ZN': 
+            if element=='Cu' and isotope=='65ZN': 
                 variable = self.beam_current(element='Cu', isotope='65ZN')
                 I.append(variable[i_bc]); dI.append(variable[i_unc_bc])
-            if isotope=='63ZN': 
+            if element=='Cu' and isotope=='63ZN': 
                 variable = self.beam_current(element='Cu', isotope='63ZN')
                 I.append(variable[i_bc]); dI.append(variable[i_unc_bc])
-            if isotope=='58CO': 
+            if element=='Cu' and isotope=='61CU': 
+                variable = self.beam_current(element='Cu', isotope='61CU')
+                I.append(variable[i_bc]); dI.append(variable[i_unc_bc])
+            if element=='Cu' and isotope=='58CO': 
                 variable = self.beam_current(element='Cu', isotope='58CO')
                 I.append(variable[i_bc]); dI.append(variable[i_unc_bc])
-            if isotope=='56CO': 
+            if element=='Cu' and isotope=='56CO': 
                 variable = self.beam_current(element='Cu', isotope='56CO')
                 I.append(variable[i_bc]); dI.append(variable[i_unc_bc])
-            if isotope=='57NI': 
+            if element=='Ni' and isotope=='57NI': 
                 variable = self.beam_current(element='Ni', isotope='57NI')
+                I.append(variable[i_bc]); dI.append(variable[i_unc_bc])
+            if element=='Ni' and isotope=='56NI': 
+                variable = self.beam_current(element='Ni', isotope='56NI')
+                I.append(variable[i_bc]); dI.append(variable[i_unc_bc])
+            if element=='Ni' and isotope=='55CO': 
+                variable = self.beam_current(element='Ni', isotope='55CO')
+                I.append(variable[i_bc]); dI.append(variable[i_unc_bc])
+            if element=='Ni' and isotope=='56CO': 
+                variable = self.beam_current(element='Ni', isotope='56CO')
+                I.append(variable[i_bc]); dI.append(variable[i_unc_bc])
+            if element=='Ni' and isotope=='57CO': 
+                variable = self.beam_current(element='Ni', isotope='57CO')
+                I.append(variable[i_bc]); dI.append(variable[i_unc_bc])
+            if element=='Ni' and isotope=='58CO': 
+                variable = self.beam_current(element='Ni', isotope='58CO')
                 I.append(variable[i_bc]); dI.append(variable[i_unc_bc])
         I = np.array(I); dI = np.array(dI)
         I_average = []; dI_average = []; percentage_dI_average = []
@@ -218,8 +268,8 @@ class BeamCurrent:
             'unc beam current (nA)': dI_average,
             'unc beam current (%)': percentage_dI_average
         })
-
-        # df.to_csv(save_beam_current_to + 'beam_current_' + self.stack + '.csv')
+        print(df)
+        # df.to_csv(save_beam_current_to + 'beam_current_new' + self.stack + '.csv')
         return I_average, dI_average
 
 

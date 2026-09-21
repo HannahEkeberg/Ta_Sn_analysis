@@ -13,6 +13,7 @@ import sys
 sys.path.append('/opt/homebrew/lib/python3.13/site-packages')
 from nuclearanalysistools.Tendl import *
 from nuclearanalysistools.tools import *
+# from weighted_average_updated import *
 
 import warnings
 
@@ -37,19 +38,27 @@ warnings.filterwarnings(
 
 # dp_array = np.arange(0.80, 1.30, 0.1)
 # dp_array = np.arange(0.80, 1.21, 0.001)
-# dp_array = dp_array = np.arange(0.80, 1.21, 0.1)
 # dp_array = np.arange(0.95, 1.11, 0.01).append(np.arange(0.80, 1.21, 0.1))
-dp_array = np.union1d(
-    np.arange(0.95, 1.11, 0.01),
-    np.arange(0.80, 1.21, 0.1)
-)
+
+
+# for 50 MeV stack
+# dp_array = np.arange(0.990, 1.030, 0.001)
+
+
+
+dp_array = np.array((0.990, 0.991, 1.003, 1.001, 1.021, 0.998, #1.013, 
+                     1.024, 1.070, 0.996, 1.050, #1.014, 
+                     0.900, 1.012, 1.110, 1.200, 1.007, 1.027, 1.040, 0.997, 1.008, 1.016, 1.022, 1.011, 1.025, 0.999, 0.994, 1.005, 1.009, 1.026, 1.080, 1.090, 0.970, 1.023, 1.029, 1.002, 1.019, 1.020, 1.006, 1.010, 0.993, 1.100, 0.950, 1.000, 1.015, 1.030, 0.992, 1.018, 0.800, 1.017, 1.028, 1.060, 1.004, 0.980, 1.200, 0.960, 0.995))
+
+# print(dp_array)
+# dp_array= np.array((1.0, 1.01, 1.02))
 # dp_array = np.arange(0.80, 1.21, 0.1)
 colors = Tools().colors()
 
-class VarianceMinimization:
+class   VarianceMinimization:
 
     def __init__(self, dp_array, monitor_reactions):
-        self.dp_array = dp_array
+        self.dp_array = np.sort(dp_array)
         if monitor_reactions:
             self.monitor_reactions = monitor_reactions
         else:
@@ -60,7 +69,7 @@ class VarianceMinimization:
             ('Cu', '63ZN'),
             ('Cu', '65ZN'),
             ('Cu', '62ZN'),
-            ('Cu', '58CO'),
+            ('Cu', '58CO') ,
             ('Cu', '56CO'),
             ('Ni', '57NI'),
             ]
@@ -140,6 +149,8 @@ class VarianceMinimization:
         x, y_data, true_array, unc_y_data, dgf = self.get_data_chi_squared(x_data, y_data, unc_y_data, method)
         chi2 = self.chi_squared(y_data, true_array, unc_y_data)
         red_chi2 = chi2/(len(y_data)-dgf)
+        # if red_chi2<0.000001:
+
         return chi2, red_chi2
 
     def get_data_cross_section(self, element, isotope, stack, wa, bc, compartments, plot=False):
@@ -214,13 +225,15 @@ class VarianceMinimization:
             print("Smooth curve minimum: "  + str(dp_min))
         else:
             plt.plot(dp_array, chi2_array, color=color, label=label, alpha=0.5)
-        plt.plot(dp_array, chi2_array, 'o', color=color, label=r'reduced $\chi^2 data$')
+        # plt.plot(dp_array, chi2_array, 'o', color=color, label=r'reduced $\chi^2 data$')
         min_index_data = chi2_array.index(min(chi2_array))
         min_chi2_data = chi2_array[min_index_data]
         min_dp_data = dp_array[min_index_data]
-        label_vertical_line = r'$\chi^2_\text{min}$=%.2f' %min_chi2_data +  ' at '+ str(min_dp_data) 
+        label_vertical_line = r'$\chi^2_\text{min}$=%.2f' %min_chi2_data +  ' for dp '+ str(min_dp_data) 
         plt.axvline(min_dp_data, color=color, linestyle='--', linewidth=0.5, label=label_vertical_line) 
         plt.legend()
+        plt.xlabel('dp value')
+        plt.ylabel(r'Reduced $\chi^2$')
         if title:
             plt.title(title)
         else:
@@ -318,16 +331,17 @@ class VarianceMinimization:
         chi2s = []; red_chi2s = []; energies = []; chi2s_2=[]; red_chi2s_2=[]
         for dp in self.dp_array:
             print("dp: "+ str(dp))
-            dp_str = '%.2f' %dp
+            dp_str = '%.3f' %dp
             full_stack, flux_stack = self.get_files(dp, stack)
             wa = WeightedAverageFlux(flux_stack, full_stack, stack)
             bc = BeamCurrent(wa, stack, self.monitor_reactions)
             if method == 'plot bc':
                 bc.plot_all(dp_str)
-                # plt.legend(loc='upper right')
+                plt.legend(fontsize=9, loc='upper right',ncol=3)
                 plt.ylim(0,250)
-                plt.savefig(os.getcwd() + '/generatedfiles/varianceminimization/beam_current_figs/' + stack + '_' + str(dp_str) +'.pdf')
+                plt.savefig(os.getcwd() + '/generatedfiles/varianceminimization/iaea25/manual/' + stack + '_' + str(dp_str) +'.pdf')
                 plt.show()
+                plt.close()
             if method == 'p0' or method == 'p1':
                 energy, chi2, red_chi2 = self.get_chi2_values(stack, wa, bc, compartments, method)
                 chi2s.append(chi2)
@@ -371,31 +385,63 @@ class VarianceMinimization:
                     # bc.plot_all()
                     # plt.show()
                     self.get_data_cross_section(element, isotope, stack, wa, bc, compartments, plot=True)
-
-
         if method == 'p0 and p1':
             self.plot_chi2(self.dp_array, red_chi2s_2,False, title_plot, 'p1','dodgerblue')
             self.plot_chi2(self.dp_array, red_chi2s,False, title_plot, 'p0','saddlebrown')
             plt.show()
         elif method == 'p0' or method =='p1':
+            # if red_chi2>0.0001:
             self.plot_chi2(self.dp_array, red_chi2s,False, title_plot, method,'saddlebrown')
             plt.title('Compartment ' + compartments[0])
             name = method + '_comparment' + compartments[0] + '.pdf'
             plt.savefig(os.getcwd() + '/generatedfiles/varianceminimization/' + name)
+            # plt.close()
             plt.show()
 
 
-zn65 = ('Cu', '65ZN'); zn63 = ('Cu', '63ZN'); zn62 = ('Cu', '62ZN')
-co58 = ('Cu', '58CO'); co56 = ('Cu', '56CO'); ni57 = ('Ni', '57NI')
-varmin_30 = VarianceMinimization(dp_array, [zn65, zn62,zn63, ni57])
-# varmin50 = VarianceMinimization(dp_array, [zn65, zn62,zn63, co58, co56, ni57])
-varmin50 = VarianceMinimization(dp_array, [zn65, zn62,zn63, co58, ni57])
-# varmin = VarianceMinimization(dp_array, [zn65, zn62, zn63, ni57])
+cu_zn65 = ('Cu', '65ZN'); cu_zn63 = ('Cu', '63ZN'); cu_zn62 = ('Cu', '62ZN')
+cu_co58 = ('Cu', '58CO'); cu_co56 = ('Cu', '56CO'); cu_cu61 = ('Cu', '61CU');
+ni_ni56 = ('Ni', '56NI'); ni_ni57 = ('Ni', '57NI')
+ni_co55 = ('Ni', '55CO'); ni_co56 = ('Ni', '56CO'); ni_co57 = ('Ni', '57CO'); ni_co58 = ('Ni', '58CO');
+# varmin_30 = VarianceMinimization(dp_array, [cu_zn65, cu_zn63,cu_zn62, cu_co58, cu_co56, cu_cu61, ni_ni56, ni_ni57, ni_co55, ni_co56, ni_co57, ni_co58])
+varmin_30 = VarianceMinimization(dp_array, [cu_zn65, cu_zn63,cu_zn62, cu_cu61, ni_ni56, ni_ni57, ni_co55, ni_co56, ni_co57, ni_co58])
+# varmin_55 = VarianceMinimization(dp_array, [cu_zn65, cu_zn63,cu_zn62, cu_co58, cu_co56, cu_cu61, ni_ni56, ni_ni57, ni_co55, ni_co56, ni_co57, ni_co58])
+varmin_55 = VarianceMinimization(dp_array, [cu_zn65, cu_zn63,cu_zn62, cu_co58, cu_co56, cu_cu61, ni_ni56, ni_ni57, ni_co55, ni_co56, ni_co57, ni_co58])
 
+# varmin_55.plot_chi_squared('stack_55_MeV', method='p0', compartments=['07'])
+# varmin_55.plot_chi_squared('stack_55_MeV', method='p0', compartments=['06'])
+# varmin_55.plot_chi_squared('stack_55_MeV', method='p0', compartments=['05'])
+# varmin_30.plot_chi_squared('stack_30_MeV', method='p0', compartments=['09'])
+# varmin_55.plot_chi_squared('stack_30_MeV', method='p0', compartments=['13'])
+# varmin_55.plot_chi_squared('stack_55_MeV', method='plot bc', compartments=['07'])
+# varmin_55.plot_chi_squared('stack_30_MeV', method='p0', compartments=['10'])
+# varmin_55.plot_chi_squared('stack_30_MeV', method='p0', compartments=['11'])
+# varmin_55.plot_chi_squared('stack_30_MeV', method='p0', compartments=['12'])
+# varmin_55.plot_chi_squared('stack_30_MeV', method='p0', compartments=['13'])
+# varmin_55.plot_chi_squared('stack_30_MeV', method='p0', compartments=['14'])
+
+
+# varmin_55.plot_chi_squared('stack_30_MeV', method='p0', compartments=['09'])
+# varmin_55.plot_chi_squared('stack_30_MeV', method='p0', compartments=['08'])
+# varmin_55.plot_chi_squared('stack_55_MeV', method='p0', compartments=['01'])
+# varmin_55.plot_chi_squared('stack_55_MeV', method='p0', compartments=['02'])
+# varmin_55.plot_chi_squared('stack_55_MeV', method='p0', compartments=['03'])
+# varmin_55.plot_chi_squared('stack_55_MeV', method='p0', compartments=['04'])
+
+# varmin_30 = VarianceMinimization(dp_array, [zn65, zn62,zn63, ni57])
+# varmin50 = VarianceMinimization(dp_array, [zn65, zn62,zn63, co58, co56, ni57])
+# varmin50 = VarianceMinimization(dp_array, [zn65, zn62,zn63, co58, ni57])
+# varmin_55 = VarianceMinimization(dp_array, [cu_zn65, cu_zn63,cu_zn62, cu_co58, cu_cu61, ni_ni56, ni_ni57, ni_co55, ni_co56])
 
 
 
 # varmin_30.plot_chi_squared('stack_30_MeV', method='plot bc', compartments=None)
+# varmin_55.plot_chi_squared('stack_55_MeV', method='plot bc', compartments=None)
+# varmin_55.plot_chi_squared('stack_55_MeV', method='p0', compartments=['07']) 
+# varmin_55.plot_chi_squared('stack_55_MeV', method='p0', compartments=['06']) 
+# varmin_30.plot_chi_squared('stack_30_MeV', method='p0', compartments=['12'])
+
+
 # varmin50.plot_chi_squared('stack_55_MeV', method='plot bc', compartments=None)
 # varmin.plot_chi_squared('stack_30_MeV', method='plot bc compartment', compartments=['13']) # 1.01
 # varmin.plot_chi_squared('stack_30_MeV', method='p0', compartments=['11']) # 1.01

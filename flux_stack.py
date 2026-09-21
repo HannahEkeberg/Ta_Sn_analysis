@@ -2,6 +2,7 @@ import curie as ci
 import numpy as np
 import os
 import pandas as pd
+
 import matplotlib.pyplot as plt
 from scipy import interpolate
 from scipy.constants import elementary_charge
@@ -12,12 +13,13 @@ from nuclearanalysistools.tools import *
 
 class WeightedAverageFlux:
 
-    def __init__(self, stack_fluxes, full_stack, stack, dp=None):
+    def __init__(self, stack_fluxes, full_stack, stack, dp=None, iaea_version='2025'):
         self.root = os.getcwd() + '/generatedfiles/stack/'
         self.stack_fluxes = pd.read_csv(self.root + stack_fluxes)
         # self.full_stack   = pd.read_csv(self.root + full_stack) # Not actually used
         self.stack        = stack # 55_MeV, 30_MeV
         self.dp           = dp # Whatever var min running... 
+        self.iaea_version = iaea_version
 
     def get_flux_energy_stack(self, element):
         flux = []; energy = []
@@ -26,7 +28,9 @@ class WeightedAverageFlux:
         
         for foil in foils:
             filtered_stack = self.stack_fluxes[self.stack_fluxes['name'] == foil]
-            E = filtered_stack['energy'].values; F = filtered_stack['flux'].values
+            # E = filtered_stack['energy'].values; F = filtered_stack['flux'].values
+            E = filtered_stack['energy'].to_numpy(copy=True)
+            F = filtered_stack['flux'].to_numpy(copy=True)
             energy.append(E); flux.append(F)
 
         max_index_for_zero_patting = 2
@@ -101,27 +105,44 @@ class WeightedAverageFlux:
         return mean_energy, unc_energy_left, unc_energy_right
     
     def monitor_data(self, element, isotope):
-        if element == 'Cu' and isotope =='62ZN':
-            monitor_file = './monitordata/cup62znt/cup62znt.txt'
-            useFile=True
-        elif element == 'Cu' and isotope =='63ZN':
-            monitor_file = './monitordata/cup63znt/cup63znt.txt'
-            useFile=True
-        elif element == 'Cu' and isotope =='65ZN':
-            monitor_file = 'monitordata/cup65znt/cup65znt.txt'
-            useFile=True
-        elif element == 'Cu' and isotope =='58CO':
-            monitor_file = 'monitordata/cup58cot/cup58cot.txt'
-            useFile=True
-        elif element == 'Cu' and isotope =='56CO':
-            monitor_file = 'monitordata/cup56cot/cup56cot.txt'
-            useFile=True
-        elif element == 'Ni' and isotope =='57NI':
-            monitor_file = 'monitordata/nip57nit/nip57nit.txt'
-            useFile=True
-        elif element == 'Ni' and 'isotope' == '55CO':
-            useFile=False
-        # print(element, isotope)
+        if self.iaea_version == '2017':
+            if element == 'Cu' and isotope == '62ZN':
+                monitor_file = './monitordata/cup62znt/cup62znt.txt'
+            elif element == 'Cu' and isotope == '63ZN':
+                monitor_file = './monitordata/cup63znt/cup63znt.txt'
+            elif element == 'Cu' and isotope == '65ZN':
+                monitor_file = 'monitordata/cup65znt/cup65znt.txt'
+            elif element == 'Cu' and isotope == '58CO':
+                monitor_file = 'monitordata/cup58cot/cup58cot.txt'
+            elif element == 'Cu' and isotope == '56CO':
+                monitor_file = 'monitordata/cup56cot/cup56cot.txt'
+            elif element == 'Ni' and isotope == '57NI':
+                monitor_file = 'monitordata/nip57nit/nip57nit.txt'
+        else:
+            if element == 'Cu' and isotope == '62ZN':
+                monitor_file = './monitordata26/cup62zn25t/cup62zn25t.txt'
+            elif element == 'Cu' and isotope =='63ZN':
+                monitor_file = './monitordata26/cup63zn25t/cup63zn25t.txt'
+            elif element == 'Cu' and isotope =='65ZN':
+                monitor_file = 'monitordata26/cup65zn25t/cup65zn25t.txt'
+            elif element == 'Cu' and isotope =='61CU':
+                monitor_file = 'monitordata26/cup61cu25t/cup61cu25t.txt'
+            elif element == 'Cu' and isotope =='58CO':
+                monitor_file = 'monitordata26/cup58co25t/cup58co25t.txt'
+            elif element == 'Cu' and isotope =='56CO':
+                monitor_file = 'monitordata26/cup56co25t/cup56co25t.txt'
+            elif element == 'Ni' and isotope =='56NI':
+                monitor_file = 'monitordata26/nip56ni25t/nip56ni25t.txt'
+            elif element == 'Ni' and isotope =='57NI':
+                monitor_file = 'monitordata26/nip57ni25t/nip57ni25t.txt'
+            elif element == 'Ni' and isotope =='55CO':
+                monitor_file = 'monitordata26/nip55co25t/nip55co25t.txt'
+            elif element == 'Ni' and isotope =='56CO':
+                monitor_file = 'monitordata26/nip56co25t/nip56co25t.txt'
+            elif element == 'Ni' and isotope =='57CO':
+                monitor_file = 'monitordata26/nip57co25t/nip57co25t.txt'
+            elif element == 'Ni' and isotope =='58CO':
+                monitor_file = 'monitordata26/nip58co25t/nip58co25t.txt'
         energy = np.loadtxt(monitor_file, usecols=[0], skiprows=6)
         cs = np.loadtxt(monitor_file, usecols=[1], skiprows=6)
         unc_cs = np.loadtxt(monitor_file, usecols=[2], skiprows=6)
@@ -134,13 +155,12 @@ class WeightedAverageFlux:
         tck = interpolate.splrep(energy, cs, s=0)
         sigma_tck = interpolate.splrep(energy, unc_cs, s=0)
 
-        # TODO for remaining, fit experimental data to pade parameters from https://doi.org/10.1007/s10967-024-09513-7
         return energy, cs, unc_cs, tck, sigma_tck
     
-    def plot_monitor_reaction(self, element, isotope, label=None):
+    def plot_monitor_reaction(self, element, isotope, label=None, color='royalblue'):
         energy, cs, unc_cs, tck, sigma_tck = self.monitor_data(element, isotope)
-        plt.plot(energy, cs, label=label, color='royalblue')
-        plt.fill_between(energy, cs+unc_cs, cs-unc_cs, color='blue', alpha=0.1)
+        plt.plot(energy, cs, label=label, color=color)
+        plt.fill_between(energy, cs+unc_cs, cs-unc_cs, color=color, alpha=0.1)
         
         energy, flux = self.get_flux_energy_stack(element)
         mean_energy, unc_energy_left, unc_energy_right = self.flux_weighted_average_energy(energy, flux)
@@ -191,3 +211,76 @@ wa.plot_monitor_reaction(element='Cu', isotope='62ZN', label=None)
 wa_2.plot_monitor_reaction(element='Cu', isotope='62ZN', label=None)
 plt.show()
 """    
+
+
+flux = 'TaSn_stack_30MeV_dp_1.000%_fluxes.csv'
+full_stack = ''
+wa = WeightedAverageFlux(stack_fluxes = flux, full_stack = full_stack, stack = 'stack_55_MeV')
+def plot_63Zn():
+    energy, cs, unc_cs, tck, sigma_tck = wa.monitor_data(element='Cu', isotope='63ZN')
+    plt.plot(energy, cs, linewidth=0.9, color='#A1AA82', label='63Zn')
+
+def plot_65Zn():
+    energy, cs, unc_cs, tck, sigma_tck = wa.monitor_data(element='Cu', isotope='65ZN')
+    plt.plot(energy, cs, linewidth=0.9, color='#667CB9', label='65Zn')
+
+def plot_62Zn():
+    energy, cs, unc_cs, tck, sigma_tck = wa.monitor_data(element='Cu', isotope='62ZN')
+    plt.plot(energy, cs, linewidth=0.9, color='#63051F', label='62Zn')
+
+def plot_61Cu():
+    energy, cs, unc_cs, tck, sigma_tck = wa.monitor_data(element='Cu', isotope='61CU')
+    plt.plot(energy, cs, linewidth=0.9, color='#1C198F', label='61CU')
+
+def plot_Cu_58Co():
+    energy, cs, unc_cs, tck, sigma_tck = wa.monitor_data(element='Cu', isotope='58CO')
+    plt.plot(energy, cs, linewidth=0.9, color='#B87333', label='58Co')
+def plot_Cu_56Co():
+    energy, cs, unc_cs, tck, sigma_tck = wa.monitor_data(element='Cu', isotope='56CO')
+    plt.plot(energy, cs, linewidth=0.9, color='#96007D', label='56Co')
+
+
+def plot_Ni_58Co():
+    energy, cs, unc_cs, tck, sigma_tck = wa.monitor_data(element='Ni', isotope='58CO')
+    plt.plot(energy, cs, linewidth=0.9, color='#A1AA82', label='58Co', linestyle='-.')    
+
+def plot_56Co():
+    energy, cs, unc_cs, tck, sigma_tck = wa.monitor_data(element='Ni', isotope='56CO')
+    plt.plot(energy, cs, linewidth=0.9, color='#667CB9', label='56Co', linestyle='-.')    
+
+def plot_57Co():
+    energy, cs, unc_cs, tck, sigma_tck = wa.monitor_data(element='Ni', isotope='57CO')
+    plt.plot(energy, cs, linewidth=0.9, color='#63051F', label='57Co', linestyle='-.')    
+
+def plot_55Co():
+    energy, cs, unc_cs, tck, sigma_tck = wa.monitor_data(element='Ni', isotope='55CO')
+    plt.plot(energy, cs, linewidth=0.9, color='#1C198F', label='55Co', linestyle='-.')    
+
+def plot_57Ni():
+    energy, cs, unc_cs, tck, sigma_tck = wa.monitor_data(element='Ni', isotope='57NI')
+    plt.plot(energy, cs, linewidth=0.9, color='#B87333', label='57Ni', linestyle='-.')    
+def plot_56Ni():
+    energy, cs, unc_cs, tck, sigma_tck = wa.monitor_data(element='Ni', isotope='56NI')
+    plt.plot(energy, cs, linewidth=0.9, color='#96007D', label='56Ni', linestyle='-.')    
+
+
+# # CU reactions
+# plot_63Zn()
+# plot_65Zn()
+# plot_62Zn()
+# plot_61Cu()
+# plot_Cu_58Co()
+# plot_Cu_56Co()
+
+
+# # NI reactions
+# plot_Ni_58Co()
+# plot_56Co()
+# plot_57Co()
+# plot_55Co()
+# plot_57Ni()
+# plot_56Ni()
+
+# plt.xlim(0,60)
+# plt.legend()
+# plt.show()

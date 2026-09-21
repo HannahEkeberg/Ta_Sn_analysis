@@ -1,0 +1,2 @@
+filename,isotope,energy,counts,unc_counts,intensity,unc_intensity,efficiency,unc_efficiency,decays,unc_decays,decay_rate,unc_decay_rate,chi2,start_time,live_time,real_time
+/Users/hannah.ekeberg/PhD/Ta_Sn_analysis/spectra/Det2/EM09262025_Sn06_10cm_DET2.Spe,116SBg,1293.558,12.38856319419726,10.143279079476333,0.85,0.06,0.0025175337709659553,5.323453390689526e-05,5903.352564191386,5134.626997778733,1.5839421959193414,1.3776836591839907,1.01556070056216,09/26/2025 12:50:57,3655.0,3727.0

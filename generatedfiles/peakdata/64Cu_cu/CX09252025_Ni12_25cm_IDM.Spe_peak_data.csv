@@ -1,0 +1,2 @@
+filename,isotope,energy,counts,unc_counts,intensity,unc_intensity,efficiency,unc_efficiency,decays,unc_decays,decay_rate,unc_decay_rate,chi2,start_time,live_time,real_time
+/Users/hannah.ekeberg/PhD/Ta_Sn_analysis/spectra/IDM/CX09252025_Ni12_25cm_IDM.Spe,65NIg,1481.84,18.611158192736717,10.78368180180745,0.2359,0.011795,0.0004622205110427984,4.7641397679340054e-05,176291.8028127208,111856.08573949467,103.82320542563062,65.87519772643974,1.6111770370007021,09/25/2025 03:28:07,1644.0,1698.0

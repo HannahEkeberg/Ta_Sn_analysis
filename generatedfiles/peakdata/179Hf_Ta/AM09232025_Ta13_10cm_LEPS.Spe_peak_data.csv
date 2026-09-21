@@ -1,0 +1,2 @@
+filename,isotope,energy,counts,unc_counts,intensity,unc_intensity,efficiency,unc_efficiency,decays,unc_decays,decay_rate,unc_decay_rate,chi2,start_time,live_time,real_time
+/Users/hannah.ekeberg/PhD/Ta_Sn_analysis/spectra/LEPS/AM09232025_Ta13_10cm_LEPS.Spe,179HFm2,362.55,2.5531652297356527e-11,1.1333013757217394,0.396,0.015,0.00015402284977399428,9.056470695772859e-05,4.1884176538829473e-07,18591.587547905812,2.423852808960039e-10,10.759020571704752,0.9041898148144469,09/23/2025 23:01:30,1727.0,1728.0

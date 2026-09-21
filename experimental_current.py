@@ -31,4 +31,4 @@ def plot(df):
     # plt.xlabel('')
     plt.show()
 
-plot(df_55)
+plot(df_30)

@@ -1,0 +1,24 @@
+#ZVView-data-copy:   7-Sep-2026 09:16:14
+#=======================================
+#
+#name:   73-TA-0(P,X)72-HF-178-M2,CUM,SIG
+#X.axis: Incident Energy
+#Y.axis: Cross Section
+#wdata:  3
+#ldata:  11
+#data...
+#            X            Y         +-dY  # Comments...
+#          MeV        barns        barns  # Year,Author(s)           ## EXFOR-ID
+            44            0       4.1e-5       1.2e-5  # 2018,Yu.E.Titarenko+     ## F1335002  #dY:29.3%  
+            68            0       7.5e-5       2.2e-5  # 2018,Yu.E.Titarenko+     ## F1335002  #dY:29.3%  
+            98            0     0.000103       2.9e-5  # 2018,Yu.E.Titarenko+     ## F1335002  #dY:28.2%  
+           149            0     0.000209       2.8e-5  # 2018,Yu.E.Titarenko+     ## F1335002  #dY:13.4%  
+           248            0     0.000188       2.2e-5  # 2018,Yu.E.Titarenko+     ## F1335002  #dY:11.7%  
+           399            0     0.000273       2.6e-5  # 2018,Yu.E.Titarenko+     ## F1335002  #dY:9.5%   
+           599            0     0.000316       2.2e-5  # 2018,Yu.E.Titarenko+     ## F1335002  #dY:7.0%   
+           799            0      0.00029         2e-5  # 2018,Yu.E.Titarenko+     ## F1335002  #dY:6.9%   
+          1199            0     0.000278       1.8e-5  # 2018,Yu.E.Titarenko+     ## F1335002  #dY:6.5%   
+          1598            0     0.000215       2.9e-5  # 2018,Yu.E.Titarenko+     ## F1335002  #dY:13.5%  
+          2605            0     0.000257       2.9e-5  # 2018,Yu.E.Titarenko+     ## F1335002  #dY:11.3%  
+//
+#-------------------------------------------------------------------------------

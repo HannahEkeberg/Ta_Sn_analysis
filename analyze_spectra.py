@@ -17,7 +17,17 @@ pathToPeakData = os.getcwd() + '/generatedfiles/peakdata/'
 # folder_name = '/manual/'
 # folder_name = '/manual_xrays/'
 # folder_name = '/generatedfiles/peakdata/data_not_yet_detected/'
-folder_name='/178W_Ta/'
+# folder_name='/178W_Ta/'
+# folder_name='/116Sbm_Sn/'
+# folder_name='/179Hf_Ta/'
+# folder_name='/179Lu_ta/'
+# folder_name='/177Lu_ta/'
+# folder_name='/174Ta_ta/'
+# folder_name='/178Ta_ta/'
+# folder_name='/180Ta_ta/'
+# folder_name='/182Ta_ta/'
+# folder_name='/64Cu_cu/'
+folder_name='/177Hfm2/'
 
 class AnalyzeSpectrum:
     def __init__(self, detector, calibrationFile):
@@ -37,10 +47,11 @@ class AnalyzeSpectrum:
             if x_rays:
                 sp.fit_config = {'xrays':True, 'E_min':20}
             else:
-                sp.fit_config = {'SNR_min':3.5, 'dE_511':9.0}
+                # sp.fit_config = {'SNR_min':3.5, 'dE_511':9.0}
+                sp.fit_config = {'SNR_min':2.0, 'dE_511':9.0}
 
+            sp.saveas('generatedFiles/peakData' + folder_name + spectrumFileName + '_peak_data.csv', replace=True)
             # sp.saveas('generatedFiles/peakData/data/' + spectrumFileName + '_peak_data.csv', replace=False)
-            sp.saveas('generatedFiles/peakData' + folder_name + spectrumFileName + '_peak_data.csv', replace=False)
             # if len(listOfIsotopes)==1:
             # sp.saveas(pathToPeakData + '/data/' + spectrumName + '_'  + listOfIsotopes[0] +'_peak_data.csv', replace=False)
             # sp.saveas(pathToPeakData + '/data/' + spectrumName + '_'  + listOfIsotopes[0] +'_peak_data.csv', replace=False)
@@ -72,7 +83,8 @@ class AnalyzeSpectrum:
         try:
             # summed_spectrum.saveas('generatedFiles/peakData/data/' + peakSummaryFilename + '_peak_data.csv', replace=False)
             # summed_spectrum.saveas('generatedFiles/peakData/data_test_178Ta/' + peakSummaryFilename + '_peak_data.csv', replace=False)
-            sp.saveas('generatedFiles/peakData' + folder_name + peakSummaryFilename + '_peak_data.csv', replace=False)
+            # sp.saveas('generatedFiles/peakData' + folder_name + peakSummaryFilename + '_peak_data.csv', replace=False)
+            sp.saveas('generatedFiles/peakData' + folder_name + peakSummaryFilename + '_peak_data.csv', replace=True)
             # summed_spectrum.saveas('generatedFiles/peakData/figures/' + peakSummaryFilename + '_peak_data.pdf')
         except AttributeError:
             print("Most likely no peaks...")
@@ -198,65 +210,84 @@ def get_spectra(detector_folder, distance, foil, file_ending='.Spe'):
 
 def split_peak_data_into_isotope_files(foil, isotope=None):
     # path_to_data = pathToPeakData + '/data/'
-    path_to_data = pathToPeakData + '/178W_Ta/'
+    # path_to_data = pathToPeakData + '/178W_Ta/'
+    path_to_data = pathToPeakData + folder_name
+    print(os.listdir(path_to_data))
+    print(foil)
     files = [f for f in os.listdir(path_to_data) if foil in f]
-    # files = [f for f in files if '179W' in f]
     print(files)
     dfs = []
     for f in files:
         df = pd.read_csv(path_to_data + f)
         dfs.append(df)
-    total_df = pd.concat(dfs, ignore_index=True)
-    isotopes = total_df["isotope"].dropna().unique()
-    print("***")
-    print(isotopes)
-    print("***")
-    path = os.getcwd() + '/generatedfiles/peakdata/data_isotope/'
-    total_df["filename"] = total_df["filename"].str.split("/").str[-1]
-
-    print(total_df)
-    # print(values)
-    if isotope:
-        df_filtered = total_df[total_df['isotope'].eq(isotope)]
-        str = foil + '_' + isotope + '_gammas.csv'
-        df_filtered.to_csv(path + str)
-    else:
-        for i in isotopes:
-            df_filtered = total_df[total_df['isotope'].eq(i)]
-            path = os.getcwd() + '/generatedfiles/peakdata/data_isotope/'
-            str = foil + '_' + i + '_gammas.csv'
+    try: 
+        total_df = pd.concat(dfs, ignore_index=True)
+        isotopes = total_df["isotope"].dropna().unique()
+        print("***")
+        print(isotopes)
+        print("***")
+        path = os.getcwd() + '/generatedfiles/peakdata/data_isotope/'
+        
+        total_df["filename"] = total_df["filename"].str.split("/").str[-1]
+        # # print(values)
+        if isotope:
+            df_filtered = total_df[total_df['isotope'].eq(isotope)]
+            str = foil + '_' + isotope + '_gammas.csv'
             df_filtered.to_csv(path + str)
+        else:
+            for i in isotopes:
+                df_filtered = total_df[total_df['isotope'].eq(i)]
+                path = os.getcwd() + '/generatedfiles/peakdata/data_isotope/'
+                str = foil + '_' + i + '_gammas.csv'
+                df_filtered.to_csv(path + str)
+    except:
+        print("No data for foil: " + foil)
 
 
-# isotopes = ['178Wg', '178TAg', '178TAm']
-# split_peak_data_into_isotope_files('Ta01', '178HFg')
-# split_peak_data_into_isotope_files('Ta02', '178HFg')
-# split_peak_data_into_isotope_files('Ta03', '178HFg')
-# split_peak_data_into_isotope_files('Ta04', '178HFg')
-# split_peak_data_into_isotope_files('Ta05', '178HFg')
-# split_peak_data_into_isotope_files('Ta06', '178HFg')
-# split_peak_data_into_isotope_files('Ta07', '178HFg')
-# split_peak_data_into_isotope_files('Ta08', '178HFg')
-# split_peak_data_into_isotope_files('Ta09', '178HFg')
-# split_peak_data_into_isotope_files('Ta10', '178HFg')
-# split_peak_data_into_isotope_files('Ta11', '178HFg')
-# split_peak_data_into_isotope_files('Ta12', '178HFg')
-# split_peak_data_into_isotope_files('Ta13', '178HFg')
-# split_peak_data_into_isotope_files('Ta14', '178HFg')
-# split_peak_data_into_isotope_files('Sn01', '119SBg')
-# split_peak_data_into_isotope_files('Sn02', '119SBg')
-# split_peak_data_into_isotope_files('Sn03', '119SBg')
-# split_peak_data_into_isotope_files('Sn04', '119SBg')
-# split_peak_data_into_isotope_files('Sn05', '119SBg')
-# split_peak_data_into_isotope_files('Sn06', '119SBg')
-# split_peak_data_into_isotope_files('Sn07', '119SBg')
-# split_peak_data_into_isotope_files('Sn08', '119SBg')
-# split_peak_data_into_isotope_files('Sn09', '119SBg')
-# split_peak_data_into_isotope_files('Sn10', '119SBg')
-# split_peak_data_into_isotope_files('Sn11', '119SBg')
-# split_peak_data_into_isotope_files('Sn12', '119SBg')
-# split_peak_data_into_isotope_files('Sn13', '119SBg')
-# split_peak_data_into_isotope_files('Sn14', '119SBg')
+
+
+# split_peak_data_into_isotope_files('Ta01', '181Wg')
+# split_peak_data_into_isotope_files('Ta02', '181Wg')
+# split_peak_data_into_isotope_files('Ta03', '181Wg')
+# split_peak_data_into_isotope_files('Ta04', '181Wg')
+# split_peak_data_into_isotope_files('Ta05', '181Wg')
+# split_peak_data_into_isotope_files('Ta06', '181Wg')
+# split_peak_data_into_isotope_files('Ta07', '181Wg')
+# split_peak_data_into_isotope_files('Ta08', '181Wg')
+# split_peak_data_into_isotope_files('Ta09', '181Wg')
+# split_peak_data_into_isotope_files('Ta10', '181Wg')
+# split_peak_data_into_isotope_files('Ta11', '181Wg')
+# split_peak_data_into_isotope_files('Ta12', '177HFm2')
+# split_peak_data_into_isotope_files('Ta13', '177HFm2')
+# split_peak_data_into_isotope_files('Ta14', '177HFm2')
+# split_peak_data_into_isotope_files('Ni01', '51CRg')
+# split_peak_data_into_isotope_files('Ni02', '51CRg')
+# split_peak_data_into_isotope_files('Ni03', '51CRg')
+# split_peak_data_into_isotope_files('Ni04', '51CRg')
+# split_peak_data_into_isotope_files('Ni05', '51CRg')
+# split_peak_data_into_isotope_files('Ni06', '51CRg')
+# split_peak_data_into_isotope_files('Ni07', '51CRg')
+# split_peak_data_into_isotope_files('Ni08', '51CRg')
+# split_peak_data_into_isotope_files('Ni09', '51CRg')
+# split_peak_data_into_isotope_files('Ni10', '51CRg')
+# split_peak_data_into_isotope_files('Ni11', '51CRg')
+# split_peak_data_into_isotope_files('Ni12', '51CRg')
+# split_peak_data_into_isotope_files('Ni13', '51CRg')
+# split_peak_data_into_isotope_files('Ni14', '51CRg')
+# split_peak_data_into_isotope_files('Sn01', '116SBm')
+# split_peak_data_into_isotope_files('Sn02', '116SBm')
+# split_peak_data_into_isotope_files('Sn03', '116SBm')
+# split_peak_data_into_isotope_files('Sn04', '116SBm')
+# split_peak_data_into_isotope_files('Sn05', '116SBm')
+# split_peak_data_into_isotope_files('Sn06', '116SBm')
+# split_peak_data_into_isotope_files('Sn07', '116SBm')
+# split_peak_data_into_isotope_files('Sn08', '116SBm')
+# split_peak_data_into_isotope_files('Sn09', '116SBm')
+# split_peak_data_into_isotope_files('Sn10', '116SBm')
+# split_peak_data_into_isotope_files('Sn11', '116SBm')
+# split_peak_data_into_isotope_files('Sn12', '116SBm')
+# split_peak_data_into_isotope_files('Sn13', '116SBm')
+# split_peak_data_into_isotope_files('Sn14', '116SBm')
 
 
 # split_peak_data_into_isotope_files('Cu02', isotope='61COg')

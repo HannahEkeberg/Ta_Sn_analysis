@@ -10,7 +10,7 @@ import traceback
 pathToPeakFiles_isotope = os.getcwd() + '/generatedfiles/peakdata/data_isotope/'
 pathToActivityFiles_isotope = os.getcwd() + '/generatedfiles/activity/data_isotope2/'
 pathToFigures = os.getcwd() + '/generatedfiles/activity/figures/'
-
+test_list = []
 class Activity_manual:
 
     def __init__(self, saveIndependent=None, saveIndependentParent=None):
@@ -28,8 +28,10 @@ class Activity_manual:
         eob_activity_list = []
         for foil in foils:
             peak_data = self.retrieve_peak_data(foil, isotope_daughter)
+            print(peak_data)
             try:
                 df = pd.read_csv(peak_data, comment="#")
+                # print(df)
                 delay_time, activity, unc_activity = self.calculate_activities(df, foil, decay_constant)
                 if filtering:
                     delay_time, activity, unc_activity = self.filter_activities_on_delay_time(delay_time, activity, unc_activity, half_life,
@@ -55,7 +57,6 @@ class Activity_manual:
         iso = ci.Isotope(isotope)
         decay_constant = iso.decay_const()
         half_life = iso.half_life()
-        # decay_constant = ci.Isotope('178Wg').decay_const()
 
         foils = self.foils(element)
         eob_activity_list = []
@@ -63,8 +64,10 @@ class Activity_manual:
             peak_data = self.retrieve_peak_data(foil, isotope)
             try:
                 df = pd.read_csv(peak_data, comment="#")
+                # print(df)
                 delay_time, activity, unc_activity = self.calculate_activities(df, foil, decay_constant)
                 if filtering:
+                    df = self.filter_counts(df)
                     delay_time, activity, unc_activity = self.filter_activities_on_delay_time(delay_time, activity, unc_activity, half_life,
                                         min_half_lives=min_half_lives, max_half_lives=max_half_lives, max_activity_uncertainty=max_activity_uncertainty)
                 if compartment and compartment in foil and plot_curve==False:
@@ -80,14 +83,13 @@ class Activity_manual:
                 if not isinstance(e, FileNotFoundError):
                     print(f"{foil}: + Error type: {type(e).__name__} – {e}")
                     # raise e
-                else:
-                    print('no peak data found in foil ' + foil + ' for isotope ' + isotope)
-                    data = [foil, isotope, 0, 0]
-                    eob_activity_list.append(data)
+                # else:
+                print('no peak data found in foil ' + foil + ' for isotope ' + isotope)
+                data = [foil, isotope, 0, 0]
+                eob_activity_list.append(data)
         df = pd.DataFrame(eob_activity_list, columns=['foil', 'isotope', 'fit', 'cov'])
         self.savecsv(df, element, isotope)
 
-    # def activity_foil_by_foil(self, foil, isotope)
 
     def two_step_decay(self, element, isotope, isotope_parent, compartment, plot_curve, min_half_lives=None, max_half_lives=None, max_activity_uncertainty=None, independent_parent=None,):
         # one-step to a feeding curve, want total cumulative, so remove gammas before with halflife_p *10
@@ -98,6 +100,7 @@ class Activity_manual:
         eob_activity_list = []
         eob_activity_parent_list = []
         eob_activity_parent = self.activity_file_parent(element, isotope_parent)
+        # print(eob_activity_parent)
         if os.path.exists(eob_activity_parent):
             df = pd.read_csv(eob_activity_parent, comment="#")
             eob_activity_parent = df['fit']; unc_eob_activity_parent = df['cov']
@@ -122,10 +125,11 @@ class Activity_manual:
                 elif eob_activity_parent is not None and eob_activity_parent[i] == 0:
                     print("02")
                     guess = [1e6]
+                    A0_parent = 0; unc_A0_parent=0
                     A0, unc_A0 = self.fit_activity_first_order(delay_time, activity, unc_activity, decay_constant, plot=plot)
                 elif eob_activity_parent == None:
                     print("03")
-                    guess = [1e3, 1e6]
+                    guess = [1e2, 1e4]
                     try:
                         print("trying to fit two parameters")
                         A0, unc_A0, A0_parent, unc_A0_parent = self.fit_activities_second_order(delay_time, activity, unc_activity, decay_constant, decay_constant_parent=decay_constant_parent, guess=guess,plot=plot)
@@ -137,9 +141,13 @@ class Activity_manual:
                     raise print('Invalid input')
                 data = [foil, isotope, A0, unc_A0]
                 eob_activity_list.append(data)
-                if A0 > 0 and A0_parent is not None and A0_parent > 0:
-                    # print(A0_parent)
+                # print(A0_parent)
+                # if A0 > 0 and A0_parent is not None and A0_parent > 0:
+                if A0_parent is not None and A0_parent > 0:
                     data_parent = [foil, isotope_parent, A0_parent, unc_A0_parent]
+                    eob_activity_parent_list.append(data_parent)
+                else:
+                    data_parent = [foil, isotope_parent, 0, 0]
                     eob_activity_parent_list.append(data_parent)
                 if plot:
                     self.savefig(element, isotope, foil)
@@ -206,30 +214,17 @@ class Activity_manual:
         peak_data['start_time'] = pd.to_datetime(peak_data['start_time'])
         delay_time = (peak_data['start_time'] - eob).dt.total_seconds()
 
-        # delay_time = ((peak_data['start_time'] + pd.to_timedelta(count_time/2, unit="s")) - eob).dt.total_seconds()
         activity, unc_activity = self.activity(counts, unc_counts, efficiency, unc_efficiency, intensity, unc_intensity, count_time, decay_constant)
+        activity, unc_activity = self.activity(counts, unc_counts, efficiency, unc_efficiency, intensity, unc_intensity, count_time, decay_constant)
+        A = pd.Series(activity, name='activity'); unc_A = pd.Series(unc_activity, name='unc activity')
+        filename = pd.Series(peak_data['filename'], name='filename')
+        E = pd.Series(peak_data['energy'], name='energy')
+        df = pd.concat([filename, E, delay_time/3600, A*1e-6, unc_A*1e-6], axis=1)
+        print(df)
         return delay_time, activity, unc_activity
-    
-    # def peak_data_overview(self, peak_data, half_life, foil):
-    #     filename = peak_data['filename'].values
-    #     gammas = peak_data['energy'].values
-    #     eob = pd.to_datetime(self.getEob(foil))
-    #     peak_data['start_time'] = pd.to_datetime(peak_data['start_time'])
-    #     delay_time = (peak_data['start_time'] - eob).dt.total_seconds()
-    #     counts = peak_data['counts'].values
-    #     unc_counts = peak_data['unc_counts'].values
-    #     for i in range(len(gammas)):
-    #         print('filename, gamma', 'delay_time')
-    #         print(filename[i], gammas[i], delay_time/3600)
-    #         if delay_time > 10 * half_life:
-    #             print("Delay time longer than 10x half life")
-        #     print(filename)
-        # else:
-        #     print("Delay time shorter than 10x half life")
-        #     print(filename  + " - relative uncertainty counts: "  )
-        #     print(unc_counts/counts * 100)
 
     def savefig(self, element, isotope, foil):
+        # test_list.append('RUN')
         if self.saveIndependent == None:
             fig_filename = pathToFigures +  element + '/' + element + '_' + isotope + '_' + foil + '.pdf'
             title = element + ' ' + isotope + ' ' + foil
@@ -246,6 +241,7 @@ class Activity_manual:
         # print(fig_filename)
         plt.savefig(fig_filename)
         plt.show()
+        # plt.close()
     
     def savecsv(self, df, element, isotope):
         # If none, should be a indirect  measurement for instance like 178Ta/178W.
@@ -268,21 +264,15 @@ class Activity_manual:
         elif self.saveIndependentParent == False:
             filename = pathToActivityFiles_isotope +  element + '_' + isotope_parent + '_cum.csv'
         return filename
-        # eob_activity_parent = pathToActivityFiles_isotope +  element + '_' + isotope_parent + '.csv'
     
     def savecsv_parent(self, df, element, isotope_parent):
         filename = self.activity_file_parent(element, isotope_parent)
-        # print("Saving to")
-        # print(filename)
         df.to_csv(filename)
         
-
     def activity(self, counts, unc_counts, efficiency, unc_efficiency, intensity, unc_intensity, count_time, decay_constant):
-        activity = (counts*decay_constant) / (efficiency * intensity * (1-np.exp(-decay_constant*count_time)) )#* np.exp(-self.decay_constant * delay_time)    )
+        activity = (counts*decay_constant) / (efficiency * intensity * (1-np.exp(-decay_constant*count_time)) )
         unc_activity = activity * np.sqrt((unc_counts/counts)**2  + (unc_efficiency/efficiency)**2 + (unc_intensity/intensity)**2 )
         return activity, unc_activity
-    
-    # def filter_activities_on_delay_time(self, delay_time, activity, unc_activity, half_life):
 
     def filter_activities_on_delay_time(self, delay_time, activity, unc_activity, half_life,
                                     min_half_lives=None, max_half_lives=None, max_activity_uncertainty=None):
@@ -290,15 +280,9 @@ class Activity_manual:
         activity = np.asarray(activity)
         unc_activity = np.asarray(unc_activity)
         mask = np.ones_like(delay_time, dtype=bool)
-        # max_half_lives *= 3600; min_half_lives *= 3600
-        # print(unc_activity/activity*100)
-        # print(min_half_lives)
         if min_half_lives is not None:
             min_half_lives = min_half_lives*3600 # hours
-            # print(min_half_lives)
-            # print(delay_time)
             mask &= delay_time >= (min_half_lives)
-            # mask &= delay_time >= (half_life * min_half_lives)
         if max_half_lives is not None:
             mask &= delay_time <= (half_life * max_half_lives)
         if max_activity_uncertainty:
@@ -310,12 +294,8 @@ class Activity_manual:
     def filter_counts(self, peakdata):
         max_error=0.4; min_counts=1
         mask = ((peakdata['counts'] > min_counts) & (peakdata['unc_counts'] / peakdata['counts'] < max_error))
-        # print(len(peakdata), len(peakdata[mask]))
         return peakdata[mask]
-        # return peakdata[ peakdata['counts'] > min_counts & (peakdata['unc_counts']<max_error*peakdata['counts']) ]
-        
-        # filter_counts = self.counts[(self.counts['counts']>min_counts)&(self.counts['unc_counts']<max_error*self.counts['counts'])]
-    
+
     def fit_activities_second_order(self, delay_time, activity, unc_activity, decay_constant, decay_constant_parent=None, guess=[1e5, 1e5], plot=False):
         delay_time_hours = delay_time/3600
         time = np.linspace(0, np.max(delay_time), 1000)
@@ -335,27 +315,24 @@ class Activity_manual:
     
     def fit_activity_first_order(self, delay_time, activity, unc_activity, decay_constant, guess=[1e5], plot=False):
         delay_time_hours = delay_time/3600
-        time = np.linspace(0, np.max(delay_time), 1000)
-        # print("delay_time:", delay_time)
-        # print("activity:", activity)
-        # print("unc_activity:", unc_activity)
-
-        # print("len(delay_time):", len(delay_time))
-        # print("len(activity):", len(activity))
-        # print("len(unc_activity):", len(unc_activity))
- 
+        time = np.linspace(0, np.max(delay_time), 1000) 
         popt, pcov = curve_fit(lambda t, p0: self.first_order_bateman(t, p0, decay_constant),delay_time,activity,p0=guess,sigma=unc_activity,absolute_sigma=True)
         unc_popt = np.sqrt(np.diagonal(pcov))
         A0 = self.first_order_bateman(0, *popt, decay_constant)
         time_hours = time/3600
+        print(A0, type(A0), np.shape(A0))
+        print(unc_popt, type(unc_popt), np.shape(unc_popt))
+        if isinstance(unc_popt, np.ndarray):
+            unc = unc_popt[0]
+        else:
+            unc = unc_popt
         if plot:
             A_fit = self.first_order_bateman(time, *popt, decay_constant)
             unc_fit_plus = self.first_order_bateman(time,*(popt+unc_popt), decay_constant); unc_fit_minus=self.first_order_bateman(time,*(popt-unc_popt), decay_constant)
             plt.errorbar(delay_time_hours, activity, color='darkolivegreen', linewidth=0.001,yerr=unc_activity, elinewidth=0.5, ecolor='k', capthick=0.5,marker='.', label='activity')   # cap thickness for error bar color='blue')
             plt.plot(time_hours, A_fit, color='tan', linewidth=0.9, label='fit')
-            # plt.fill_between(time_hours, self.first_order_bateman(time,*(popt+unc_popt)), self.first_order_bateman(time,*(popt-unc_popt)), color='tan', alpha=0.1)
             plt.fill_between(time_hours, unc_fit_plus, unc_fit_minus, color='tan', alpha=0.1)
-            plt.errorbar(0, A0, marker='*', yerr=unc_popt, label=r'eob: %.f ($\pm %.f$) Bq' %(A0,unc_popt), color='maroon')
+            plt.errorbar(0, A0, marker='*', yerr=unc_popt, label=r'eob: %.f ($\pm %.f$) Bq' %(A0,unc), color='maroon')
         return A0, unc_popt[0]
 
     def uncertainty_A0(self, pcov, decay_constant_daughter, decay_constant_parent,  time):
@@ -375,7 +352,4 @@ class Activity_manual:
         if not os.path.exists(peak_data):
             str = foil + '_' + isotope + 'g_gammas.csv'
             peak_data = pathToPeakFiles_isotope + str
-        # independent_rows, decayed_rows = peak_data_match_gammas(foil, str)
-        # print(independent_rows)
-        # print("In activity folder")
         return peak_data

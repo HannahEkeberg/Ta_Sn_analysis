@@ -13,7 +13,7 @@ def assemble(detector, distance, foil, calibrationfile, listOfIsotopes=None):
         print('No files for for detector: ' + detector + ', foil: ' + foil + ' and distance: ' + distance )
     for spec in spectra:
         if type(spec) is str:
-            analyze_spec.analyze(spec, listOfIsotopes, x_rays=True)
+            analyze_spec.analyze(spec, listOfIsotopes, x_rays=False)
         elif type(spec) is list:
             analyze_spec.analyze_jobs(spec, peakSummaryFilename=None, listOfIsotopes=listOfIsotopes)
         else:
@@ -54,7 +54,7 @@ def faster(foil, listOfIsotopes=None):
 #             ]
 
 
-# isotopes = ['178Wg', '178TAg', '178TAm']
+isotopes = ['179HFm2']
 # faster('Ta01', listOfIsotopes=isotopes)
 # faster('Ta02', listOfIsotopes=isotopes)
 # faster('Ta03', listOfIsotopes=isotopes)
@@ -70,7 +70,40 @@ def faster(foil, listOfIsotopes=None):
 # faster('Ta13', listOfIsotopes=isotopes)
 # faster('Ta14', listOfIsotopes=isotopes)
 
-# isotopes = ['119SBg']
+
+
+split_peak_data_into_isotope_files('Ta01', '179HFm2')
+split_peak_data_into_isotope_files('Ta02', '179HFm2')
+split_peak_data_into_isotope_files('Ta03', '179HFm2')
+split_peak_data_into_isotope_files('Ta04', '179HFm2')
+split_peak_data_into_isotope_files('Ta05', '179HFm2')
+split_peak_data_into_isotope_files('Ta06', '179HFm2')
+split_peak_data_into_isotope_files('Ta07', '179HFm2')
+split_peak_data_into_isotope_files('Ta08', '179HFm2')
+split_peak_data_into_isotope_files('Ta09', '179HFm2')
+split_peak_data_into_isotope_files('Ta10', '179HFm2')
+split_peak_data_into_isotope_files('Ta11', '179HFm2')
+split_peak_data_into_isotope_files('Ta12', '179HFm2')
+split_peak_data_into_isotope_files('Ta13', '179HFm2')
+split_peak_data_into_isotope_files('Ta14', '179HFm2')
+
+# isotopes = ['51CRg']
+# faster('Ni01', listOfIsotopes=isotopes)
+# faster('Ni02', listOfIsotopes=isotopes)
+# faster('Ni03', listOfIsotopes=isotopes)
+# faster('Ni04', listOfIsotopes=isotopes)
+# faster('Ni05', listOfIsotopes=isotopes)
+# faster('Ni06', listOfIsotopes=isotopes)
+# faster('Ni07', listOfIsotopes=isotopes)
+# faster('Ni08', listOfIsotopes=isotopes)
+# faster('Ni09', listOfIsotopes=isotopes)
+# faster('Ni10', listOfIsotopes=isotopes)
+# faster('Ni11', listOfIsotopes=isotopes)
+# faster('Ni12', listOfIsotopes=isotopes)
+# faster('Ni13', listOfIsotopes=isotopes)
+# faster('Ni14', listOfIsotopes=isotopes)
+
+# isotopes = ['116SBm1', '116SBg']
 # faster('Sn01', listOfIsotopes=isotopes)
 # faster('Sn02', listOfIsotopes=isotopes)
 # faster('Sn03', listOfIsotopes=isotopes)

@@ -67,6 +67,8 @@ class Acitivity:
             try:
                 df = pd.read_csv(peak_data, comment="#")
                 # print(peak_data)
+                # print(df)
+                # print(peak_data)
                 if compartment and compartment in foil and not plot_:
                     e = df['energy'].values; counts = df['counts'].values; unc_counts = df['unc_counts'].values; file = df['filename'].values
                     for i in range(len(e)):
