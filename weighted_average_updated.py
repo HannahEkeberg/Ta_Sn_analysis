@@ -23,14 +23,19 @@ class WeightedAverageBeamCurrent:
         print(self.list_of_isotopes)
         submatrix_lower_indices = np.zeros(self.number_of_monitor_foils)
         submatrix_upper_indices = np.zeros(self.number_of_monitor_foils)
+        print(submatrix_lower_indices, submatrix_upper_indices)
 
 
         for i in range(0, self.number_of_monitor_foils):
-            # print(i)
+            # Each of 
+            print(submatrix_lower_indices[i])
             submatrix_lower_indices[i] = number_of_monitor_reactions
             number_of_monitor_reactions += self.monitor_reactions_per_foil[i]
             submatrix_upper_indices[i] = number_of_monitor_reactions
-            # print(submatrix_lower_indices, submatrix_upper_indices)
+            print(submatrix_lower_indices, submatrix_upper_indices)
+            print(submatrix_lower_indices)
+
+        print("*****")
 
         submatrix_lower_indices=submatrix_lower_indices.astype(int)
         submatrix_upper_indices=submatrix_upper_indices.astype(int)
@@ -65,7 +70,8 @@ class WeightedAverageBeamCurrent:
         np.fill_diagonal(corr_reaction_integral,1)
         np.fill_diagonal(corr_t_irradiation,1)
         np.fill_diagonal(corr_EoB_activities,1)
-
+        print(len(matrix_mass_density))
+        print(np.shape(matrix_mass_density))
         # Loop over all beam positions
         number_of_energies = len(matrix_mass_density)
 
@@ -220,9 +226,9 @@ class WeightedAverageBeamCurrent:
 
             weights = inverted_covariance @ corr
             weights = weights / (corr @ inverted_covariance @ corr)
-            print("weights")
-            print(weights)
-            print("****")
+            # print("weights")
+            # print(weights)
+            # print("****")
 
             for i_index,i_element in enumerate(nonzero_indices[0]):
                 for j_index,j_element in enumerate(nonzero_indices[0]):
@@ -267,8 +273,10 @@ class WeightedAverageBeamCurrent:
         wabc = np.nan_to_num(wabc); unc_wabc = np.nan_to_num(unc_wabc)
         # print(wabc)
         plt.errorbar(energy, wabc, marker='*', color=color,linewidth=0.0001,
-            xerr=[unc_left, unc_right], yerr=unc_wabc, elinewidth=1.0, capthick=3.0, capsize=3.0,
+            xerr=[unc_left, unc_right], yerr=unc_wabc, elinewidth=1.0, capthick=1.0, capsize=1.0,
             label=note, linestyle='none')
+        plt.ylim(50,120)
+        plt.show()
         
     def plot_beam_current_isotope(self, element, isotope_params, color, label, symbol='.'):
         params = getattr(self, isotope_params)
@@ -283,6 +291,10 @@ class WeightedAverageBeamCurrent:
         mask = beam_current>0
         # print(element)
         # print(beam_current)
+        outfile = np.stack((np.transpose(energy),np.transpose(beam_current),np.transpose(unc_beam_current)), axis=-1)
+        df = pd.DataFrame(outfile,columns=["energy", "Average Current (nA)", "Uncertainty in Average Current (nA)"])
+        # df = pd.DataFrame('energy': energy, [energy, beam_current, unc_beam_current], columns=['energy', 'beam current', 'unc beam current'])
+        df.to_csv('generatedfiles/varianceminimization/iaea25/individial_bc/' + str(isotope_params + '.csv') )
         plt.errorbar(energy[mask], beam_current[mask], color=color, marker=symbol, ls = '',linewidth=0.001, xerr=[unc_left[mask], unc_right[mask]], yerr=np.abs(unc_beam_current[mask]), elinewidth=0.8, capthick=0.8, capsize=3.0,label=label)
 
     def beam_current(self, A0, areal_density, decay_constant, irr_time, reaction_integral):

@@ -15,7 +15,7 @@ def cross_sections(element, isotope, independent):
     else:
         filename = element + '_' + isotope + '.csv'
     # print(root + filename)
-    print(filename)
+    # print(filename)
     df = pd.read_csv(root + filename, comment='#')
     print(df)
     cross_sections = df['cross section (mb)'].values
@@ -25,8 +25,10 @@ def cross_sections(element, isotope, independent):
     unc_right = df['unc right (MeV)'].values
     return energy, unc_left, unc_right, cross_sections, unc_cross_sections
 
-def eob_activity_manually(element, isotope, independent, stack=None):
+def eob_activity_manually(element, isotope, independent, stack=None, corrected=False):
     root = os.getcwd() + '/generatedfiles/activity/data_isotope2/'
+    if corrected:
+        isotope = isotope + '_corrected'
     if independent==True:
         filename = element + '_' + isotope + '_ind.csv'
     elif independent==False:

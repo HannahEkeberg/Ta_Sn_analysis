@@ -7,6 +7,9 @@ from nuclearanalysistools.Tendl import *
 from nuclearanalysistools.Exfor import *
 from nuclearanalysistools.tools import *
 from nuclearanalysistools.Talys import *
+from nuclearanalysistools.Alice import *
+from nuclearanalysistools.Empire import *
+from nuclearanalysistools.Coh import *
 import matplotlib.pyplot as plt
 from get_variables import *
 
@@ -20,6 +23,10 @@ natTa = {"Ta181": 0.9998799, "Ta180m": 0.0001201}
 natSn = {"Sn112": 0.0097,"Sn114": 0.0066,"Sn115": 0.0034,"Sn116": 0.1454,"Sn117": 0.0768,"Sn118": 0.2422,"Sn119": 0.0859,"Sn120": 0.3258,"Sn122": 0.0463,"Sn124": 0.0579
 }
 
+aliceFilePath = os.getcwd() + '/alice/'
+empireFilePath = os.getcwd() + '/empire/'
+cohFilePath = os.getcwd() + '/coh/'
+
 exfor_path = os.getcwd() + '/exfor/'
 talys_path_old = os.getcwd() + '/talys/'
 talys_path = os.getcwd() + '/talys_analysis/'
@@ -30,6 +37,14 @@ talys = Talys(talys_path)
 tendl_Cu = Tendl(natCu, 'proton')
 tendl_Ni = Tendl(natNi, 'proton')
 tendl_Sn = Tendl(natSn, 'proton')
+
+
+flag = True
+def show(flag):
+    if flag == True:
+        plt.show()
+    if flag == False:
+        plt.close()
 
 def Cu_63Zn_monitor():
     element = 'Cu'; isotope = '63ZN'; max_energy = 80; max_cs= 475
@@ -45,8 +60,8 @@ def Cu_63Zn_monitor():
     set_titles(element=element, isotope=isotope)
     legend(fontsize='7', loc='best', ncols=1)
     plt.savefig(save_cs_figures_to + 'Cu_63Zn_monitor.pdf')
-    # plt.show()
-    plt.close()
+    show(flag)
+    ()
 
 def Cu_62Zn_monitor():
     element = 'Cu'; isotope = '62ZN'; max_energy = 80; max_cs= 80
@@ -61,39 +76,47 @@ def Cu_62Zn_monitor():
     set_titles(element=element, isotope=isotope)
     legend(fontsize='6', loc='best', ncols=2)
     plt.savefig(save_cs_figures_to + 'Cu_62Zn_monitor.pdf')
-    # plt.show()
-    plt.close()
+    show(flag)
+    # ()
 
 def Cu_65Zn_monitor():
     element = 'Cu'; isotope = '65ZN'; max_energy = 60; max_cs= 310
     # tendl_Cu.plotTendl23Unique(productZ='30', productA='65', isomerLevel = None, color=None, lineStyle=None, label=None, semilog_y=False)
     Exfor(exfor_path).plotExforDataFromFilename(filename='Cu_65Zn.txt', setLegend=False)
-    CrossSection().monitor_cross_section(element,isotope)
+    fwaxs = CrossSection().monitor_cross_section(element,isotope)
     CrossSection().plot_directly(element, isotope, independent=None, bc_file='IAEA17', note='IAEA 17', color='orange')
     CrossSection().save_manual(element, isotope)
-    CrossSection().plot_manual(element, isotope, label='IAEA 25')
+    xs2 = CrossSection().plot_manual(element, isotope, label='IAEA 25')
+    
+    print("PERCENTAGES")
+    percentages = (xs2-fwaxs)/fwaxs * 100
+    percentages = 1- (xs2/fwaxs) * 100
+    print(percentages)
     plt.xlim(0,max_energy)
     plt.ylim(0,max_cs)
     set_titles(element=element, isotope=isotope)
     legend(fontsize='7', loc='best', ncols=2)
     plt.savefig(save_cs_figures_to + 'Cu_65Zn_monitor.pdf')
-    # plt.show()
-    plt.close()
+    show(flag)
+    ()
 
 def Cu_58Co_monitor():
     element = 'Cu'; isotope = '58CO'; max_energy = 80; max_cs= 75
     Exfor(exfor_path).plotExforDataFromFilename(filename='Cu_58Co.txt', setLegend=False)
-    CrossSection().monitor_cross_section(element,isotope)
-    CrossSection().plot_directly(element, isotope, independent=None, bc_file='IAEA17', note='IAEA 17', color='orange')
+    fwaxs = CrossSection().monitor_cross_section(element,isotope)
+    xs1 = CrossSection().plot_directly(element, isotope, independent=None, bc_file='IAEA17', note='IAEA 17', color='orange')
     CrossSection().save_manual(element, isotope)
-    CrossSection().plot_manual(element, isotope, label='IAEA 25')
+    xs2 = CrossSection().plot_manual(element, isotope, label='IAEA 25')
+    print("PERCENTAGES")
+    percentages = (xs2-fwaxs)/fwaxs * 100
+    print(percentages)
     plt.xlim(0,max_energy)
     plt.ylim(0,max_cs)
     legend(fontsize='7', loc='best', ncols=1)
     set_titles(element=element, isotope=isotope)
     plt.savefig(save_cs_figures_to + 'Cu_58Co_monitor.pdf')
-    # plt.show()
-    plt.close()
+    show(flag)
+    # ()
 
 def Cu_56Co_monitor():
     element = 'Cu'; isotope = '56CO'; max_energy = 80; max_cs = 16
@@ -107,8 +130,7 @@ def Cu_56Co_monitor():
     legend(fontsize='xx-small', loc='best')
     set_titles(element=element, isotope=isotope)
     plt.savefig(save_cs_figures_to + 'Cu_56Co_monitor.pdf')
-    # plt.show()
-    plt.close()
+    show(flag)
 
 def Ni_55Co_monitor():
     element = 'Ni'; isotope = '55CO'; max_energy = 80; max_cs= 55
@@ -130,25 +152,27 @@ def Ni_55Co_monitor():
     legend(fontsize='6', loc='best', ncols=2)
     set_titles(element=element, isotope=isotope)
     plt.savefig(save_cs_figures_to + 'Ni_55Co_monitor.pdf')
-    # plt.show()
-    plt.close()
+    show(flag)
 
 def Ni_57Ni_monitor():
     element = 'Ni'; isotope = '57NI'; max_energy = 80; max_cs = 250
     Exfor(exfor_path).plotExforDataFromFilename(filename='Ni_57Ni.txt', setLegend=False, maxE = 80)
-    CrossSection().monitor_cross_section(element,isotope)
+    fwaxs = CrossSection().monitor_cross_section(element,isotope)
     # CrossSection().plot(element, isotope)
 
-    CrossSection().plot_directly(element, isotope, independent=None, bc_file='IAEA17', note='IAEA 17', color='orange')
+    xs1 = CrossSection().plot_directly(element, isotope, independent=None, bc_file='IAEA17', note='IAEA 17', color='orange')
     CrossSection().save_manual(element, isotope)
-    CrossSection().plot_manual(element, isotope, label='IAEA 25')
+    xs2 = CrossSection().plot_manual(element, isotope, label='IAEA 25')
+    
+    print("PERCENTAGES")
+    percentages = (xs2-fwaxs)/fwaxs * 100
+    print(percentages)
     plt.xlim(0,max_energy)
     plt.ylim(0,max_cs)
     legend(fontsize='6', loc='best', ncols=2)
     set_titles(element=element, isotope=isotope)
     plt.savefig(save_cs_figures_to + 'Ni_57Ni_monitor.pdf')
-    # plt.show()
-    plt.close()
+    show(flag)
 
 
 def Ni_57Co_monitor():
@@ -172,8 +196,7 @@ def Ni_57Co_monitor():
     legend(fontsize='6', loc='best', ncols=2)
     set_titles(element=element, isotope=isotope)
     plt.savefig(save_cs_figures_to + 'Ni_57Co_monitor.pdf')
-    # plt.show()
-    plt.close()
+    show(flag)
 
 def Ni_58Co_monitor(): # cumulative
     element = 'Ni'; isotope='58CO'; max_energy=80; max_cs=100
@@ -183,19 +206,21 @@ def Ni_58Co_monitor(): # cumulative
     decaychain = {isotope: [branchingratio, '01']} # isomer
     # {isotope: [branchingRatio isomerLevel]} #isomer
     independent=False
-    CrossSection().monitor_cross_section(element,isotope)
+    fwaxs = CrossSection().monitor_cross_section(element,isotope)
     # tendl(element, Z, A, isomerLevel=None, betaPlusDecayChain = None, betaMinusDecayChain = None, isomer_decay_chain = decaychain)
     # talys.plotTalys(productZ=Z, productA=A, targetFoil=element, isomerLevel = None, betaFeeding = None, branchingRatio =branchingratio, parentIsomerLevel = '01')
-    CrossSection().plot_directly(element, isotope, independent=None, bc_file='IAEA17', note='IAEA 17', color='orange')
+    xs1 = CrossSection().plot_directly(element, isotope, independent=None, bc_file='IAEA17', note='IAEA 17', color='orange')
     CrossSection().save_manual(element, isotope)
-    CrossSection().plot_manual(element, isotope, label='IAEA 25')
+    xs2 = CrossSection().plot_manual(element, isotope, label='IAEA 25')
+    print("PERCENTAGES")
+    percentages = (xs2-fwaxs)/fwaxs * 100
+    print(percentages)
     plt.xlim(0,max_energy)
     plt.ylim(0,max_cs)
     legend(fontsize='6', loc='best', ncols=1)
     set_titles(element=element, isotope=isotope, independent=independent)
     plt.savefig(save_cs_figures_to + 'Ni_58Co_monitor.pdf')
-    # plt.show()
-    plt.close()
+    show(flag)
 
 def Cu_61Cu_monitor():
     element = 'Cu'; isotope = '61CU'; max_energy = 80; max_cs= 210
@@ -207,18 +232,20 @@ def Cu_61Cu_monitor():
                                 #   betaPlusDecayChain = betaPlusDecayChain,
                                 #   color=None, lineStyle=None, label=None, semilog_y=False)
     # CrossSection().plot(element, isotope)
-    CrossSection().monitor_cross_section(element,isotope)
-    CrossSection().plot_directly(element, isotope, independent=None, bc_file='IAEA17', note='IAEA 17', color='orange')
+    fwaxs = CrossSection().monitor_cross_section(element,isotope)
+    xs1 = CrossSection().plot_directly(element, isotope, independent=None, bc_file='IAEA17', note='IAEA 17', color='orange')
     CrossSection().save_manual(element, isotope)
-    CrossSection().plot_manual(element, isotope, label='IAEA 25')
+    xs2 = CrossSection().plot_manual(element, isotope, label='IAEA 25')
+    print("PERCENTAGES")
+    percentages = (xs2-fwaxs)/fwaxs * 100
+    print(percentages)
     plt.xlim(0,max_energy)
     plt.ylim(0,max_cs)
     # legend(fontsize='xx-small')
     legend(fontsize='6', loc='best', ncols=1)
     set_titles(element=element, isotope=isotope)
     plt.savefig(save_cs_figures_to + 'Cu_61Cu_monitor.pdf')
-    # plt.show()
-    plt.close()
+    show(flag)
 
 def Ni_56Ni_monitor():
     element = 'Ni'; isotope = '56NI'; max_energy = 80; max_cs= 18
@@ -237,8 +264,7 @@ def Ni_56Ni_monitor():
     legend(fontsize='6', loc='best', ncols=1)
     set_titles(element=element, isotope=isotope)
     plt.savefig(save_cs_figures_to + 'Ni_56Ni_monitor.pdf')
-    # plt.show()
-    plt.close()
+    show(flag)
 
 
 def Ni_56Co_monitor():
@@ -261,14 +287,20 @@ def Ni_56Co_monitor():
     legend(fontsize='6', loc='best', ncols=2)
     set_titles(element=element, isotope=isotope)
     plt.savefig(save_cs_figures_to + 'Ni_56Co_monitor.pdf')
-    # plt.show()
-    plt.close()
+    show(flag)
 
 def Cu_60Cu_cumulative():
-    element = 'Cu'; isotope = '60CU'; max_energy = 80; max_cs= 50
+    element = 'Cu'; isotope = '60CU'; max_energy = 80; max_cs= 103
     Z = '29'; A = '60'; betaFeeding='beta+'; branchingratio = 1.0;
     exfor.plotExforDataFromFilename(filename='Cu_60Cu_cumulative.txt', setLegend=False, maxE = max_energy)
     independent=False
+    targetFoil='Cu'; nuclearState=None; threshold=29
+    # Alice(aliceFilePath).plotAliceWithFeeding(productZ=Z, productA=A, targetFoil=targetFoil, nuclearState = None, betaPlusDecayChain=betaPlusDecayChain, betaMinusDecayChain=None, isomerDecayChain=None, threshold=threshold)
+    Alice(aliceFilePath).plotAlice(Z, A, targetFoil, nuclearState, threshold)
+    # Empire(natCu, empireFilePath).plotEmpire(Z,A,reaction='Cu_60Cu',isomerState = None, feeding = 'isomer',parentIsomerState = 'M',branchingRatio = branchingratio,reactionParent = 'Ni_52Mn')
+    Empire(natCu, empireFilePath).plotEmpire(Z,A,reaction='Cu_60Cu',isomerState = None,feeding = 'beta+',parentIsomerState = None,branchingRatio = branchingratio,reactionParent = 'Cu_60Zn')
+    # Coh(natCu, cohFilePath).plotCoh(Z, A, reaction='Cu_60Cu', isomerState=None, threshold=None)
+    Coh(natCu, cohFilePath).plotdataWithMultipleFeeding(Z, A, reaction='Cu_60Cu', isomerState=None, betaPlusDecayChain={'60Zn': ['30', branchingratio, None, 'Cu_60Zn']}, betaMinusDecayChain=None, isomerDecayChain=None)
     betaPlusDecayChain = {isotope: ['30', branchingratio, None]}
     talys.plotTalys(productZ=Z, productA=A, targetFoil=element, isomerLevel = None, betaFeeding = betaFeeding, branchingRatio =branchingratio)
     tendl_Cu.plotTendl23Unique_feeding(productZ=Z, productA=A, isomerLevel = None,  
@@ -282,7 +314,7 @@ def Cu_60Cu_cumulative():
     legend(fontsize='xx-small')
     set_titles(element=element, isotope=isotope, independent=independent)
     plt.savefig(save_cs_figures_to + 'Cu_60Cu_cumulative.pdf')
-    plt.show()
+    show(flag)
 
 def Cu_62Cu_independent():
     element = 'Cu'; isotope = '62CU'; max_energy = 80; max_cs= 1400
@@ -302,12 +334,19 @@ def Cu_62Cu_independent():
     legend(fontsize='xx-small')
     set_titles(element=element, isotope=isotope, independent=independent)
     plt.savefig(save_cs_figures_to + 'Cu_62Cu_independent.pdf')
-    plt.show()
+    show(flag)
 
 def Cu_64Cu_independent():
     element = 'Cu'; isotope = '64CU'; max_energy = 80; max_cs= 250
     Z = '29'; A = '64'; betaFeeding = None; branchingratio = None;
     betaPlusDecayChain = None; independent=True
+    targetFoil='Cu'; nuclearState=None; threshold=11
+    # Alice(aliceFilePath).plotAliceWithFeeding(productZ=Z, productA=A, targetFoil=targetFoil, nuclearState = None, betaPlusDecayChain=betaPlusDecayChain, betaMinusDecayChain=None, isomerDecayChain=None, threshold=threshold)
+    Alice(aliceFilePath).plotAlice(Z, A, targetFoil, nuclearState, threshold)
+    Empire(natCu, empireFilePath).plotEmpire(Z,A,reaction='Cu_64Cu')#,isomerState = None,feeding = 'isomer',parentIsomerState = 'M',branchingRatio = branchingratio,reactionParent = 'Ni_52Mn')
+    Coh(natCu, cohFilePath).plotCoh(Z, A, reaction='Cu_64Cu', isomerState=None, threshold=None)
+    # Coh(natTa, cohFilePath).plotdataWithMultipleFeeding(Z, A, reaction='Ni_51Cr', isomerState=None, betaPlusDecayChain={'51Mn': ['25', branchingratio, None, 'Ni_51Mn']}, betaMinusDecayChain=None, isomerDecayChain=None)
+    # Coh(natNi, cohFilePath).plotdataWithMultipleFeeding(Z, A, reaction='Ni_52Mn', isomerState='g', betaPlusDecayChain=None, betaMinusDecayChain=None, isomerDecayChain={'Ni:52Mn': [branchingratio, 'm', 'Ni_52Mn']})
     exfor.plotExforDataFromFilename(filename='Cu_64Cu_independent.txt', setLegend=False, maxE = max_energy)
     talys.plotTalys(productZ=Z, productA=A, targetFoil=element, isomerLevel = None, betaFeeding = betaFeeding, branchingRatio =branchingratio)
     tendl_Cu.plotTendl23Unique_feeding(productZ=Z, productA=A, isomerLevel = None,  
@@ -321,18 +360,24 @@ def Cu_64Cu_independent():
     legend(fontsize='xx-small')
     set_titles(element=element, isotope=isotope, independent=independent)
     plt.savefig(save_cs_figures_to + 'Cu_64Cu_independent.pdf')
-    plt.show()
+    show(flag)
 
 def Cu_57Ni_cumulative():
     element = 'Cu'; isotope = '57NI'; max_energy = 80; max_cs= 4
     Z = '28'; A = '57'; betaFeeding = None; branchingratio = None;
     betaPlusDecayChain = None; independent=False
+    targetFoil='Cu'; nuclearState=None; threshold=None
+    # Alice(aliceFilePath).plotAliceWithFeeding(productZ=Z, productA=A, targetFoil=targetFoil, nuclearState = None, betaPlusDecayChain=betaPlusDecayChain, betaMinusDecayChain=None, isomerDecayChain=None, threshold=threshold)
+    Alice(aliceFilePath).plotAlice(Z, A, targetFoil, nuclearState, threshold)
     exfor.plotExforDataFromFilename(filename='Cu_57Ni_cumulative.txt', setLegend=False, maxE = max_energy)
     talys.plotTalys(productZ=Z, productA=A, targetFoil=element, isomerLevel = None, betaFeeding = betaFeeding, branchingRatio =branchingratio)
     tendl_Cu.plotTendl23Unique_feeding(productZ=Z, productA=A, isomerLevel = None,  
                                   betaPlusDecayChain = betaPlusDecayChain,
                                   color=None, lineStyle=None, label=None, semilog_y=False)
     # CrossSection().plot(element, isotope)
+    Empire(natCu, empireFilePath).plotEmpire(Z,A,reaction='Cu_57Ni',isomerState = None,feeding = 'beta+',parentIsomerState = None,branchingRatio = 1.0,reactionParent = 'Cu_57Cu')
+    # Coh(natCu, cohFilePath).plotCoh(Z, A, reaction='Cu_60Cu', isomerState=None, threshold=None)
+    Coh(natCu, cohFilePath).plotdataWithMultipleFeeding(Z, A, reaction='Cu_57Ni', isomerState='g', betaPlusDecayChain={'57Cu': ['29', 1.0, None, 'Cu_57Ni']}, betaMinusDecayChain=None, isomerDecayChain=None)
     CrossSection().save_manual(element, isotope, independent=independent)
     CrossSection().plot_manual(element, isotope, independent=independent)
     plt.xlim(0,max_energy)
@@ -340,7 +385,7 @@ def Cu_57Ni_cumulative():
     legend(fontsize='xx-small')
     set_titles(element=element, isotope=isotope, independent=independent)
     plt.savefig(save_cs_figures_to + 'Cu_57Ni_cumulative.pdf')
-    plt.show()
+    show(flag)
 
 def Cu_56Ni_cumulative():
     element = 'Cu'; isotope = '56NI'; max_energy = 80; max_cs= 2
@@ -359,19 +404,26 @@ def Cu_56Ni_cumulative():
     legend(fontsize='xx-small')
     set_titles(element=element, isotope=isotope, independent=independent)
     plt.savefig(save_cs_figures_to + 'Cu_56Ni_cumulative.pdf')
-    plt.show()
+    show(flag)
 
 def Cu_61Co_cumulative():
     # only using gamma 917
     element = 'Cu'; isotope = '61CO'; max_energy = 80; max_cs=15
     Z = '27'; A = '61'; betaFeeding = 'beta-'; branchingratio = 1.0;
     betaMinusDecayChain = {isotope: ['26', branchingratio, None]}; independent=False
+    targetFoil='Cu'; nuclearState=None; threshold=None
+    # Alice(aliceFilePath).plotAliceWithFeeding(productZ=Z, productA=A, targetFoil=targetFoil, nuclearState = None, betaPlusDecayChain=betaPlusDecayChain, betaMinusDecayChain=None, isomerDecayChain=None, threshold=threshold)
+    Alice(aliceFilePath).plotAlice(Z, A, targetFoil, nuclearState, threshold)
     exfor.plotExforDataFromFilename(filename='Cu_61Co_cumulative.txt', setLegend=False, maxE = max_energy)
     talys.plotTalys(productZ=Z, productA=A, targetFoil=element, isomerLevel = None, betaFeeding = betaFeeding, branchingRatio =branchingratio)
     tendl_Cu.plotTendl23Unique_feeding(productZ=Z, productA=A, isomerLevel = None,  
                                   betaMinusDecayChain = betaMinusDecayChain,
                                   color=None, lineStyle=None, label=None, semilog_y=False)
     # CrossSection().plot(element, isotope)
+    Empire(natCu, empireFilePath).plotEmpire(Z,A,reaction='Cu_61Co')#,isomerState = None,feeding = 'isomer',parentIsomerState = 'M',branchingRatio = branchingratio,reactionParent = 'Ni_52Mn')
+    Coh(natCu, cohFilePath).plotCoh(Z, A, reaction='Ni_61Co', isomerState=None, threshold=None)
+    # Coh(natTa, cohFilePath).plotdataWithMultipleFeeding(Z, A, reaction='Ni_51Cr', isomerState=None, betaPlusDecayChain={'51Mn': ['25', branchingratio, None, 'Ni_51Mn']}, betaMinusDecayChain=None, isomerDecayChain=None)
+    # Coh(natNi, cohFilePath).plotdataWithMultipleFeeding(Z, A, reaction='Ni_52Mn', isomerState='g', betaPlusDecayChain=None, betaMinusDecayChain=None, isomerDecayChain={'Ni:52Mn': [branchingratio, 'm', 'Ni_52Mn']})
     CrossSection().save_manual(element, isotope, independent=independent)
     CrossSection().plot_manual(element, isotope, independent=independent)
     plt.xlim(0,max_energy)
@@ -379,14 +431,19 @@ def Cu_61Co_cumulative():
     legend(fontsize='xx-small')
     set_titles(element=element, isotope=isotope, independent=independent)
     plt.savefig(save_cs_figures_to + 'Cu_61Co_cumulative.pdf')
-    plt.show()
+    show(flag)
 
 def Cu_60Co_cumulative():
     # Everything looks good except Cu01. 
-    element = 'Cu'; isotope = '60CO'; max_energy = 80; max_cs= 20
+    element = 'Cu'; isotope = '60CO'; max_energy = 80; max_cs= 25
     Z = '27'; A = '60'; betaFeeding = None; branchingratio = None;
     betaPlusDecayChain = None
+    targetFoil='Cu'; nuclearState=None; threshold=28
+    # Alice(aliceFilePath).plotAliceWithFeeding(productZ=Z, productA=A, targetFoil=targetFoil, nuclearState = None, betaPlusDecayChain=betaPlusDecayChain, betaMinusDecayChain=None, isomerDecayChain=None, threshold=threshold)
+    Alice(aliceFilePath).plotAlice(Z, A, targetFoil, nuclearState, threshold)
     exfor.plotExforDataFromFilename(filename='Cu_60Co_cumulative.txt', setLegend=False, maxE = max_energy)
+    Coh(natCu, cohFilePath).plotCoh(Z, A, reaction='Cu_60Co', isomerState=None, threshold=None)
+    Empire(natCu, empireFilePath).plotEmpire(Z,A,reaction='Cu_60Co')#,isomerState = None,feeding = 'isomer',parentIsomerState = 'M',branchingRatio = branchingratio,reactionParent = 'Ni_52Mn')
     talys.plotTalys(productZ=Z, productA=A, targetFoil=element, isomerLevel = None, betaFeeding = betaFeeding, branchingRatio =branchingratio)
     tendl_Cu.plotTendl23Unique_feeding(productZ=Z, productA=A, isomerLevel = None,  
                                   betaPlusDecayChain = betaPlusDecayChain,
@@ -399,13 +456,18 @@ def Cu_60Co_cumulative():
     legend(fontsize='xx-small')
     set_titles(element=element, isotope=isotope, independent=False)
     plt.savefig(save_cs_figures_to + 'Cu_60Co_cumulative.pdf')
-    plt.show()
+    show(flag)
 
 def Cu_55Co_cumulative():
     # Everything looks good except Cu01. 
     element = 'Cu'; isotope = '55CO'; max_energy = 80; max_cs= 2
     Z = '27'; A = '55'; betaFeeding = None; branchingratio = None;
     betaPlusDecayChain = None
+    targetFoil='Cu'; nuclearState=None; threshold=62
+    # Alice(aliceFilePath).plotAliceWithFeeding(productZ=Z, productA=A, targetFoil=targetFoil, nuclearState = None, betaPlusDecayChain=betaPlusDecayChain, betaMinusDecayChain=None, isomerDecayChain=None, threshold=threshold)
+    Alice(aliceFilePath).plotAlice(Z, A, targetFoil, nuclearState, threshold)
+    Empire(natCu, empireFilePath).plotEmpire(Z,A,reaction='Cu_61Co')#,isomerState = None,feeding = 'isomer',parentIsomerState = 'M',branchingRatio = branchingratio,reactionParent = 'Ni_52Mn')
+    Coh(natCu, cohFilePath).plotCoh(Z, A, reaction='Ni_61Co', isomerState=None, threshold=None)
     exfor.plotExforDataFromFilename(filename='Cu_55Co_cumulative.txt', setLegend=False, maxE = max_energy)
     talys.plotTalys(productZ=Z, productA=A, targetFoil=element, isomerLevel = None, betaFeeding = betaFeeding, branchingRatio =branchingratio)
     tendl_Cu.plotTendl23Unique_feeding(productZ=Z, productA=A, isomerLevel = None,  
@@ -419,7 +481,7 @@ def Cu_55Co_cumulative():
     legend(fontsize='xx-small')
     set_titles(element=element, isotope=isotope, independent=False)
     plt.savefig(save_cs_figures_to + 'Cu_55Co_cumulative.pdf')
-    plt.show()
+    show(flag)
 
 def Cu_57Co_cumulative():
     element = 'Cu'; isotope = '57CO'; max_energy = 80; max_cs= 90
@@ -438,7 +500,7 @@ def Cu_57Co_cumulative():
     legend(fontsize='xx-small')
     set_titles(element=element, isotope=isotope, independent=False)
     plt.savefig(save_cs_figures_to + 'Cu_57Co_cumulative.pdf')
-    plt.show()
+    show(flag)
 
 def Cu_57Co_independent():
     # CrossSection().plot(element, isotope)
@@ -455,7 +517,7 @@ def Cu_57Co_independent():
     legend(fontsize='xx-small')
     set_titles(element=element, isotope=isotope, independent=True)
     plt.savefig(save_cs_figures_to + 'Cu_57Co_independent.pdf')
-    plt.show()
+    show(flag)
 
 def Cu_58Co_independent():
     element = 'Cu'; isotope='58CO'; max_energy=80; max_cs= 80
@@ -484,7 +546,7 @@ def Cu_58Co_independent():
     plt.ylim(-0.1,max_cs)
     legend()
     plt.savefig(save_cs_figures_to + 'Cu_58Co_independent.pdf')
-    plt.show()
+    show(flag)
 
 def Cu_58mCo_independent():
     br = 0.999988
@@ -518,7 +580,7 @@ def Cu_58mCo_independent():
     plt.ylim(0,max_cs)
     legend()
     plt.savefig(save_cs_figures_to + 'Cu_58mCo_independent.pdf')
-    plt.show()
+    show(flag)
 
     pass
 
@@ -526,6 +588,11 @@ def Cu_59Fe_cumulative():
     element = 'Cu'; isotope = '59FE'; max_energy = 80; max_cs= 1
     Z = '26'; A = '59'; betaFeeding=None; branchingratio = None;
     betaPlusDecayChain = None#{isotope: ['30', branchingratio, None]}
+    targetFoil='Cu'; nuclearState=None; threshold=30
+    # Alice(aliceFilePath).plotAliceWithFeeding(productZ=Z, productA=A, targetFoil=targetFoil, nuclearState = None, betaPlusDecayChain=betaPlusDecayChain, betaMinusDecayChain=None, isomerDecayChain=None, threshold=threshold)
+    Alice(aliceFilePath).plotAlice(Z, A, targetFoil, nuclearState, threshold)
+    Empire(natCu, empireFilePath).plotEmpire(Z,A,reaction='Cu_59Fe')#,isomerState = None,feeding = 'isomer',parentIsomerState = 'M',branchingRatio = branchingratio,reactionParent = 'Ni_52Mn')
+    Coh(natCu, cohFilePath).plotCoh(Z, A, reaction='Cu_59Fe', isomerState=None, threshold=None)
     exfor.plotExforDataFromFilename(filename='Cu_59Fe_cumulative.txt', setLegend=False, maxE = max_energy)
     talys.plotTalys(productZ=Z, productA=A, targetFoil=element, isomerLevel = None, betaFeeding = betaFeeding, branchingRatio =branchingratio)
     tendl_Cu.plotTendl23Unique_feeding(productZ=Z, productA=A, isomerLevel = None,  
@@ -539,12 +606,17 @@ def Cu_59Fe_cumulative():
     legend(fontsize='xx-small')
     set_titles(element=element, isotope=isotope)
     plt.savefig(save_cs_figures_to + 'Cu_59Fe_cumulative.pdf')
-    plt.show()
+    show(flag)
 
 def Cu_56Mn_cumulative():
     element = 'Cu'; isotope = '56MN'; max_energy = 80; max_cs= 1
     Z = '25'; A = '56'; betaFeeding=None; branchingratio = None; independent=False;
     betaPlusDecayChain = None#{isotope: ['30', branchingratio, None]}
+    targetFoil='Cu'; nuclearState=None; threshold=None
+    # Alice(aliceFilePath).plotAliceWithFeeding(productZ=Z, productA=A, targetFoil=targetFoil, nuclearState = None, betaPlusDecayChain=betaPlusDecayChain, betaMinusDecayChain=None, isomerDecayChain=None, threshold=threshold)
+    Alice(aliceFilePath).plotAlice(Z, A, targetFoil, nuclearState, threshold)
+    Empire(natCu, empireFilePath).plotEmpire(Z,A,reaction='Cu_56Mn')#,isomerState = None,feeding = 'isomer',parentIsomerState = 'M',branchingRatio = branchingratio,reactionParent = 'Ni_52Mn')
+    Coh(natCu, cohFilePath).plotCoh(Z, A, reaction='Cu_56Mn', isomerState=None, threshold=None)
     exfor.plotExforDataFromFilename(filename='Cu_56Mn_cumulative.txt', setLegend=False, maxE = max_energy)
     talys.plotTalys(productZ=Z, productA=A, targetFoil=element, isomerLevel = None, betaFeeding = betaFeeding, branchingRatio =branchingratio)
     tendl_Cu.plotTendl23Unique_feeding(productZ=Z, productA=A, isomerLevel = None,  
@@ -558,12 +630,17 @@ def Cu_56Mn_cumulative():
     legend(fontsize='xx-small')
     set_titles(element=element, isotope=isotope)
     plt.savefig(save_cs_figures_to + 'Cu_56Mn_cumulative.pdf')
-    plt.show()
+    show(flag)
 
 def Cu_54Mn_independent():
     element = 'Cu'; isotope = '54MN'; max_energy = 80; max_cs= 10.5
     Z = '25'; A = '54'; betaFeeding=None; branchingratio = None;
     independent=True
+    targetFoil='Cu'; nuclearState=None; threshold=45
+    # Alice(aliceFilePath).plotAliceWithFeeding(productZ=Z, productA=A, targetFoil=targetFoil, nuclearState = None, betaPlusDecayChain=betaPlusDecayChain, betaMinusDecayChain=None, isomerDecayChain=None, threshold=threshold)
+    Alice(aliceFilePath).plotAlice(Z, A, targetFoil, nuclearState, threshold)
+    Empire(natCu, empireFilePath).plotEmpire(Z,A,reaction='Cu_54Mn')#,isomerState = None,feeding = 'isomer',parentIsomerState = 'M',branchingRatio = branchingratio,reactionParent = 'Ni_52Mn')
+    Coh(natCu, cohFilePath).plotCoh(Z, A, reaction='Cu_54Mn', isomerState=None, threshold=None)
     betaPlusDecayChain = None#{isotope: ['30', branchingratio, None]}
     exfor.plotExforDataFromFilename(filename='Cu_54Mn_independent.txt', setLegend=False, maxE = max_energy)
     talys.plotTalys(productZ=Z, productA=A, targetFoil=element, isomerLevel = None, betaFeeding = betaFeeding, branchingRatio =branchingratio)
@@ -578,13 +655,19 @@ def Cu_54Mn_independent():
     legend(fontsize='xx-small')
     set_titles(element=element, isotope=isotope, independent=independent)
     plt.savefig(save_cs_figures_to + 'Cu_54Mn_independent.pdf')
-    plt.show()
+    show(flag)
 
 def Ni_64Cu_independent():
     # cross sections in foils 13,14 looks good. In 1-2, probably false?
     element = 'Ni'; isotope = '64CU'; max_energy = 80; max_cs= 10.5
     Z = '29'; A = '64'; betaFeeding=None; branchingratio = None;
     betaPlusDecayChain = None; independent=True
+    targetFoil='Ni'; nuclearState=None; threshold=None
+    Alice(aliceFilePath).plotAlice(Z, A, targetFoil, nuclearState, threshold)
+    Empire(natNi, empireFilePath).plotEmpire(Z,A,reaction='Ni_64Cu',isomerState = None)
+    Coh(natNi, cohFilePath).plotCoh(Z, A, reaction='Ni_64Cu', isomerState=None, threshold=None)
+    # Coh(natTa, cohFilePath).plotdataWithMultipleFeeding(Z, A, reaction='Ta_177Ta', isomerState='g', betaPlusDecayChain=None, betaMinusDecayChain=None, isomerDecayChain={'Ta:179W': [branchingratio, 'm1', reaction]})
+    # Coh(natTa, cohFilePath).plotdataWithMultipleFeeding(Z, A, reaction='Ta_173Hf', isomerState=None, betaPlusDecayChain={'173Ta': ['73', branchingratio, None, 'Ta_173Ta']}, betaMinusDecayChain=None, isomerDecayChain=None)
     # exfor.plotExforDataFromFilename(filename='Cu_54Mn_independent.txt', setLegend=False, maxE = max_energy)
     talys.plotTalys(productZ=Z, productA=A, targetFoil=element, isomerLevel = None, betaFeeding = betaFeeding, branchingRatio =branchingratio)
     tendl_Ni.plotTendl23Unique_feeding(productZ=Z, productA=A, isomerLevel = None,  
@@ -599,12 +682,18 @@ def Ni_64Cu_independent():
     legend(fontsize='xx-small')
     set_titles(element=element, isotope=isotope,independent=independent)
     plt.savefig(save_cs_figures_to + 'Ni_64Cu_independent.pdf')
-    plt.show()
+    show(flag)
 
 def Ni_61Cu_independent():
-    element = 'Ni'; isotope = '61CU'; max_energy = 80; max_cs= 14
+    element = 'Ni'; isotope = '61CU'; max_energy = 80; max_cs= 22
     Z = '29'; A = '61'; betaFeeding=None; branchingratio = None; decaychain=None
     independent=True
+    targetFoil='Ni'; nuclearState=None; threshold=None
+    Alice(aliceFilePath).plotAlice(Z, A, targetFoil, nuclearState, threshold)
+    Empire(natNi, empireFilePath).plotEmpire(Z,A,reaction='Ni_61Cu', isomerState=None)
+    Coh(natNi, cohFilePath).plotCoh(Z, A, reaction='Ni_61Cu', isomerState=None, threshold=None)
+    # Coh(natTa, cohFilePath).plotdataWithMultipleFeeding(Z, A, reaction='Ta_177Ta', isomerState='g', betaPlusDecayChain=None, betaMinusDecayChain=None, isomerDecayChain={'Ta:179W': [branchingratio, 'm1', reaction]})
+    # Coh(natTa, cohFilePath).plotdataWithMultipleFeeding(Z, A, reaction='Ta_173Hf', isomerState=None, betaPlusDecayChain={'173Ta': ['73', branchingratio, None, 'Ta_173Ta']}, betaMinusDecayChain=None, isomerDecayChain=None)
     exfor.plotExforDataFromFilename(filename='Ni_61Cu_independent.txt', setLegend=False, maxE = max_energy)
     talys.plotTalys(productZ=Z, productA=A, targetFoil=element, isomerLevel = None, betaFeeding = betaFeeding, branchingRatio =branchingratio)
     tendl(element, Z, A)
@@ -616,7 +705,7 @@ def Ni_61Cu_independent():
     legend(fontsize='xx-small')
     set_titles(element=element, isotope=isotope, independent=independent)
     plt.savefig(save_cs_figures_to + 'Ni_61Cu_independent.pdf')
-    plt.show()
+    show(flag)
 
 def Ni_60Cu_independent():
     # FALSE. Did not see......
@@ -634,7 +723,7 @@ def Ni_60Cu_independent():
     legend(fontsize='xx-small')
     set_titles(element=element, isotope=isotope, independent=independent)
     # plt.savefig(save_cs_figures_to + 'Ni_61Cu_independent.pdf')
-    plt.show()
+    show(flag)
 
 def Ni_61Co_cumulative():
     # Looks false
@@ -650,7 +739,7 @@ def Ni_61Co_cumulative():
     legend(fontsize='xx-small')
     set_titles(element=element, isotope=isotope)
     plt.savefig(save_cs_figures_to + 'Ni_61Co_cumulative.pdf')
-    plt.show()
+    show(flag)
 
 def Ni_60Co_cumulative():
     element = 'Ni'; isotope = '60CO'; max_energy = 80; max_cs= 150
@@ -665,7 +754,7 @@ def Ni_60Co_cumulative():
     legend(fontsize='xx-small')
     set_titles(element=element, isotope=isotope)
     plt.savefig(save_cs_figures_to + 'Ni_60Co_cumulative.pdf')
-    plt.show()
+    show(flag)
 
 def Ni_57Co_independent():
     element = 'Ni'; isotope = '57CO'; max_energy = 80; max_cs= 430
@@ -674,6 +763,12 @@ def Ni_57Co_independent():
     tendl_Ni.plotTendl23Unique_feeding(productZ=Z, productA=A, isomerLevel = None,  
                                   betaPlusDecayChain = None,
                                   color=None, lineStyle=None, label=None, semilog_y=False)
+    targetFoil='Ni'; nuclearState=None; threshold=5.5
+    Alice(aliceFilePath).plotAlice(Z, A, targetFoil, nuclearState, threshold)
+    Empire(natNi, empireFilePath).plotEmpire(Z,A,reaction='Ni_57Co',isomerState = None)#,feeding = 'isomer',parentIsomerState = 'M',branchingRatio = branchingratio,reactionParent = 'Ta_179W')
+    Coh(natNi, cohFilePath).plotCoh(Z, A, reaction='Ni_57Co', isomerState=None, threshold=None)
+    # Coh(natTa, cohFilePath).plotdataWithMultipleFeeding(Z, A, reaction='Ta_177Ta', isomerState='g', betaPlusDecayChain=None, betaMinusDecayChain=None, isomerDecayChain={'Ta:179W': [branchingratio, 'm1', reaction]})
+    # Coh(natTa, cohFilePath).plotdataWithMultipleFeeding(Z, A, reaction='Ta_173Hf', isomerState=None, betaPlusDecayChain={'173Ta': ['73', branchingratio, None, 'Ta_173Ta']}, betaMinusDecayChain=None, isomerDecayChain=None)
     exfor.plotExforDataFromFilename(filename='Ni_57Co_independent.txt', setLegend=False, maxE = max_energy)
 
     energy, unc_left, unc_right, subtract_xs, unc_subtract_xs = cross_sections(element, isotope='57NI', independent=None)
@@ -687,15 +782,20 @@ def Ni_57Co_independent():
     legend(fontsize='xx-small')
     set_titles(element=element, isotope=isotope, independent=independent)
     plt.savefig(save_cs_figures_to + 'Ni_57Co_independent.pdf')
-    plt.show()
+    show(flag)
     
 def Ni_56Co_independent():
     element = 'Ni'; isotope = '56CO'; max_energy = 80; max_cs= 290
     Z = '27'; A = '56'; betaFeeding=None; branchingratio = None; independent=True
+    targetFoil='Ni'; nuclearState=None; threshold=19
+    Alice(aliceFilePath).plotAlice(Z, A, targetFoil, nuclearState, threshold)
+    Empire(natNi, empireFilePath).plotEmpire(Z,A,reaction='Ni_56Co',isomerState = None)#,feeding = 'isomer',parentIsomerState = 'M',branchingRatio = branchingratio,reactionParent = 'Ta_179W')
+    Coh(natNi, cohFilePath).plotCoh(Z, A, reaction='Ni_56Co', isomerState=None, threshold=None)
     talys.plotTalys(productZ=Z, productA=A, targetFoil=element, isomerLevel = None, betaFeeding = betaFeeding, branchingRatio =branchingratio)
     tendl_Ni.plotTendl23Unique_feeding(productZ=Z, productA=A, isomerLevel = None,  
                                   betaPlusDecayChain = None,
                                   color=None, lineStyle=None, label=None, semilog_y=False)
+    
     # CrossSection().plot_manual(element, isotope, independent=True)
     # CrossSection().plot_manual(element, isotope, independent=False, color='forestgreen')
     # CrossSection().plot_manual(element, isotope='56NI', independent=True, color='hotpink')
@@ -713,7 +813,7 @@ def Ni_56Co_independent():
     legend(fontsize='xx-small')
     set_titles(element=element, isotope=isotope, independent=independent)
     plt.savefig(save_cs_figures_to + 'Ni_56Co_independent.pdf')
-    plt.show()
+    show(flag)
 
 
     # total, unc_total = cross_sections(element, isotope, independent=False)
@@ -729,12 +829,16 @@ def Ni_56Co_independent():
     # legend(fontsize='xx-small')
     # set_titles(element=element, isotope=isotope, independent=True)
     # plt.savefig(save_cs_figures_to + 'Ni_56Co_independent.pdf')
-    # plt.show()
+    show(flag)
 
 def Ni_54Mn_independent():
     element = 'Ni'; isotope = '54MN'; max_energy = 80; max_cs= 14
     Z = '25'; A = '54'; betaFeeding=None; branchingratio = None; decaychain=None
     independent=True
+    targetFoil='Ni'; nuclearState=None; threshold=5.5
+    Alice(aliceFilePath).plotAlice(Z, A, targetFoil, nuclearState, threshold)
+    Empire(natNi, empireFilePath).plotEmpire(Z,A,reaction='Ni_54Mn',isomerState = None)#,feeding = 'isomer',parentIsomerState = 'M',branchingRatio = branchingratio,reactionParent = 'Ta_179W')
+    Coh(natNi, cohFilePath).plotCoh(Z, A, reaction='Ni_54Mn', isomerState=None, threshold=None)
     exfor.plotExforDataFromFilename(filename='Ni_54Mn_independent.txt', setLegend=False, maxE = max_energy)
     talys.plotTalys(productZ=Z, productA=A, targetFoil=element, isomerLevel = None, betaFeeding = betaFeeding, branchingRatio =branchingratio)
     tendl(element, Z, A)
@@ -747,7 +851,7 @@ def Ni_54Mn_independent():
     legend(fontsize='xx-small')
     set_titles(element=element, isotope=isotope, independent=independent)
     plt.savefig(save_cs_figures_to + 'Ni_54Mn_independent.pdf')
-    plt.show()
+    show(flag)
 
 
 def Ni_52Mn_cumulative():
@@ -756,6 +860,13 @@ def Ni_52Mn_cumulative():
     decaychain = {isotope: ['26', branchingratio]}
     # {isotope: [branchingRatio isomerLevel]} #isomer
     independent=False
+    targetFoil='Ni'; nuclearState=None; threshold=5.5
+    Alice(aliceFilePath).plotAlice(Z, A, targetFoil, nuclearState, threshold)
+    Empire(natNi, empireFilePath).plotEmpire(Z,A,reaction='Ni_52Mn',isomerState = None,feeding = 'isomer',parentIsomerState = 'M',branchingRatio = branchingratio,reactionParent = 'Ni_52Mn')
+    # Coh(natNi, cohFilePath).plotCoh(Z, A, reaction='Ni_64Cu', isomerState=None, threshold=None)
+    # Coh(natTa, cohFilePath).plotdataWithMultipleFeeding(Z, A, reaction='Ta_177Ta', isomerState='g', betaPlusDecayChain=None, betaMinusDecayChain=None, isomerDecayChain={'Ta:179W': [branchingratio, 'm1', reaction]})
+    Coh(natNi, cohFilePath).plotdataWithMultipleFeeding(Z, A, reaction='Ni_52Mn', isomerState='g', betaPlusDecayChain=None, betaMinusDecayChain=None, isomerDecayChain={'Ni:52Mn': [branchingratio, 'm', 'Ni_52Mn']})
+    # Alice(aliceFilePath).plotAliceWithFeeding(productZ=Z, productA=A, targetFoil=targetFoil, nuclearState = None, betaPlusDecayChain=betaPlusDecayChain, betaMinusDecayChain=None, isomerDecayChain=None, threshold=threshold)
     tendl(element, Z, A, isomerLevel=None, betaPlusDecayChain = None, betaMinusDecayChain = None, isomer_decay_chain = decaychain)
     talys.plotTalys(productZ=Z, productA=A, targetFoil=element, isomerLevel = None, betaFeeding = betaFeeding, branchingRatio =branchingratio)
     # talys.plotTalys(productZ='26', productA=A, targetFoil=element, isomerLevel = None, betaFeeding = None)
@@ -769,7 +880,7 @@ def Ni_52Mn_cumulative():
     legend(fontsize='xx-small')
     set_titles(element=element, isotope=isotope, independent=independent)
     plt.savefig(save_cs_figures_to + 'Ni_52Mn_cumulative.pdf')
-    plt.show()
+    show(flag)
 
 def Ni_52mMn_cumulative():
     #FALSE
@@ -790,7 +901,7 @@ def Ni_52mMn_cumulative():
     legend(fontsize='xx-small')
     set_titles(element=element, isotope=isotope, independent=independent)
     # plt.savefig(save_cs_figures_to + 'Ni_52Mn_cumulative.pdf')
-    plt.show()
+    show(flag)
 
 def Ni_51Cr_cumulative():
     element = 'Ni'; isotope='51CR'; max_energy=80; max_cs=31
@@ -798,6 +909,13 @@ def Ni_51Cr_cumulative():
     decaychain = {isotope: ['25', branchingratio]}
     # {isotope: [branchingRatio isomerLevel]} #isomer
     independent=False
+    targetFoil='Ni'; nuclearState=None; threshold=5.5
+    # Alice(aliceFilePath).plotAliceWithFeeding(productZ=Z, productA=A, targetFoil=targetFoil, nuclearState = None, betaPlusDecayChain=betaPlusDecayChain, betaMinusDecayChain=None, isomerDecayChain=None, threshold=threshold)
+    Alice(aliceFilePath).plotAlice(Z, A, targetFoil, nuclearState, threshold)
+    Empire(natNi, empireFilePath).plotEmpire(Z,A,reaction='Ni_51Cr')#,isomerState = None,feeding = 'isomer',parentIsomerState = 'M',branchingRatio = branchingratio,reactionParent = 'Ni_52Mn')
+    Coh(natNi, cohFilePath).plotCoh(Z, A, reaction='Ni_51Cr', isomerState=None, threshold=None)
+    # Coh(natTa, cohFilePath).plotdataWithMultipleFeeding(Z, A, reaction='Ni_51Cr', isomerState=None, betaPlusDecayChain={'51Mn': ['25', branchingratio, None, 'Ni_51Mn']}, betaMinusDecayChain=None, isomerDecayChain=None)
+    # Coh(natNi, cohFilePath).plotdataWithMultipleFeeding(Z, A, reaction='Ni_52Mn', isomerState='g', betaPlusDecayChain=None, betaMinusDecayChain=None, isomerDecayChain={'Ni:52Mn': [branchingratio, 'm', 'Ni_52Mn']})
     tendl(element, Z, A, isomerLevel=None, betaPlusDecayChain = None, betaMinusDecayChain = None, isomer_decay_chain = decaychain)
     talys.plotTalys(productZ=Z, productA=A, targetFoil=element, isomerLevel = None, betaFeeding = betaFeeding, branchingRatio =branchingratio)
     # talys.plotTalys(productZ='26', productA=A, targetFoil=element, isomerLevel = None, betaFeeding = None)
@@ -810,7 +928,7 @@ def Ni_51Cr_cumulative():
     legend(fontsize='xx-small')
     set_titles(element=element, isotope=isotope, independent=independent)
     plt.savefig(save_cs_figures_to + 'Ni_51Cr_cumulative.pdf')
-    plt.show()
+    show(flag)
 
 # def Ni_58Co_independent():
 #     element = 'Ni'; isotope = '58CO'; max_energy = 80; max_cs= 580
@@ -830,7 +948,7 @@ def Ni_51Cr_cumulative():
 #     # CrossSection().plot_manual(element, isotope, independent=True)
 #     # # CrossSection().plot_manual(element, isotope, independent=False, color='brown')
 #     legend()
-#     plt.show()
+#     show(flag)
 
 # def Ni_58mCo_independent():
 #     br = 0.999988
@@ -850,7 +968,7 @@ def Ni_51Cr_cumulative():
 #     plt.errorbar(energy, total, yerr=unc_total, xerr=[unc_left, unc_right], marker='o', ls='none', label='total')
 #     plt.errorbar(energy,    gs, yerr=np.abs(unc_gs), xerr=[unc_left,    unc_right], marker='o', ls='none', label='groundstate')
 #     legend()
-#     plt.show()
+#     show(flag)
 
 def Ta_175Ta():
     element = 'Ta'; isotope = '175TA'
@@ -860,10 +978,10 @@ def Ta_175Ta():
     # plt.ylim(0,300)
     legend(fontsize='xx-small')
     set_titles(element=element, isotope=isotope)
-    plt.show()
+    show(flag)
 
 def Ta_177Ta_cumulative():
-    element = 'Ta'; isotope = '177TA'; max_energy = 80; max_cs=900;
+    element = 'Ta'; isotope = '177TA'; max_energy = 80; max_cs=1020;
     Z = '73'; A = '177'; betaFeeding='beta+'; branchingratio = 1.0;
     betaPlusDecayChain = {isotope: ['74', branchingratio, None]}
     exfor.plotExforDataFromFilename(filename='Ta_177Ta_cumulative.txt', setLegend=False, maxE = max_energy)
@@ -872,6 +990,14 @@ def Ta_177Ta_cumulative():
                                   betaPlusDecayChain = betaPlusDecayChain,
                                   color=None, lineStyle=None, label=None, semilog_y=False)
     # CrossSection().plot(element, isotope)
+    targetFoil='Ta'; nuclearState=None; threshold=30
+    Empire(natTa, empireFilePath).plotEmpire(Z,A,reaction='Ta_177Ta',isomerState = None,feeding = 'beta+',parentIsomerState = None,branchingRatio = branchingratio,reactionParent = 'Ta_177W')
+    # Coh(natTa, cohFilePath).plotCoh(Z, A, reaction='Ta_177Ta', isomerState=None, threshold=None)
+    # Coh(natTa, cohFilePath).plotdataWithMultipleFeeding(Z, A, reaction='Ta_177Ta', isomerState='g', betaPlusDecayChain=None, betaMinusDecayChain=None, isomerDecayChain={'Ta:179W': [branchingratio, 'm1', reaction]})
+    Coh(natTa, cohFilePath).plotdataWithMultipleFeeding(Z, A, reaction='Ta_177Ta', isomerState=None, betaPlusDecayChain={'177W': ['74', branchingratio, None, 'Ta_177W']}, betaMinusDecayChain=None, isomerDecayChain=None)
+    
+    # Alice(aliceFilePath).plotAlice(Z, A, targetFoil, nuclearState, threshold)#, feeding, branchingRatio, parentNuclearState)
+    Alice(aliceFilePath).plotAliceWithFeeding(productZ=Z, productA=A, targetFoil=targetFoil, nuclearState = None, betaPlusDecayChain=betaPlusDecayChain, betaMinusDecayChain=None, isomerDecayChain=None, threshold=threshold)
     # CrossSection().save_manual(element, isotope, independent=False)
     CrossSection().plot_manual(element, isotope, independent=False)
     # CrossSection().plot_manual(element, isotope='177W', independent=True, color='#7b9ebe')
@@ -880,11 +1006,17 @@ def Ta_177Ta_cumulative():
     legend(fontsize='xx-small')
     set_titles(element=element, isotope=isotope, independent=False)
     plt.savefig(save_cs_figures_to + 'Ta_177Ta_cumulative.pdf')
-    plt.show()
+    show(flag)
 
 def Ta_177W_independent():
-    element = 'Ta'; isotope = '177W'; max_energy = 80; max_cs=975;
+    element = 'Ta'; isotope = '177W'; max_energy = 80; max_cs=1000;
     Z = '74'; A = '177'; betaFeeding=None; branchingratio = None; 
+    targetFoil='Ta'; nuclearState=None; threshold=30
+    reaction='Ta_177W'; isomerState=None
+    Empire(natTa, empireFilePath).plotEmpire(Z, A, reaction, isomerState, threshold)
+    Alice(aliceFilePath).plotAlice(Z, A, targetFoil, nuclearState, threshold)#, feeding, branchingRatio, parentNuclearState)
+    Coh(natTa, cohFilePath).plotCoh(Z, A, reaction, isomerState=None, threshold=None)
+    # Coh(natTa, cohFilePath).plotdataWithMultipleFeeding(Z, A, reaction, isomerState='g', betaPlusDecayChain=None, betaMinusDecayChain=None, isomerDecayChain={'Ta:179W': [branchingratio, 'm1', reaction]})
     betaPlusDecayChain = None
     independent=True
     exfor.plotExforDataFromFilename(filename='Ta_177W.txt', setLegend=False, maxE = max_energy)
@@ -901,17 +1033,36 @@ def Ta_177W_independent():
     legend(fontsize='xx-small')
     set_titles(element=element, isotope=isotope, independent=independent)
     plt.savefig(save_cs_figures_to + 'Ta_177W_independent.pdf')
-    plt.show()
+    show(flag)
 
 def Ta_179W_cumulative():
-    element = 'Ta'; isotope = '179W'; max_energy = 80; max_cs=1267
-    Z = '74'; A = '179'; betaFeeding=None; branchingratio = None; 
-    betaPlusDecayChain = None
+    element = 'Ta'; isotope = '179W'; max_energy = 80; max_cs=1424
+    Z = '74'; A = '179'; betaFeeding=None; branchingratio = 0.9971; 
+    isomer_decay_chain = {'179mW': [1.0, 'M']}
     independent=False
+    targetFoil='Ta'; nuclearState=None; threshold=12
+    reaction = 'Ta_179W'; isomerState=None
+    # Alice(aliceFilePath).plotAlice(Z, A, targetFoil, nuclearState, threshold)#, feeding, branchingRatio, parentNuclearState)
+    Alice(aliceFilePath).plotAliceWithFeeding(Z, A, targetFoil, nuclearState = None, betaPlusDecayChain = None, betaMinusDecayChain = None, isomerDecayChain = None, threshold=None)
     # exfor.plotExforDataFromFilename(filename='Ta_177W.txt', setLegend=False, maxE = max_energy)
-    talys.plotTalys(productZ=Z, productA=A, targetFoil=element, isomerLevel = None, betaFeeding = betaFeeding, branchingRatio =branchingratio)
+    Empire(natTa, empireFilePath).plotEmpire(Z,A,reaction='Ta_179W',isomerState = None,feeding = 'isomer',parentIsomerState = 'M',branchingRatio = branchingratio,reactionParent = 'Ta_179W')
+    # Coh(natTa, cohFilePath).plotCoh(Z, A, reaction, isomerState='m1', threshold=None)
+    # Coh(natTa, cohFilePath).plotCoh(Z, A, reaction, isomerState='g', threshold=None)
+    Coh(natTa, cohFilePath).plotdataWithMultipleFeeding(Z, A, reaction, isomerState='g', betaPlusDecayChain=None, betaMinusDecayChain=None, isomerDecayChain={'Ta:179W': [branchingratio, 'm1', reaction]})
+    # try:
+    #     Coh(natTa, cohFilePath).plotCoh(Z, A, reaction, isomerState='G', threshold=None)
+    # except:
+        # print("Not plotting single??")
+    # talys.plotTalys(productZ=Z, productA=A, targetFoil=element, isomerLevel = None, betaFeeding = betaFeeding, branchingRatio =branchingratio)
+    talys.plotTalys(Z,
+    A,
+    targetFoil,
+    isomerLevel = None,
+    betaFeeding = None, # only beta+ beta-
+    branchingRatio = branchingratio,
+    parentIsomerLevel = 'm')
     tendl_Ta.plotTendl23Unique_feeding(productZ=Z, productA=A, isomerLevel = None,  
-                                  betaPlusDecayChain = betaPlusDecayChain,
+                                  isomerDecayChain = {'179mW': [0.9971, '02']}, #isomer,
                                   color=None, lineStyle=None, label=None, semilog_y=False)
     # CrossSection().plot(element, isotope)
     # CrossSection().save_manual(element, isotope, independent=independent)
@@ -922,11 +1073,11 @@ def Ta_179W_cumulative():
     legend(fontsize='xx-small')
     set_titles(element=element, isotope=isotope, independent=independent)
     plt.savefig(save_cs_figures_to + 'Ta_179W_cumulative.pdf')
-    plt.show()
+    show(flag)
 
 def Ta_179mW_independent():
     element = 'Ta'; isotope = '179Wm'; max_energy = 80; max_cs=1267
-    Z = '74'; A = '179'; betaFeeding=None; branchingratio = None; 
+    Z = '74'; A = '179'; betaFeeding=None; branchingratio = 0.9971; 
     betaPlusDecayChain = None; isomerLevel='02'
     independent=True
     # exfor.plotExforDataFromFilename(filename='Ta_177W.txt', setLegend=False, maxE = max_energy)
@@ -949,7 +1100,7 @@ def Ta_179mW_independent():
     legend(fontsize='xx-small')
     set_titles(element=element, isotope=isotope, independent=independent)
     plt.savefig(save_cs_figures_to + 'Ta_179mW_independent.pdf')
-    plt.show()
+    show(flag)
 
 def Ta_179Ta_cumulative():
     element = 'Ta'; isotope = '179TA'; max_energy = 80; max_cs=1200
@@ -968,14 +1119,20 @@ def Ta_179Ta_cumulative():
     legend(fontsize='xx-small')
     set_titles(element=element, isotope=isotope, independent=False)
     plt.savefig(save_cs_figures_to + 'Ta_179Ta_cumulative.pdf')
-    plt.show()
+    show(flag)
 
     # ADD SUBTRACTION 
 
 def Ta_178W_independent():
-    element = 'Ta'; isotope = '178W'; max_energy = 80; max_cs=1200
+    element = 'Ta'; isotope = '178W'; max_energy = 80; max_cs=1250
     Z = '74'; A = '178'; betaFeeding=None; branchingratio = None; 
     betaPlusDecayChain = None
+    targetFoil='Ta'; nuclearState=None; threshold=20
+    reaction='Ta_178W'; isomerState=None
+    Empire(natTa, empireFilePath).plotEmpire(Z, A, reaction, isomerState, threshold)
+    Alice(aliceFilePath).plotAlice(Z, A, targetFoil, nuclearState, threshold)#, feeding, branchingRatio, parentNuclearState)
+    Coh(natTa, cohFilePath).plotCoh(Z, A, reaction, isomerState=None, threshold=None)
+    # Coh(natTa, cohFilePath).plotdataWithMultipleFeeding(Z, A, reaction, isomerState='g', betaPlusDecayChain=None, betaMinusDecayChain=None, isomerDecayChain={'Ta:179W': [branchingratio, 'm1', reaction]})
     exfor.plotExforDataFromFilename(filename='Ta_178W_independent.txt', setLegend=False, maxE = max_energy)
     talys.plotTalys(productZ=Z, productA=A, targetFoil=element, isomerLevel = None, betaFeeding = betaFeeding, branchingRatio =branchingratio)
     tendl_Ta.plotTendl23Unique_feeding(productZ=Z, productA=A, isomerLevel = None,  
@@ -990,18 +1147,23 @@ def Ta_178W_independent():
     # Manually removed TA14,13,12,11.  Remember to remove if rerunning! 
     CrossSection().plot_manual(element, isotope, independent=None, color='#7b9ebe', label=r'decay of $^{178}Ta$')
     plt.xlim(0,max_energy)
-    # plt.ylim(0,max_cs)
+    plt.ylim(0,max_cs)
     legend(fontsize='xx-small')
     set_titles(element=element, isotope=isotope, independent=True)
     plt.savefig(save_cs_figures_to + 'Ta_178W_independent.pdf')
-    plt.show()
+    show(flag)
 
 def Ta_178mTa_cumulative(): # SWITCHED UP m1 and GS
-    element = 'Ta'; isotope = '178TAm1'; max_energy = 80; max_cs=70
+    element = 'Ta'; isotope = '178TAm1'; max_energy = 80; max_cs=110
     Z = '73'; A = '178'; betaFeeding=None; branchingratio = None; 
     betaPlusDecayChain = None; independent=False
+    targetFoil='Ta'; nuclearState=None; threshold=25
+    Empire(natTa, empireFilePath).plotEmpire(Z, A, 'Ta_178Ta', 'M')
+    Alice(aliceFilePath).plotAlice(Z, A, targetFoil, nuclearState, threshold)#, feeding, branchingRatio, parentNuclearState)
     # talys.plotTalys(productZ=Z, productA=A, targetFoil=element, isomerLevel = None, betaFeeding = betaFeeding, branchingRatio =branchingratio)
     exfor.plotExforDataFromFilename(filename='Ta_178Ta_cumulative.txt', setLegend=False, maxE = max_energy, minE=None)
+    Coh(natTa, cohFilePath).plotCoh(Z, A, reaction='Ta_178Ta', isomerState='m1', threshold=None)
+    # Coh(natTa, cohFilePath).plotdataWithMultipleFeeding(Z, A, reaction, isomerState='g', betaPlusDecayChain=None, betaMinusDecayChain=None, isomerDecayChain={'Ta:179W': [branchingratio, 'm1', reaction]})
     # tendl_Ta.plotTendl23Unique_feeding(productZ=Z, productA=A, isomerLevel = None,  
     #                               betaPlusDecayChain = betaPlusDecayChain,
     #                               color=None, lineStyle=None, label=None, semilog_y=False)
@@ -1015,18 +1177,26 @@ def Ta_178mTa_cumulative(): # SWITCHED UP m1 and GS
     element='Ta';
     plt.title(f"$^{{nat}}${element}(p,x)$^{{178m1}}$Ta - cumulative")
     plt.savefig(save_cs_figures_to + 'Ta_178mTa_cumulative.pdf')
-    plt.show()
+    show(flag)
 
 def Ta_178Ta_cumulative(): # SWITCHED UP m1 and GS
     element = 'Ta'; isotope = '178TA'; max_energy = 80; max_cs=200; independent=False
     # Z = '73'; A = '178'; betaFeeding=None; branchingratio = None; 
     # betaPlusDecayChain = None; independent=False
-    Z = '73'; A = '178'; betaFeeding='beta+'; branchingratio = 1.0; 
+    Z = '73'; A = '178'; betaFeeding='beta+'; branchingratio = 1.0; threshold=None
     betaPlusDecayChain = {isotope: ['74', branchingratio, None]}
+    reaction='Ta_178Ta'
+    # targetFoil='Ta'; nuclearState=None; threshold=None
+    # Alice(aliceFilePath).plotAliceWithFeeding(productZ=Z, productA=A, targetFoil=targetFoil, nuclearState = None, betaPlusDecayChain=betaPlusDecayChain, betaMinusDecayChain=None, isomerDecayChain=None, threshold=None)
+    targetFoil='Ta'; nuclearState=None;
+    Empire(natTa, empireFilePath).plotEmpire(Z,A,reaction='Ta_178Ta',isomerState = None,feeding = 'beta+',parentIsomerState = None,branchingRatio = branchingratio,reactionParent = 'Ta_178W')
+    Alice(aliceFilePath).plotAlice(Z, A, targetFoil, nuclearState, threshold)#, feeding, branchingRatio, parentNuclearState)
     # exfor.plotExforDataFromFilename(filename='Ta_178Ta_cumulative.txt', setLegend=False, maxE = max_energy, minE=None)
-    talys.plotTalys(productZ=Z, productA=A, targetFoil=element, isomerLevel = None, betaFeeding = betaFeeding, branchingRatio =branchingratio)
+    Coh(natTa, cohFilePath).plotCoh(Z, A, reaction, isomerState='g', threshold=None)
+    # Coh(natTa, cohFilePath).plotdataWithMultipleFeeding(Z, A, reaction, isomerState='g', betaPlusDecayChain=None, betaMinusDecayChain=None, isomerDecayChain={'Ta:179W': [branchingratio, 'm1', reaction]})
+    talys.plotTalys(productZ=Z, productA=A, targetFoil=element, isomerLevel = None, betaFeeding = None, branchingRatio =branchingratio)
     tendl_Ta.plotTendl23Unique_feeding(productZ=Z, productA=A, isomerLevel = None,  
-                                  betaPlusDecayChain = betaPlusDecayChain,
+                                  betaPlusDecayChain = None,
                                   color=None, lineStyle=None, label=None, semilog_y=False)
     # CrossSection().plot(element, isotope, independent=True)
     # CrossSection().save_manual(element, isotope, independent=independent) # IF REDOING ACTIVITIES --- need to uncomment everything.... 
@@ -1036,7 +1206,7 @@ def Ta_178Ta_cumulative(): # SWITCHED UP m1 and GS
     legend(fontsize='xx-small')
     set_titles(element=element, isotope=isotope, independent=independent)
     plt.savefig(save_cs_figures_to + 'Ta_178Ta_cumulative.pdf')
-    plt.show()
+    show(flag)
 
 def Ta_176Ta_independent():
     element = 'Ta'; isotope = '176TA'; max_energy = 80; max_cs=70
@@ -1054,12 +1224,19 @@ def Ta_176Ta_independent():
     legend(fontsize='xx-small')
     set_titles(element=element, isotope=isotope, independent=True)
     plt.savefig(save_cs_figures_to + 'Ta_176Ta_independent.pdf')
-    plt.show()
+    show(flag)
 
 def Ta_176Ta_cumulative():
-    element = 'Ta'; isotope = '176TA'; max_energy = 80; max_cs=670; independent=False
+    element = 'Ta'; isotope = '176TA'; max_energy = 80; max_cs=940; independent=False
     Z = '73'; A = '176'; betaFeeding='beta+'; branchingratio = 1.0; 
     betaPlusDecayChain = {isotope: ['74', branchingratio, None]}
+
+    targetFoil='Ta'; nuclearState=None; threshold=25
+    Empire(natTa, empireFilePath).plotEmpire(Z,A,reaction='Ta_176Ta',isomerState = None,feeding = 'beta+',parentIsomerState = None,branchingRatio = branchingratio,reactionParent = 'Ta_176W')
+    Alice(aliceFilePath).plotAliceWithFeeding(productZ=Z, productA=A, targetFoil=targetFoil, nuclearState = None, betaPlusDecayChain=betaPlusDecayChain, betaMinusDecayChain=None, isomerDecayChain=None, threshold=threshold)
+    # Coh(natTa, cohFilePath).plotCoh(Z, A, reaction='Ta_177Ta', isomerState=None, threshold=None)
+    # Coh(natTa, cohFilePath).plotdataWithMultipleFeeding(Z, A, reaction='Ta_177Ta', isomerState='g', betaPlusDecayChain=None, betaMinusDecayChain=None, isomerDecayChain={'Ta:179W': [branchingratio, 'm1', reaction]})
+    Coh(natTa, cohFilePath).plotdataWithMultipleFeeding(Z, A, reaction='Ta_176Ta', isomerState=None, betaPlusDecayChain={'176W': ['74', branchingratio, None, 'Ta_176W']}, betaMinusDecayChain=None, isomerDecayChain=None)
     exfor.plotExforDataFromFilename(filename='Ta_176Ta_cumulative.txt', setLegend=False, maxE = max_energy)
     talys.plotTalys(productZ=Z, productA=A, targetFoil=element, isomerLevel = None, betaFeeding = betaFeeding, branchingRatio =branchingratio)
     tendl_Ta.plotTendl23Unique_feeding(productZ=Z, productA=A, isomerLevel = None,  
@@ -1073,13 +1250,19 @@ def Ta_176Ta_cumulative():
     legend(fontsize='xx-small')
     set_titles(element=element, isotope=isotope, independent=independent)
     plt.savefig(save_cs_figures_to + 'Ta_176Ta_cumulative.pdf')
-    plt.show()
+    show(flag)
 
 def Ta_176Ta_independent():
-    element = 'Ta'; isotope = '176TA'; max_energy = 80; max_cs=200; independent=True
+    element = 'Ta'; isotope = '176TA'; max_energy = 80; max_cs=280; independent=True
     Z = '73'; A = '176'; betaFeeding=None; branchingratio = None; 
     betaPlusDecayChain = None
+    targetFoil='Ta'; nuclearState=None; threshold=40
+    Empire(natTa, empireFilePath).plotEmpire(Z, A, 'Ta_176Ta', isomerState=None)
+    Alice(aliceFilePath).plotAlice(Z, A, targetFoil, nuclearState, threshold)#, feeding, branchingRatio, parentNuclearState)
     # exfor.plotExforDataFromFilename(filename='Ta_176Ta_cumulative.txt', setLegend=False, maxE = max_energy)
+    Coh(natTa, cohFilePath).plotCoh(Z, A, reaction='Ta_176Ta', isomerState=None, threshold=None)
+    # Coh(natTa, cohFilePath).plotdataWithMultipleFeeding(Z, A, reaction='Ta_177Ta', isomerState='g', betaPlusDecayChain=None, betaMinusDecayChain=None, isomerDecayChain={'Ta:179W': [branchingratio, 'm1', reaction]})
+    # Coh(natTa, cohFilePath).plotdataWithMultipleFeeding(Z, A, reaction='Ta_177Ta', isomerState=None, betaPlusDecayChain={'177W': ['74', branchingratio, None, 'Ta_177W']}, betaMinusDecayChain=None, isomerDecayChain=None)
     talys.plotTalys(productZ=Z, productA=A, targetFoil=element, isomerLevel = None, betaFeeding = betaFeeding, branchingRatio =branchingratio)
     tendl_Ta.plotTendl23Unique_feeding(productZ=Z, productA=A, isomerLevel = None,  
                                   betaPlusDecayChain = betaPlusDecayChain,
@@ -1105,12 +1288,18 @@ def Ta_176Ta_independent():
     legend(fontsize='xx-small')
     set_titles(element=element, isotope=isotope, independent=True)
     plt.savefig(save_cs_figures_to + 'Ta_176Ta_independent.pdf')
-    plt.show()
+    show(flag)
 
 def Ta_176W_independent():
-    element = 'Ta'; isotope = '176W'; max_energy = 80; max_cs=670; independent=False
+    element = 'Ta'; isotope = '176W'; max_energy = 80; max_cs=928; independent=False
     Z = '74'; A = '176'; betaFeeding=None; branchingratio = None; 
     betaPlusDecayChain = None
+    targetFoil='Ta'; nuclearState=None; threshold=40
+    Alice(aliceFilePath).plotAlice(Z, A, targetFoil, nuclearState, threshold)#, feeding, branchingRatio, parentNuclearState)
+    reaction='Ta_176W'; isomerState=None
+    Coh(natTa, cohFilePath).plotCoh(Z, A, reaction, isomerState=None, threshold=None)
+    # Coh(natTa, cohFilePath).plotdataWithMultipleFeeding(Z, A, reaction, isomerState='g', betaPlusDecayChain=None, betaMinusDecayChain=None, isomerDecayChain={'Ta:179W': [branchingratio, 'm1', reaction]})
+    Empire(natTa, empireFilePath).plotEmpire(Z, A, reaction, isomerState, threshold)
     # exfor.plotExforDataFromFilename(filename='Ta_176Ta_cumulative.txt', setLegend=False, maxE = max_energy)
     talys.plotTalys(productZ=Z, productA=A, targetFoil=element, isomerLevel = None, betaFeeding = betaFeeding, branchingRatio =branchingratio)
     tendl_Ta.plotTendl23Unique_feeding(productZ=Z, productA=A, isomerLevel = None,  
@@ -1128,12 +1317,19 @@ def Ta_176W_independent():
     legend(fontsize='xx-small')
     set_titles(element=element, isotope=isotope, independent=True)
     plt.savefig(save_cs_figures_to + 'Ta_176W_independent.pdf')
-    plt.show()
+    show(flag)
 
 def Ta_175Ta_cumulative():
     element = 'Ta'; isotope = '175TA'; max_energy = 80; max_cs=20; independent=False
     Z = '73'; A = '175'; betaFeeding='beta+'; branchingratio = 1.0; 
     betaPlusDecayChain = {isotope: ['74', branchingratio, None]}
+    targetFoil='Ta'; nuclearState=None; threshold=49
+    # Empire(natTa, empireFilePath).plotEmpire(Z,A,reaction='Ta_175Ta',isomerState = None,feeding = 'beta+',parentIsomerState = None,branchingRatio = branchingratio,reactionParent = 'Ta_175W')
+    Empire(natTa, empireFilePath).plotEmpire(Z,A,reaction='Ta_175Ta')
+    Alice(aliceFilePath).plotAlice(Z, A, targetFoil, nuclearState, threshold)#, feeding, branchingRatio, parentNuclearState)
+    # Coh(natTa, cohFilePath).plotCoh(Z, A, reaction='Ta_177Ta', isomerState=None, threshold=None)
+    # Coh(natTa, cohFilePath).plotdataWithMultipleFeeding(Z, A, reaction='Ta_177Ta', isomerState='g', betaPlusDecayChain=None, betaMinusDecayChain=None, isomerDecayChain={'Ta:179W': [branchingratio, 'm1', reaction]})
+    Coh(natTa, cohFilePath).plotdataWithMultipleFeeding(Z, A, reaction='Ta_175Ta', isomerState=None, betaPlusDecayChain={'175W': ['74', branchingratio, None, 'Ta_175W']}, betaMinusDecayChain=None, isomerDecayChain=None)
     exfor.plotExforDataFromFilename(filename='Ta_175Ta_cumulative.txt', setLegend=False, maxE = max_energy)
     talys.plotTalys(productZ=Z, productA=A, targetFoil=element, isomerLevel = None, betaFeeding = betaFeeding, branchingRatio =branchingratio)
     # talys.plotTalys(productZ='74', productA=A, targetFoil=element, isomerLevel = None, betaFeeding = None, branchingRatio =None)
@@ -1154,7 +1350,7 @@ def Ta_175Ta_cumulative():
     legend(fontsize='xx-small')
     set_titles(element=element, isotope=isotope, independent=independent)
     plt.savefig(save_cs_figures_to + 'Ta_175Ta_cumulative.pdf')
-    plt.show()
+    show(flag)
 
 def Ta_174Ta_cumulative():
     element = 'Ta'; isotope = '174TA'; max_energy = 80; max_cs=415; independent=False
@@ -1176,7 +1372,7 @@ def Ta_174Ta_cumulative():
     legend(fontsize='xx-small')
     set_titles(element=element, isotope=isotope, independent=independent)
     plt.savefig(save_cs_figures_to + 'Ta_174Ta_cumulative.pdf')
-    plt.show()
+    show(flag)
 
 
 def Ta_173Ta_cumulative():
@@ -1196,12 +1392,18 @@ def Ta_173Ta_cumulative():
     legend(fontsize='xx-small')
     set_titles(element=element, isotope=isotope, independent=independent)
     plt.savefig(save_cs_figures_to + 'Ta_173Ta_cumulative.pdf')
-    plt.show()
+    show(flag)
 
 def Ta_180mHF_independent():
     element = 'Ta'; isotope = '180HFm'; max_energy = 80; max_cs=6.5; independent=True
     Z = '72'; A = '180'; betaFeeding=None; branchingratio = None;
     betaPlusDecayChain = None
+    targetFoil='Ta'; nuclearState=None; threshold=28
+    Empire(natTa, empireFilePath).plotEmpire(Z, A, 'Ta_180Hf', 'M', None)
+    Alice(aliceFilePath).plotAlice(Z, A, targetFoil, nuclearState, threshold)#, feeding, branchingRatio, parentNuclearState)
+    Coh(natTa, cohFilePath).plotCoh(Z, A, reaction='Ta_180Hf', isomerState='m1', threshold=None)
+    # Coh(natTa, cohFilePath).plotdataWithMultipleFeeding(Z, A, reaction='Ta_177Ta', isomerState='g', betaPlusDecayChain=None, betaMinusDecayChain=None, isomerDecayChain={'Ta:179W': [branchingratio, 'm1', reaction]})
+    # Coh(natTa, cohFilePath).plotdataWithMultipleFeeding(Z, A, reaction='Ta_177Ta', isomerState=None, betaPlusDecayChain={'177W': ['74', branchingratio, None, 'Ta_177W']}, betaMinusDecayChain=None, isomerDecayChain=None)
     exfor.plotExforDataFromFilename(filename='Ta_180mHf_independent.txt', setLegend=False, maxE = max_energy)
     # talys_old.plotTalys(productZ=Z, productA=A, targetFoil=element, isomerLevel = '07', betaFeeding = betaFeeding, branchingRatio =branchingratio)
     talys.plotTalys(productZ=Z, productA=A, targetFoil=element, isomerLevel = '06', betaFeeding = betaFeeding, branchingRatio =branchingratio)
@@ -1217,7 +1419,7 @@ def Ta_180mHF_independent():
     plt.title(f"$^{{nat}}${element}(p,x)$^{{180m}}$Hf")
     
     plt.savefig(save_cs_figures_to + 'Ta_180mHf_independent.pdf')
-    plt.show()
+    show(flag)
 
 def Ta_179Lu_independent():
     element = 'Ta'; isotope = '179LU'; max_energy = 80; max_cs=None; independent=True
@@ -1235,7 +1437,7 @@ def Ta_179Lu_independent():
     legend(fontsize='xx-small')
     set_titles(element=element, isotope=isotope, independent=independent)
     # plt.savefig(save_cs_figures_to + 'Ta_179Lu_independent.pdf')
-    plt.show()
+    show(flag)
 
 def Ta_172Hf_cumulative():
     element = 'Ta'; isotope = '172HF'; max_energy = 80; max_cs=50; independent=False
@@ -1254,12 +1456,19 @@ def Ta_172Hf_cumulative():
     legend(fontsize='xx-small')
     set_titles(element=element, isotope=isotope, independent=independent)
     plt.savefig(save_cs_figures_to + 'Ta_172Hf_cumulative.pdf')
-    plt.show()
+    show(flag)
 
 def Ta_173Hf_cumulative():
     element = 'Ta'; isotope = '173HF'; max_energy = 80; max_cs=21; independent=False
     Z = '72'; A = '173'; betaFeeding=None; branchingratio = None;
     betaPlusDecayChain = None
+    targetFoil='Ta'; nuclearState=None; threshold=49
+    Alice(aliceFilePath).plotAliceWithFeeding(productZ=Z, productA=A, targetFoil=targetFoil, nuclearState = None, betaPlusDecayChain=betaPlusDecayChain, betaMinusDecayChain=None, isomerDecayChain=None, threshold=threshold)
+    # Empire(natTa, empireFilePath).plotEmpire(Z,A,reaction='Ta_173Hf',isomerState = None,feeding = 'beta+',parentIsomerState = None,branchingRatio = branchingratio,reactionParent = 'Ta_173Ta')
+    Empire(natTa, empireFilePath).plotEmpire(Z,A,reaction='Ta_173Hf',isomerState = None)
+    # Coh(natTa, cohFilePath).plotCoh(Z, A, reaction='Ta_177Ta', isomerState=None, threshold=None)
+    # Coh(natTa, cohFilePath).plotdataWithMultipleFeeding(Z, A, reaction='Ta_177Ta', isomerState='g', betaPlusDecayChain=None, betaMinusDecayChain=None, isomerDecayChain={'Ta:179W': [branchingratio, 'm1', reaction]})
+    Coh(natTa, cohFilePath).plotdataWithMultipleFeeding(Z, A, reaction='Ta_173Hf', isomerState=None, betaPlusDecayChain={'173Ta': ['73', branchingratio, None, 'Ta_173Ta']}, betaMinusDecayChain=None, isomerDecayChain=None)
     exfor.plotExforDataFromFilename(filename='Ta_173Hf_cumulative.txt', setLegend=False, maxE = max_energy)
     # talys_old.plotTalys(productZ=Z, productA=A, targetFoil=element, isomerLevel = '07', betaFeeding = betaFeeding, branchingRatio =branchingratio)
     talys.plotTalys(productZ=Z, productA=A, targetFoil=element, isomerLevel = None, betaFeeding = betaFeeding, branchingRatio =branchingratio)
@@ -1276,13 +1485,19 @@ def Ta_173Hf_cumulative():
 
     # tendl_Ta.get_q_value('73', '173', None)
     # tendl_Ta.get_q_value('74', '173', None)
-    plt.show()
+    show(flag)
 
 
 def Ta_175Hf_cumulative(): # FIX feeding
-    element = 'Ta'; isotope = '175HF'; max_energy = 80; max_cs=21; independent=False
+    element = 'Ta'; isotope = '175HF'; max_energy = 80; max_cs=58; independent=False
     Z = '72'; A = '175'; betaFeeding='beta+'; branchingratio = 1.0;
     betaPlusDecayChain = {isotope: ['73', branchingratio, None]}
+    targetFoil='Ta'; nuclearState=None; threshold=None
+    Alice(aliceFilePath).plotAliceWithFeeding(productZ=Z, productA=A, targetFoil=targetFoil, nuclearState = None, betaPlusDecayChain=betaPlusDecayChain, betaMinusDecayChain=None, isomerDecayChain=None, threshold=threshold)
+    Empire(natTa, empireFilePath).plotEmpire(Z,A,reaction='Ta_175Hf',isomerState = None,feeding = 'beta+',parentIsomerState = None,branchingRatio = branchingratio,reactionParent = 'Ta_175Ta')
+    # Coh(natTa, cohFilePath).plotCoh(Z, A, reaction='Ta_177Ta', isomerState=None, threshold=None)
+    # Coh(natTa, cohFilePath).plotdataWithMultipleFeeding(Z, A, reaction='Ta_177Ta', isomerState='g', betaPlusDecayChain=None, betaMinusDecayChain=None, isomerDecayChain={'Ta:179W': [branchingratio, 'm1', reaction]})
+    Coh(natTa, cohFilePath).plotdataWithMultipleFeeding(Z, A, reaction='Ta_175Hf', isomerState=None, betaPlusDecayChain={'175Ta': ['73', branchingratio, None, 'Ta_175Ta']}, betaMinusDecayChain=None, isomerDecayChain=None)
     exfor.plotExforDataFromFilename(filename='Ta_175Hf_cumulative.txt', setLegend=False, maxE = max_energy)
     # talys_old.plotTalys(productZ=Z, productA=A, targetFoil=element, isomerLevel = None, betaFeeding = betaFeeding, branchingRatio =branchingratio)
     talys.plotTalys(productZ=Z, productA=A, targetFoil=element, isomerLevel = None, betaFeeding = betaFeeding, branchingRatio =branchingratio)
@@ -1295,12 +1510,19 @@ def Ta_175Hf_cumulative(): # FIX feeding
     legend(fontsize='xx-small')
     set_titles(element=element, isotope=isotope, independent=independent)
     plt.savefig(save_cs_figures_to + 'Ta_175Hf_cumulative.pdf')
-    plt.show()
+    show(flag)
 
 def Ta_175Hf_independent():
-    element = 'Ta'; isotope = '175HF'; max_energy = 80; max_cs=21; independent=True
+    element = 'Ta'; isotope = '175HF'; max_energy = 80; max_cs=58; independent=True
     Z = '72'; A = '175'; betaFeeding=None; branchingratio = None;
     betaPlusDecayChain = None
+    targetFoil='Ta'; nuclearState=None; threshold=30
+    Alice(aliceFilePath).plotAlice(Z, A, targetFoil, nuclearState, threshold)#, feeding, branchingRatio, parentNuclearState)
+    Empire(natTa, empireFilePath).plotEmpire(Z,A,reaction='Ta_175Hf',isomerState = None)
+    
+    Coh(natTa, cohFilePath).plotCoh(Z, A, reaction='Ta_175Hf', isomerState=None, threshold=None)
+    # Coh(natTa, cohFilePath).plotdataWithMultipleFeeding(Z, A, reaction='Ta_177Ta', isomerState='g', betaPlusDecayChain=None, betaMinusDecayChain=None, isomerDecayChain={'Ta:179W': [branchingratio, 'm1', reaction]})
+    # Coh(natTa, cohFilePath).plotdataWithMultipleFeeding(Z, A, reaction='Ta_175Hf', isomerState=None, betaPlusDecayChain={'175Ta': ['73', branchingratio, None, 'Ta_175Ta']}, betaMinusDecayChain=None, isomerDecayChain=None)
     talys.plotTalys(productZ=Z, productA=A, targetFoil=element, isomerLevel = None, betaFeeding = betaFeeding, branchingRatio =branchingratio)
     tendl_Ta.plotTendl23Unique(productZ=Z, productA=A, isomerLevel = None, color=None, lineStyle=None, label=None, semilog_y=False)
     
@@ -1315,7 +1537,7 @@ def Ta_175Hf_independent():
     legend(fontsize='xx-small')
     set_titles(element=element, isotope=isotope, independent=independent)
     plt.savefig(save_cs_figures_to + 'Ta_175Hf_independent.pdf')
-    plt.show()
+    show(flag)
 
 def Ta_176Hf_cumulative():
     element = 'Ta'; isotope = '176HF'; max_energy = 80; max_cs=21; independent=False
@@ -1332,7 +1554,7 @@ def Ta_176Hf_cumulative():
     legend(fontsize='xx-small')
     set_titles(element=element, isotope=isotope, independent=independent)
     # plt.savefig(save_cs_figures_to + 'Ta_179Lu_independent.pdf')
-    plt.show()
+    show(flag)
 
 def Ta_179m2Hf_cumulative():
     element = 'Ta'; isotope = '179HFm2'; max_energy = 80; max_cs=5; independent=False
@@ -1351,7 +1573,7 @@ def Ta_179m2Hf_cumulative():
     legend(fontsize='xx-small')
     plt.title(f"$^{{nat}}${element}(p,x)$^{{179m2}}$Hf")
     plt.savefig(save_cs_figures_to + 'Ta_179m2Hf_cumulative.pdf')
-    plt.show()
+    show(flag)
 
 
 def Ta_178m2Hf_cumulative():
@@ -1371,7 +1593,7 @@ def Ta_178m2Hf_cumulative():
     legend(fontsize='xx-small')
     plt.title(f"$^{{nat}}${element}(p,x)$^{{178m2}}$Hf")
     plt.savefig(save_cs_figures_to + 'Ta_178m2Hf_cumulative.pdf')
-    plt.show()
+    show(flag)
 
 def Ta_177m2Hf_cumulative():
     element = 'Ta'; isotope = '177HFm2'; max_energy = 80; max_cs=1.5; independent=False
@@ -1391,7 +1613,7 @@ def Ta_177m2Hf_cumulative():
     legend(fontsize='xx-small')
     plt.title(f"$^{{nat}}${element}(p,x)$^{{177m2}}$Hf")
     plt.savefig(save_cs_figures_to + 'Ta_177m2Hf_cumulative.pdf')
-    plt.show()
+    show(flag)
 
 def Ta_179Lu_independent():
     element = 'Ta'; isotope = '179LU'; max_energy = 80; max_cs=None; independent=True
@@ -1411,7 +1633,7 @@ def Ta_179Lu_independent():
     legend(fontsize='xx-small')
     set_titles(element=element, isotope=isotope, independent=independent)
     plt.savefig(save_cs_figures_to + 'Ta_179Lu_independent.pdf')
-    plt.show()
+    show(flag)
 
 def Ta_177Lu_cumulative():
     element = 'Ta'; isotope = '177LU'; max_energy = 80; max_cs=None; independent=False
@@ -1429,14 +1651,14 @@ def Ta_177Lu_cumulative():
     legend(fontsize='xx-small')
     set_titles(element=element, isotope=isotope, independent=independent)
     plt.savefig(save_cs_figures_to + 'Ta_177Lu_cumulative.pdf')
-    plt.show()
+    show(flag)
 
 def Ta_tests(Z, A, isomerLevel, label):
     tendl_Ta.get_q_value(productZ=Z, productA=A, isomerLevel=isomerLevel)
     tendl_Ta.plotTendl23Unique(productZ=Z, productA=A, isomerLevel = isomerLevel, color='royalblue', lineStyle=None, label=label, semilog_y=False)
     # plt.xlim(0,80)
     # plt.legend()
-    # plt.show()
+    show(flag)
 
 def Sn_tests(Z, A, isomerLevel, label, color='royalblue'):
     # tendl_Sn.get_q_value(productZ=Z, productA=A, isomerLevel=isomerLevel)
@@ -1444,15 +1666,23 @@ def Sn_tests(Z, A, isomerLevel, label, color='royalblue'):
     tendl_Sn.plotTendl23Unique(productZ=Z, productA=A, isomerLevel = isomerLevel, color=color, lineStyle=None, label=label, semilog_y=False)
     # plt.xlim(0,80)
     # plt.legend()
-    # plt.show()
+    show(flag)
 
 def Ta_177Ta_independent():
-    element = 'Ta'; isotope = '177TA'; max_energy = 80; max_cs=200
+    element = 'Ta'; isotope = '177TA'; max_energy = 80; max_cs=340
     Z = '73'; A = '177'
     # CrossSection().plot_subtract(element, isotope_parent='177W', isotope_daughter=isotope, branching_ratio=1.0)
     tendl(element, Z, A)
     talys.plotTalys(productZ=Z, productA=A, targetFoil=element) #, isomerLevel = None, betaFeeding = betaFeeding, branchingRatio =branchingratio)
     independent=True
+    targetFoil='Ta'; nuclearState=None; threshold=25
+    Empire(natTa, empireFilePath).plotEmpire(Z, A, 'Ta_177Ta', isomerState=None)
+    Alice(aliceFilePath).plotAlice(Z, A, targetFoil, nuclearState, threshold)#, feeding, branchingRatio, parentNuclearState)
+    Coh(natTa, cohFilePath).plotCoh(Z, A, reaction='Ta_177Ta', isomerState=None, threshold=None)
+    # Coh(natTa, cohFilePath).plotdataWithMultipleFeeding(Z, A, reaction='Ta_177Ta', isomerState='g', betaPlusDecayChain=None, betaMinusDecayChain=None, isomerDecayChain={'Ta:179W': [branchingratio, 'm1', reaction]})
+    # Coh(natTa, cohFilePath).plotdataWithMultipleFeeding(Z, A, reaction='Ta_177Ta', isomerState='g', betaPlusDecayChain={'177W': [Z='74', br, isomerState, reaction]}, betaMinusDecayChain=None, isomerDecayChain=None)
+    
+    
     # total, unc_total = cross_sections(element, isotope, independent=False)
     # feeding, unc_feeding = cross_sections(element, isotope='177W', independent=True)
     # energy, unc_left, unc_right = weighted_average_beam_energy(element)
@@ -1479,31 +1709,42 @@ def Ta_177Ta_independent():
     legend(fontsize='xx-small')
     set_titles(element=element, isotope=isotope, independent=True)
     plt.savefig(save_cs_figures_to + 'Ta_177Ta_independent.pdf')
-    plt.show()
+    show(flag)
 
 def Ta_180Ta_independent():
-    element = 'Ta'; isotope = '180TA'; max_energy = 80; max_cs=232
+    element = 'Ta'; isotope = '180TA'; max_energy = 80; max_cs = 232#max_cs=232
     # element = 'Ta'; isotope = '180TA'; max_energy = 80; max_cs=350
     Z = '73'; A = '180'; betaFeeding=None; branchingratio = None; 
     # betaPlusDecayChain = {isotope: ['74', branchingratio, None]}
     betaPlusDecayChain = None; independent=True
+    targetFoil='Ta'; nuclearState=None; threshold=None
+    reaction='Ta_180Ta'; isomerState=None
+    Empire(natTa, empireFilePath).plotEmpire(Z, A, reaction, isomerState, threshold)
+    Alice(aliceFilePath).plotAlice(Z, A, targetFoil, nuclearState, threshold)#, feeding, branchingRatio, parentNuclearState)
     exfor.plotExforDataFromFilename(filename='Ta_180Ta_cumulative.txt', setLegend=False, maxE = max_energy)
+    Coh(natTa, cohFilePath).plotCoh(Z, A, reaction, isomerState='g', threshold=None)
+    # Coh(natTa, cohFilePath).plotdataWithMultipleFeeding(Z, A, reaction, isomerState='g', betaPlusDecayChain=None, betaMinusDecayChain=None, isomerDecayChain={'Ta:179W': [branchingratio, 'm1', reaction]})
     talys.plotTalys(productZ=Z, productA=A, targetFoil=element, isomerLevel = None, betaFeeding = betaFeeding, branchingRatio =branchingratio)
-    # tendl_Ta.plotTendl23Unique(productZ=Z, productA=A, isomerLevel = None, color=None, lineStyle=None, label=None, semilog_y=False)
+    tendl_Ta.plotTendl23Unique(productZ=Z, productA=A, isomerLevel = None, color=None, lineStyle=None, label=None, semilog_y=False)
     # tendl_Ta.plotTendl23Unique(productZ='75', productA=A, isomerLevel = None, color='red', lineStyle=None, label=None, semilog_y=False)
     # CrossSection().plot(element, isotope)
-    CrossSection().save_manual(element, isotope, independent=independent)
+    # CrossSection().save_manual(element, isotope, independent=independent)
+    # CrossSection().save_manual(element, isotope, independent=independent)
     CrossSection().plot_manual(element, isotope, independent=independent)
+    # CrossSection().save_manual(element, isotope, independent=independent, corrected=True)
+    # CrossSection().plot_manual(element, isotope, independent=independent, color='red', label='corrected')
     # CrossSection().plot_manual(element, isotope, independent=True)
-    CrossSection().plot_manual(element, isotope='175TA', independent=False, color='hotpink', label='175Ta')
-    CrossSection().plot_manual(element, isotope='180HFm', independent=True, color='dodgerblue', label='180mHf')
-    CrossSection().plot_manual(element, isotope='178W', independent=True, color='orange', label='178W')
+    # CrossSection().plot_manual(element, isotope='175TA', independent=False, color='hotpink', label='175Ta')
+    # CrossSection().plot_manual(element, isotope='180HFm', independent=True, color='dodgerblue', label='180mHf')
+    # CrossSection().plot_manual(element, isotope='178W', independent=True, color='orange', label='178W')
+    # CrossSection().plot_manual(element, isotope='178TAm', independent=False, color='blue', label='178Tam')
+    # CrossSection().plot_manual(element, isotope='178TAm1', independent=False, color='blue', label='178Ta')
     plt.xlim(0,max_energy)
     plt.ylim(0,max_cs)
     legend(fontsize='xx-small')
     set_titles(element=element, isotope=isotope, independent=True)
     plt.savefig(save_cs_figures_to + 'Ta_180Ta_independent.pdf')
-    plt.show()
+    show(flag)
 
 # def Ta_178Ta_independent():   # Must use x ray detector... 
 #     element = 'Ta'; isotope = '180TA'; max_energy = 80; max_cs=350
@@ -1520,7 +1761,7 @@ def Ta_180Ta_independent():
 #     legend(fontsize='xx-small')
 #     set_titles(element=element, isotope=isotope, independent=True)
 #     plt.savefig(save_cs_figures_to + 'Ta_180Ta_independent.pdf')
-#     plt.show()
+#     show(flag)
 
 # def Ta_178Ta_cumulative():
 #     element = 'Ta'; isotope = '178TAm'; max_energy = 80; max_cs=850
@@ -1541,7 +1782,7 @@ def Ta_180Ta_independent():
 #     legend(fontsize='xx-small')
 #     set_titles(element=element, isotope=isotope, independent=independent)
 #     # plt.savefig(save_cs_figures_to + 'Ta_178Ta_cumulative.pdf')
-#     plt.show()
+#     show(flag)
 
 # def Ta_178Ta_cumulative():
 #     element = 'Ta'; isotope = '178TAm'; max_energy = 80; max_cs=850
@@ -1562,7 +1803,7 @@ def Ta_180Ta_independent():
 #     legend(fontsize='xx-small')
 #     set_titles(element=element, isotope=isotope, independent=False)
 #     plt.savefig(save_cs_figures_to + 'Ta_178Ta_cumulative.pdf')
-#     plt.show()
+#     show(flag)
 
 # def Ta_179W_cumulative():
 #     element = 'Ta'; isotope = '179W'; max_energy = 80; max_cs= 200
@@ -1578,14 +1819,19 @@ def Ta_180Ta_independent():
 #     legend(fontsize='xx-small')
 #     set_titles(element=element, isotope=isotope, independent=independent)
 #     # plt.savefig(save_cs_figures_to + 'Ni_61Cu_independent.pdf')
-#     plt.show()
+#     show(flag)
 
 
 def Ta_181W_independent():
     element = 'Ta'; isotope = '181W'; max_energy = 75; max_cs= 100
     Z = '74'; A = '181'; betaFeeding=None; branchingratio = None; decaychain=None
     independent=True
-    # exfor.plotExforDataFromFilename(filename='Ni_61Cu_independent.txt', setLegend=False, maxE = max_energy)
+    targetFoil='Ta'; nuclearState=None; threshold=None; # for alice
+    reaction='Ta_181W'; isomerState=None; # for empire
+    Alice(aliceFilePath).plotAlice(Z, A, targetFoil, nuclearState, threshold)#, feeding, branchingRatio, parentNuclearState)
+    # Empire(natTa, empireFilePath).plotdataWithMultipleFeeding('77', '189', 'Ir_189Ir', isomerState=None, betaPlusDecayChain={"189Pt": ['78', 1.0, None, 'Ir_189Pt']}, betaMinusDecayChain=None, isomerDecayChain=None)
+    Empire(natTa, empireFilePath).plotEmpire(Z, A, reaction, isomerState, threshold)
+    Coh(natTa, cohFilePath).plotCoh(Z, A, reaction, isomerState, threshold=None)
     talys.plotTalys(productZ=Z, productA=A, targetFoil=element, isomerLevel = None, betaFeeding = betaFeeding, branchingRatio =branchingratio)
     tendl(element, Z, A)
     tendl_Ta.get_q_value(Z, A, None)
@@ -1601,7 +1847,7 @@ def Ta_181W_independent():
     legend(fontsize='xx-small')
     set_titles(element=element, isotope=isotope, independent=independent)
     plt.savefig(save_cs_figures_to + 'Ta_181W_independent.pdf')
-    plt.show()
+    show(flag)
 
 def Sn_112mIn():
     element = 'Sn'; isotope = '112INm'; max_energy = 80; max_cs=850
@@ -1620,7 +1866,7 @@ def Sn_112mIn():
     legend(fontsize='xx-small')
     set_titles(element=element, isotope=isotope, independent=False)
     # plt.savefig(save_cs_figures_to + 'Ta_177Ta_cumulative.pdf')
-    plt.show()
+    show(flag)
 
 def legend(fontsize='small', loc='best', ncols=1):
     handles, labels = plt.gca().get_legend_handles_labels()
@@ -1722,7 +1968,7 @@ def tendl_reactions(ylim=None, title=None):
     plt.legend(fontsize='12', ncols=4)
     if title:
         plt.savefig('./generatedfiles/tendl/' + title + '.pdf')
-    plt.show()
+    show(flag)
 
 
 def Sn_110mIn_cumulative():
@@ -1745,7 +1991,7 @@ def Sn_110mIn_cumulative():
     plt.title(f"$^{{nat}}${element}(p,x)$^{{110}}$In")
     
     # plt.savefig(save_cs_figures_to + 'Ta_180mHf_independent.pdf')
-    plt.show()
+    show(flag)
 
 def Sn_110In_cumulative():
     element = 'Sn'; isotope = '110IN'; max_energy = 80; max_cs=10; independent=False
@@ -1766,7 +2012,7 @@ def Sn_110In_cumulative():
     plt.title(f"$^{{nat}}${element}(p,x)$^{{110}}$In")
     
     # plt.savefig(save_cs_figures_to + 'Ta_180mHf_independent.pdf')
-    plt.show()
+    show(flag)
 
 def Sn_110In_independent():
     element = 'Sn'; isotope = '110IN'; max_energy = 80; max_cs=10; independent=True
@@ -1787,7 +2033,7 @@ def Sn_110In_independent():
     plt.title(f"$^{{nat}}${element}(p,x)$^{{110}}$In independent")
     
     # plt.savefig(save_cs_figures_to + 'Ta_180mHf_independent.pdf')
-    plt.show()
+    show(flag)
 
 def Sn_111Sn_cumulative():
     element = 'Sn'; isotope = '111SN'; max_energy = 80; max_cs=100; independent=False
@@ -1808,7 +2054,7 @@ def Sn_111Sn_cumulative():
     plt.title(f"$^{{nat}}${element}(p,x)$^{{111}}$Sn")
     
     # plt.savefig(save_cs_figures_to + 'Ta_180mHf_independent.pdf')
-    plt.show()
+    show(flag)
 
 def Sn_113Sn_cumulative():
     element = 'Sn'; isotope = '113SN'; max_energy = 80; max_cs=100; independent=False
@@ -1829,7 +2075,7 @@ def Sn_113Sn_cumulative():
     plt.title(f"$^{{nat}}${element}(p,x)$^{{113}}$Sn")
     
     plt.savefig(save_cs_figures_to + 'Sn_113Sn_cumulative.pdf')
-    plt.show()
+    show(flag)
 
 def Sn_115Sb_cumulative():
     element = 'Sn'; isotope = '115SB'; max_energy = 80; max_cs=400; independent=False
@@ -1850,4 +2096,4 @@ def Sn_115Sb_cumulative():
     plt.title(f"$^{{nat}}${element}(p,x)$^{{115}}$Sb")
     
     plt.savefig(save_cs_figures_to + 'Sn_115Sb_independent.pdf')
-    plt.show()
+    show(flag)

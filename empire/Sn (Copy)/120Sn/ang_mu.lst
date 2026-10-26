@@ -1,0 +1,47 @@
+                                        
+ ANG_MU - Add mu-bar to a C4 file       
+ ================================       
+                                        
+                                        
+ Source C4 filename                   : C4.DAT                                  
+ Output C4 filename                   : C4.TMP                                  
+ WARNING -  49 out of   49 distrib. not fitted for E 9.85E+0MeV R.Arking,ET.AL. 
+ WARNING - Large error fitting ang.dist. for  E 1.60E+1MeV W.MAKOFSKE,ET.AL
+           first 2 coeff.-4.575E-01-1.123E+00 er 7.000E-02
+ WARNING -   1 out of    1 distrib. not fitted for E 2.04E+1MeV S.D.Wassenaar,ET
+ WARNING -   1 out of    1 distrib. not fitted for E 2.04E+1MeV S.D.Wassenaar,ET
+ WARNING -   1 out of    1 distrib. not fitted for E 2.04E+1MeV S.D.Wassenaar,ET
+ WARNING - Large error fitting ang.dist. for  E 6.15E+1MeV F.E.BERTRAND,ET.
+           first 2 coeff.-4.800E-02 4.538E-01 er 8.612E+01
+ WARNING -   1 out of    2 distrib. not fitted for E 6.15E+1MeV F.E.BERTRAND,ET.
+ WARNING - Large error fitting ang.dist. for  E 3.03E+1MeV B.W.RIDLEY,ET.AL
+           first 2 coeff.-5.348E+02-1.600E+03 er 7.468E-02
+ WARNING -   1 out of    1 distrib. not fitted for E 3.03E+1MeV B.W.RIDLEY,ET.AL
+ WARNING -   1 out of    1 distrib. not fitted for E 3.03E+1MeV B.W.RIDLEY,ET.AL
+ WARNING -   1 out of    1 distrib. not fitted for E 3.03E+1MeV B.W.RIDLEY,ET.AL
+ WARNING -   1 out of    1 distrib. not fitted for E 4.00E+1MeV M.P.FRICKE,ET.AL
+ WARNING -   1 out of    1 distrib. not fitted for E 4.00E+1MeV M.P.FRICKE,ET.AL
+ WARNING -   1 out of    1 distrib. not fitted for E 4.00E+1MeV M.P.FRICKE,ET.AL
+ WARNING -   1 out of    1 distrib. not fitted for E 4.00E+1MeV M.P.FRICKE,ET.AL
+ WARNING -   1 out of    1 distrib. not fitted for E 4.00E+1MeV M.P.FRICKE,ET.AL
+ WARNING -   1 out of    1 distrib. not fitted for E 4.00E+1MeV M.P.FRICKE,ET.AL
+ WARNING -   1 out of    1 distrib. not fitted for E 4.00E+1MeV M.P.FRICKE,ET.AL
+ WARNING -   1 out of    1 distrib. not fitted for E 4.00E+1MeV M.P.FRICKE,ET.AL
+ WARNING -   1 out of    1 distrib. not fitted for E 4.00E+1MeV M.P.FRICKE,ET.AL
+ WARNING -   1 out of    1 distrib. not fitted for E 4.00E+1MeV M.P.FRICKE,ET.AL
+ WARNING -   1 out of    1 distrib. not fitted for E 4.00E+1MeV M.P.FRICKE,ET.AL
+ WARNING -   1 out of    1 distrib. not fitted for E 4.00E+1MeV M.P.FRICKE,ET.AL
+ WARNING - Large error fitting ang.dist. for  E 6.15E+1MeV F.E.BERTRAND,ET.
+           first 2 coeff. 8.248E-03 1.062E-02 er 1.255E+00
+ WARNING -   1 out of    2 distrib. not fitted for E 6.15E+1MeV F.E.BERTRAND,ET.
+ WARNING - Large error fitting ang.dist. for  E 6.15E+1MeV F.E.BERTRAND,ET.
+           first 2 coeff. 3.237E-03-9.161E-04 er 9.193E-02
+ WARNING -   1 out of    2 distrib. not fitted for E 6.15E+1MeV F.E.BERTRAND,ET.
+ WARNING - Large error fitting ang.dist. for  E 6.15E+1MeV F.E.BERTRAND,ET.
+           first 2 coeff.-3.300E-03 1.207E-02 er 8.703E-02
+ WARNING -   1 out of    2 distrib. not fitted for E 6.15E+1MeV F.E.BERTRAND,ET.
+ WARNING -   1 out of    2 distrib. not fitted for E 6.15E+1MeV F.E.BERTRAND,ET.
+ WARNING -  13 out of   13 distrib. not fitted for E 6.15E+1MeV F.E.BERTRAND,ET.
+ WARNING -   1 out of    1 distrib. not fitted for E 6.15E+1MeV F.E.BERTRAND,ET.
+ WARNING -   1 out of    1 distrib. not fitted for E 6.15E+1MeV F.E.BERTRAND,ET.
+ WARNING -  14 out of   14 distrib. not fitted for E 6.15E+1MeV F.E.BERTRAND,ET.

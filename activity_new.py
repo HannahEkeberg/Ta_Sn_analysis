@@ -221,6 +221,7 @@ class Activity_manual:
         E = pd.Series(peak_data['energy'], name='energy')
         df = pd.concat([filename, E, delay_time/3600, A*1e-6, unc_A*1e-6], axis=1)
         print(df)
+
         return delay_time, activity, unc_activity
 
     def savefig(self, element, isotope, foil):

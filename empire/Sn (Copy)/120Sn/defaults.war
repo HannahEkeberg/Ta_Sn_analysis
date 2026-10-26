@@ -1,0 +1,293 @@
+  WARNING!!!! HRTW has been turned off 
+  WARNING!!!! (It is not allowed for charged
+  WARNING!!!! particle induced reactions)
+  WARNING: NDEX in dimension.h is  101  recommended value is  160
+  WARNING: Element =106Tc  Z= 43
+  WARNING: ground-state has no assigned spin/parity 
+  WARNING: assuming a default 
+  WARNING:
+  WARNING: Element =102Tc  Z= 43
+  WARNING: excited state No.   2 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.0  1
+  WARNING:
+  WARNING: Element =102Tc  Z= 43
+  WARNING: excited state No.   3 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.0  1
+  WARNING:
+  WARNING: Element =102Tc  Z= 43
+  WARNING: excited state No.   4 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.0  1
+  WARNING:
+  WARNING: Element =102Tc  Z= 43
+  WARNING: excited state No.   5 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.0  1
+  WARNING:
+  WARNING: Element =102Tc  Z= 43
+  WARNING: excited state No.   6 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.0  1
+  WARNING:
+  WARNING: Element =102Tc  Z= 43
+  WARNING: excited state No.   7 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.0  1
+  WARNING:
+  WARNING: Element =102Tc  Z= 43
+  WARNING: excited state No.   9 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.0  1
+  WARNING:
+  WARNING: Element =102Tc  Z= 43
+  WARNING: excited state No.  10 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.0  1
+  WARNING:
+  WARNING: Element =102Tc  Z= 43
+  WARNING: excited state No.  12 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.0  1
+  WARNING:
+  WARNING: Element =102Tc  Z= 43
+  WARNING: excited state No.  14 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.0  1
+  WARNING:
+  WARNING: Element =102Tc  Z= 43
+  WARNING: excited state No.  16 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.0  1
+  WARNING:
+  WARNING: Element =102Tc  Z= 43
+  WARNING: excited state No.  17 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.0  1
+  WARNING:
+  WARNING: Element =102Tc  Z= 43
+  WARNING: excited state No.  18 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.0  1
+  WARNING:
+  WARNING: Element =102Tc  Z= 43
+  WARNING: excited state No.  19 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.0  1
+  WARNING:
+  WARNING: Element =102Tc  Z= 43
+  WARNING: excited state No.  20 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.0  1
+  WARNING:
+  WARNING: Element =102Tc  Z= 43
+  WARNING: excited state No.  21 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.0  1
+  WARNING:
+  WARNING: Element =102Tc  Z= 43
+  WARNING: excited state No.  22 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.0  1
+  WARNING:
+  WARNING: Element =102Tc  Z= 43
+  WARNING: excited state No.  23 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.0  1
+  WARNING:
+  WARNING: Element =102Zr  Z= 40
+  WARNING: excited state No.   7 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.0  1
+  WARNING:
+  WARNING: Element = 97Zr  Z= 40
+  WARNING: excited state No.   4 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.5  1
+  WARNING:
+  WARNING: Element = 97Zr  Z= 40
+  WARNING: excited state No.   6 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.5  1
+  WARNING:
+  WARNING: Element = 97Zr  Z= 40
+  WARNING: excited state No.   7 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.5  1
+  WARNING:
+  WARNING: Element = 98Sr  Z= 38
+  WARNING: excited state No.   7 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.0  1
+  WARNING:
+  WARNING: Element = 99Sr  Z= 38
+  WARNING: excited state No.   9 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.5  1
+  WARNING:
+  WARNING: Element = 92Y   Z= 39
+  WARNING: excited state No.   2 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.0  1
+  WARNING:
+  WARNING: Element = 92Y   Z= 39
+  WARNING: excited state No.   3 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.0  1
+  WARNING:
+  WARNING: Element = 92Y   Z= 39
+  WARNING: excited state No.   5 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.0  1
+  WARNING:
+  WARNING: Element = 92Y   Z= 39
+  WARNING: excited state No.   6 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.0  1
+  WARNING:
+  WARNING: Element = 92Y   Z= 39
+  WARNING: excited state No.   9 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.0  1
+  WARNING:
+  WARNING: Element = 94Rb  Z= 37
+  WARNING: excited state No.   2 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.0  1
+  WARNING:
+  WARNING: Element = 94Rb  Z= 37
+  WARNING: excited state No.   3 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.0  1
+  WARNING:
+  WARNING: Element = 94Rb  Z= 37
+  WARNING: excited state No.   5 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.0  1
+  WARNING:
+  WARNING: Element = 94Rb  Z= 37
+  WARNING: excited state No.   6 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.0  1
+  WARNING:
+  WARNING: Element = 94Rb  Z= 37
+  WARNING: excited state No.   8 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.0  1
+  WARNING:
+  WARNING: Element = 94Rb  Z= 37
+  WARNING: excited state No.   9 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.0  1
+  WARNING: Element = 90Br  Z= 35
+  WARNING: ground-state has no assigned spin/parity 
+  WARNING: assuming a default 
+  WARNING: Element = 89Br  Z= 35
+  WARNING: ground-state has no assigned spin/parity 
+  WARNING: assuming a default 
+  WARNING:
+  WARNING: Element = 86Br  Z= 35
+  WARNING: excited state No.   5 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.0  1
+  WARNING:
+  WARNING: Element = 86Br  Z= 35
+  WARNING: excited state No.   7 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.0  1
+  WARNING:
+  WARNING: Element = 86Br  Z= 35
+  WARNING: excited state No.   8 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.0  1
+  WARNING: Element =105Zr  Z= 40
+  WARNING: ground-state has no assigned spin/parity 
+  WARNING: assuming a default 
+  WARNING: Element = 94Br  Z= 35
+  WARNING: ground-state has no assigned spin/parity 
+  WARNING: assuming a default 
+  WARNING: Element = 90As  Z= 33
+  WARNING: ground-state has no assigned spin/parity 
+  WARNING: assuming a default 
+  WARNING: Element = 88As  Z= 33
+  WARNING: ground-state has no assigned spin/parity 
+  WARNING: assuming a default 
+  WARNING: Element = 86As  Z= 33
+  WARNING: ground-state has no assigned spin/parity 
+  WARNING: assuming a default 
+  WARNING:
+  WARNING: Element = 80Ge  Z= 32
+  WARNING: excited state No.   5 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.0  1
+  WARNING:
+  WARNING: Element = 80Ge  Z= 32
+  WARNING: excited state No.   6 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.0  1
+  WARNING:
+  WARNING: Element = 80Ge  Z= 32
+  WARNING: excited state No.   7 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.0  1
+  WARNING:
+  WARNING: Element = 80Ge  Z= 32
+  WARNING: excited state No.   9 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.0  1
+  WARNING: Branching ratios for level           15  in          121 -Sb are missing
+  WARNING: Branching ratios for level           16  in          121 -Sb are missing
+  WARNING: Branching ratios for level           23  in          121 -Sb are missing
+  WARNING: Branching ratios for level           27  in          121 -Sb are missing
+  WARNING: Branching ratios for level           28  in          121 -Sb are missing
+  WARNING: Branching ratios for level           29  in          121 -Sb are missing
+  WARNING: Branching ratios for level           32  in          121 -Sb are missing
+  WARNING: Branching ratios for level           33  in          121 -Sb are missing
+  WARNING: Branching ratios for level           35  in          121 -Sb are missing
+  WARNING: Branching ratios for level           39  in          121 -Sb are missing
+  WARNING: Branching ratios for level           40  in          121 -Sb are missing
+  WARNING: Conversion coeff for level           15  in          121 -Sb are missing
+  WARNING: Conversion coeff for level           16  in          121 -Sb are missing
+  WARNING: Conversion coeff for level           23  in          121 -Sb are missing
+  WARNING: Conversion coeff for level           27  in          121 -Sb are missing
+  WARNING: Conversion coeff for level           28  in          121 -Sb are missing
+  WARNING: Conversion coeff for level           29  in          121 -Sb are missing
+  WARNING: Conversion coeff for level           32  in          121 -Sb are missing
+  WARNING: Conversion coeff for level           33  in          121 -Sb are missing
+  WARNING: Conversion coeff for level           35  in          121 -Sb are missing
+  WARNING: Conversion coeff for level           39  in          121 -Sb are missing
+  WARNING: Conversion coeff for level           40  in          121 -Sb are missing
+  WARNING: Branching ratios for level            6  in          120 -Sn are missing
+  WARNING: Branching ratios for level            9  in          120 -Sn are missing
+  WARNING: Branching ratios for level           15  in          120 -Sn are missing
+  WARNING: Branching ratios for level           19  in          120 -Sn are missing
+  WARNING: Branching ratios for level           23  in          120 -Sn are missing
+  WARNING: Branching ratios for level           25  in          120 -Sn are missing
+  WARNING: Conversion coeff for level            6  in          120 -Sn are missing
+  WARNING: Conversion coeff for level            9  in          120 -Sn are missing
+  WARNING: Conversion coeff for level           15  in          120 -Sn are missing
+  WARNING: Conversion coeff for level           19  in          120 -Sn are missing
+  WARNING: Conversion coeff for level           23  in          120 -Sn are missing
+  WARNING: Conversion coeff for level           25  in          120 -Sn are missing
+  WARNING: Branching ratios for level            9  in          117 -In are missing
+  WARNING: Branching ratios for level           14  in          117 -In are missing
+  WARNING: Branching ratios for level           23  in          117 -In are missing
+  WARNING: Conversion coeff for level            9  in          117 -In are missing
+  WARNING: Conversion coeff for level           14  in          117 -In are missing
+  WARNING: Conversion coeff for level           23  in          117 -In are missing
+  WARNING: Sum of production XS (incl.fission)
+  WARNING: is not equal reaction cross section
+  WARNING:     difference:   7.93 % at E =   1.0000     MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  25.000000  by 0.341454 to  24.658546 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  25.000000  by 0.260938 to  24.739062 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  29.000000  by 0.363127 to  28.636873 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  35.000000  by 0.457123 to  34.542877 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  35.000000  by 0.363820 to  34.636180 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  38.000000  by 0.425793 to  37.574207 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  38.000000  by 0.513991 to  37.486009 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  41.000000  by 0.466772 to  40.533228 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  41.000000  by 0.428873 to  40.571127 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  41.000000  by 0.459298 to  40.540702 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  44.000000  by 0.431808 to  43.568192 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  44.000000  by 0.532038 to  43.467962 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  48.000000  by 0.485445 to  47.514555 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  48.000000  by 0.641313 to  47.358687 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  52.000000  by 0.550086 to  51.449914 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  56.000000  by 0.693486 to  55.306514 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  60.000000  by 0.724071 to  59.275929 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  60.000000  by 0.658240 to  59.341760 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  64.000000  by 0.818850 to  63.181150 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  72.000000  by 0.694346 to  71.305654 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  76.000000  by 0.938633 to  75.061367 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  76.000000  by 0.811793 to  75.188207 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  76.000000  by 0.997869 to  75.002131 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  76.000000  by 0.905978 to  75.094022 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  80.000000  by 0.927873 to  79.072127 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  80.000000  by 0.868453 to  79.131547 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  80.000000  by 0.813702 to  79.186298 MeV

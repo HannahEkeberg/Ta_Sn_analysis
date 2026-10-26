@@ -87,14 +87,20 @@ class VarMin:
             break
 
     
-
-        indices = self.get_compartment_indices(foils, compartments) if compartments else slice(None)
-        energy, flux = wa.get_flux_energy_stack(element)
-        flux_weighted_average_energy, unc_energy_left, unc_energy_right = wa.flux_weighted_average_energy(energy, flux)
-        flux_weighted_average_cross_section, unc_flux_weighted_average_cross_section = wa.monitor_flux_weighted_average_cross_section(element, isotope)
-        flux_weighted_average_energy, unc_energy_left, unc_energy_right, beam_current, unc_beam_current, protons_per_second, unc_protons_per_second = bc.beam_current(element, isotope)
-        # print(isotope, beam_current[indices])
-        return flux_weighted_average_energy[indices], beam_current[indices], unc_beam_current[indices]
+    # def get_data(self, foils, compartments)
+    #     indices = self.get_compartment_indices(foils, compartments) if compartments else slice(None)
+    #     energy, flux = wa.get_flux_energy_stack(element)
+    #     flux_weighted_average_energy, unc_energy_left, unc_energy_right = wa.flux_weighted_average_energy(energy, flux)
+    #     flux_weighted_average_cross_section, unc_flux_weighted_average_cross_section = wa.monitor_flux_weighted_average_cross_section(element, isotope)
+    #     flux_weighted_average_energy, unc_energy_left, unc_energy_right, beam_current, unc_beam_current, protons_per_second, unc_protons_per_second = bc.beam_current(element, isotope)
+    #     # print(isotope, beam_current[indices])
+    #     return flux_weighted_average_energy[indices], beam_current[indices], unc_beam_current[indices]
+    
+    # def get_compartment_indices(self, all_foils, compartments):
+    #     indices = [i for i, foil in enumerate(all_foils) if any(foil.endswith(c) for c in compartments)]
+    #     if not indices:
+    #         raise Exception("Compartments and foils do not match, wrong stack?")
+    #     return indices
 
     # def plot(self, compartment):
     #     self.plot_chi2(self.dp_array, red_chi2s,False, title_plot, method,'saddlebrown')
@@ -104,20 +110,20 @@ class VarMin:
     #     plt.show()
 
 
-dp_array = np.array([0.990, 0.991, 1.003, 1.001, 1.021, 0.998, 1.013, 
-                    1.024, 1.070, 0.996, 1.050, 1.014, 
-                    0.900, 1.012, 1.110, 1.200, 1.007, 1.027, 1.040, 0.997, 1.008, 1.016, 1.022, 1.011, 1.025, 0.999, 0.994, 1.005, 1.009, 1.026, 1.080, 1.090, 0.970, 1.023, 1.029, 1.002, 1.019, 1.020, 1.006, 1.010, 0.993, 1.100, 0.950, 1.000, 1.015, 1.030, 0.992, 1.018, 0.800, 1.017, 1.028, 1.060, 1.004, 0.980, 0.960, 0.995])
+# dp_array = np.array([0.990, 0.991, 1.003, 1.001, 1.021, 0.998, 1.013, 
+#                     1.024, 1.070, 0.996, 1.050, 1.014, 
+#                     0.900, 1.012, 1.110, 1.200, 1.007, 1.027, 1.040, 0.997, 1.008, 1.016, 1.022, 1.011, 1.025, 0.999, 0.994, 1.005, 1.009, 1.026, 1.080, 1.090, 0.970, 1.023, 1.029, 1.002, 1.019, 1.020, 1.006, 1.010, 0.993, 1.100, 0.950, 1.000, 1.015, 1.030, 0.992, 1.018, 0.800, 1.017, 1.028, 1.060, 1.004, 0.980, 0.960, 0.995])
 
-params_55_stack = [
-    'params_Cu_65Zn', 'params_Cu_63Zn', 'params_Cu_62Zn', 'params_Cu_61Cu', 'params_Cu_58Co',
-    'params_Ni_57Ni', 'params_Ni_56Ni', 'params_Ni_58Co', 'params_Ni_57Co', 'params_Ni_56Co', 'params_Ni_55Co'
-]
+# params_55_stack = [
+#     'params_Cu_65Zn', 'params_Cu_63Zn', 'params_Cu_62Zn', 'params_Cu_61Cu', 'params_Cu_58Co',
+#     'params_Ni_57Ni', 'params_Ni_56Ni', 'params_Ni_58Co', 'params_Ni_57Co', 'params_Ni_56Co', 'params_Ni_55Co'
+# ]
 
-params_30_stack = [
-    'params_Cu_65Zn', 'params_Cu_63Zn', 'params_Cu_62Zn',
-    'params_Ni_56Ni', 'params_Ni_58Co', 'params_Ni_57Co', 'params_Ni_56Co', 'params_Ni_55Co'
-]
+# params_30_stack = [
+#     'params_Cu_65Zn', 'params_Cu_63Zn', 'params_Cu_62Zn',
+#     'params_Ni_56Ni', 'params_Ni_58Co', 'params_Ni_57Co', 'params_Ni_56Co', 'params_Ni_55Co'
+# ]
 
-# 55 MeV
+# # 55 MeV
 
-VarMin(dp_array).get_data(7, 2, [6,6], 'stack_55_MeV', params_55_stack)
+# VarMin(dp_array).get_data(7, 2, [6,6], 'stack_55_MeV', params_55_stack)

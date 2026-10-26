@@ -1,0 +1,63 @@
+#begin LSTTAB.CUR/u
+       fun: Exp RHO(U)=DN/DU of Cd118
+thick: 2  
+length:250
+//
+ 0.0 1.0
+   487770.00000000000        1.7634403621149886     
+   1164940.0000000000        5.5432872119475896     
+   1269000.0000000000        913.89583417806477     
+   1269550.0000000000        940.22416377477475     
+   1285610.0000000000        34.000386584253881     
+   1460000.0000000000        6.0914869774311180     
+   1615070.0000000000        6.4487003020783407     
+//
+#end LSTTAB.CUR/u
+#begin LSTTAB.CUR/c
+x-scale: auto      
+y-scale: auto    
+//
+#end LSTTAB.CUR/c
+#begin LSTTAB.CUR/u
+       fun: RHO(U)   at GS of Cd118 (EGSM)
+thick: 2  
+length:250
+//
+ 0.172E+07   2.10276E+01
+ 0.206E+07   4.18604E+01
+ 0.241E+07   8.12723E+01
+ 0.275E+07   1.54362E+02
+ 0.309E+07   2.87540E+02
+ 0.344E+07   5.26432E+02
+ 0.378E+07   9.48984E+02
+ 0.412E+07   1.68705E+03
+ 0.447E+07   2.96172E+03
+ 0.481E+07   5.14083E+03
+ 0.516E+07   8.83220E+03
+ 0.550E+07   1.50342E+04
+ 0.584E+07   2.53787E+04
+ 0.619E+07   4.25215E+04
+ 0.653E+07   6.95130E+04
+ 0.687E+07   1.10534E+05
+ 0.722E+07   1.72964E+05
+ 0.756E+07   2.66620E+05
+ 0.791E+07   4.05188E+05
+//
+#end LSTTAB.CUR/u
+ #begin aa/c
+ tit:  LEVEL DENSITY
+ tit2: Energy continuum starts at  1.62 MeV
+ x-unit:1000000, (MeV)
+ ix-unit: 1
+ y-unit:1, (1/MeV)
+ iy-unit: 1
+ X-SCALE: lin
+ Y-SCALE: log
+ X-GRID: 1
+ NOSTAT: 1
+ legend: 1
+ X: U
+ x-long: Excitation energy U 
+ Y: Level density     
+//
+ #end aa/c  

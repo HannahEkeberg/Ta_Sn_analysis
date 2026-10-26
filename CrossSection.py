@@ -51,9 +51,9 @@ class CrossSection:
             # print(mask)
             return energy, unc_left, unc_right, cross_section*1e27, unc_cross_section*1e27
 
-    def cross_section_manual(self, element, isotope, independent=False):
+    def cross_section_manual(self, element, isotope, independent=False, corrected=False):
         foils, areal_density, unc_areal_density = areal_density_from_files(element)
-        eob_activity, std_eob_activity = eob_activity_manually(element, isotope, independent)
+        eob_activity, std_eob_activity = eob_activity_manually(element, isotope, independent, corrected=False)
         beam_current, unc_beam_current = weighted_average_beam_current()
         energy, unc_left, unc_right = weighted_average_beam_energy(element)
         decay_constant, unc_decay_constant = ci.Isotope(isotope).decay_const(unc=True)
@@ -158,8 +158,14 @@ class CrossSection:
 
     def monitor_cross_section(self,element,isotope):
         wa_55, wa_30 = get_wa_from_stack_files()
-        wa_55.plot_monitor_reaction(element, isotope, label='IAEA recommended data 2025')
-        wa_30.plot_monitor_reaction(element, isotope)
+        mean_energy_55, xs_55 = wa_55.plot_monitor_reaction(element, isotope, label='IAEA recommended data 2025')
+        mean_energy_30, xs_30 = wa_30.plot_monitor_reaction(element, isotope)
+        mean_energy = np.concatenate([mean_energy_55, mean_energy_30]); flux_weighted_average_cross_section = np.concatenate([xs_55, xs_30])
+        # print(mean_energy)
+        # df = pd.DataFrame({'energy': mean_energy, 'fwacs': flux_weighted_average_cross_section})
+        # print("####################################")
+        print(flux_weighted_average_cross_section)
+        return flux_weighted_average_cross_section
 
     def subtract_isomer(self, cumulative_xs, unc_cumulative_xs, subtract_xs, unc_subtract_xs, branching_ratio):
         # independent_xs = cumulative_xs-subtract_xs*branching_ratio
@@ -233,7 +239,7 @@ class CrossSection:
         xerr=[unc_left, unc_right], yerr=unc_cross_section, elinewidth=1.0, capthick=1.0, capsize=3.0,
         label='flux weighted average cross section', linestyle='none')
 
-    def save_manual(self, element, isotope, independent=None):
+    def save_manual(self, element, isotope, independent=None, corrected=False):
         self.cross_section_manual(element, isotope, independent=independent)
 
     def plot_directly(self, element, isotope, independent, bc_file, note='#860d0d', color='darkred'):
@@ -249,13 +255,17 @@ class CrossSection:
                                 std_eob_activity, unc_areal_density, unc_decay_constant, unc_irradiation_time, unc_beam_current
         )
         mask = cross_section != 0
+        print("cross sections directly")
+        print(cross_section)
         plt.errorbar(energy[mask], cross_section[mask]*1e27, marker='P', color=color,linewidth=0.0001,
         xerr=[unc_left[mask], unc_right[mask]], yerr=unc_cross_section[mask]*1e27, elinewidth=1.0, capthick=1.0, capsize=3.0,
         label=note, linestyle='none')
+        return cross_section
 
     def plot_manual(self, element, isotope, independent=None, color='#860d0d', label=None):
         # energy, unc_left, unc_right, cross_section, unc_cross_section = self.cross_section_manual(element, isotope, mask=True, independent=independent)
         energy, unc_left, unc_right, cross_section, unc_cross_section = cross_sections(element, isotope, independent)
+        print("cross sections manual")
         print(cross_section)
         mask = cross_section>0
         if label==None:
@@ -263,6 +273,7 @@ class CrossSection:
         plt.errorbar(energy[mask], cross_section[mask]*1e27, marker='P', color=color,linewidth=0.0001,
         xerr=[unc_left[mask], unc_right[mask]], yerr=unc_cross_section[mask]*1e27, elinewidth=1.0, capthick=1.0, capsize=3.0,
         label=label, linestyle='none')
+        return cross_section
 
     def plot_subtract(self, element, isotope_parent, isotope_daughter, branching_ratio):
         energy, unc_left, unc_right, cross_section, unc_cross_section = self.cross_section_subtract(element, isotope_parent, isotope_daughter, branching_ratio)
@@ -276,8 +287,10 @@ class CrossSection:
         energy, unc_left, unc_right, cross_section, unc_cross_section = cross_sections(element, isotope, independent)
         e, e_left, e_right = weighted_average_beam_energy(element, stack=stack)
         eps = 0.01
+        print(e, energy)
         for i in range(len(e)):
             idx = np.where(np.abs(energy - e[i]) < eps)[0]
+            print(idx)
             if len(idx) > 0:
                 j = idx[0]
                 cs = cross_section[j] * 1e26

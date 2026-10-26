@@ -66,9 +66,61 @@ Ai_i = Activity_manual(saveIndependent=True, saveIndependentParent=True)
 
 
 
+# TA PRODUCTS
+# Ta_181W_independent()
+# Ta_179W_cumulative()
+# Ta_178W_independent()
+# Ta_177W_independent()
+# Ta_176W_independent()
+
+# Ta_180Ta_independent()
+# Ta_178Ta_cumulative()
+# Ta_178mTa_cumulative()
+# Ta_177Ta_independent()
+# Ta_177Ta_cumulative()
+# Ta_176Ta_independent()
+# Ta_176Ta_cumulative()
+# Ta_175Ta_cumulative()
+
+# Ta_180mHF_independent() # Fix talys for isomers. Empire is not working either...
+# Ta_175Hf_cumulative()
+# Ta_175Hf_independent()
+# Ta_173Hf_cumulative()
+
+# MONITORS
+# Cu_65Zn_monitor()
+# Cu_63Zn_monitor()
+# Cu_62Zn_monitor()
+# Cu_61Cu_monitor()
+# Cu_58Co_monitor()
+# Cu_56Co_monitor()
+# Ni_58Co_monitor()
+# Ni_57Co_monitor()
+# Ni_56Co_monitor()
+# Ni_55Co_monitor()
+# Ni_57Ni_monitor()
+# Ni_56Ni_monitor()
 
 
+# NI PRODUCTS
+# Ni_64Cu_independent()
+# Ni_61Cu_independent()
+# Ni_57Co_independent()
+# Ni_56Co_independent()
+# Ni_54Mn_independent()
+# Ni_52Mn_cumulative()
+# Ni_51Cr_cumulative()
 
+# CU PRODUCTS
+# Cu_64Cu_independent()
+# Cu_60Cu_cumulative() # missing a run on empire for 60Zn, missing on CoH as well both isomers.... 
+# Cu_57Ni_cumulative() # missing a run on empire for 57Cu
+# Cu_61Co_cumulative()
+# Cu_60Co_cumulative()
+# Cu_55Co_cumulative()
+# Cu_59Fe_cumulative()
+# Cu_56Mn_cumulative()
+# Cu_54Mn_independent()
 
 
 # A.one_step_decay('Cu', '58CO', compartment=None, plot_curve=True)
@@ -283,6 +335,7 @@ Ai_i = Activity_manual(saveIndependent=True, saveIndependentParent=True)
 # Acitivity().getA0(element='Ta', isotope='180TA', plot_=True, compartment=None)
 #CONTINUE AFTER 175TA, 180mHF
 # Ai.one_step_decay('Ta', '180TA', compartment=None, plot_curve=True, min_half_lives=12, max_half_lives=10, max_activity_uncertainty=5)
+# Ai.one_step_decay('Ta', '180TA', compartment=None, plot_curve=True, min_half_lives=2, max_half_lives=5, max_activity_uncertainty=5)
 # Ta_180Ta_independent() # Not looking great, especially for foils 1-3. Curie and I disagree....
 
 # NOT SEEN
@@ -480,23 +533,25 @@ def print_latex_ta(stack, element):
     s += rf'\hline \\'
     s += cs.latex_table_energy(stack, element)
     s += rf'\hline \\'
-    s += cs.latex_table_cross_section(element, '181W', independent=True, stack=stack, A = 181, el='W', isomer_state='g', subscript_independent=True)
-    s += cs.latex_table_cross_section(element, '179W', independent=False, stack=stack, A = 179, el='W', isomer_state='m+g', subscript_independent=False)
-    s += cs.latex_table_cross_section(element, '178W', independent=True, stack=stack, A = 178, el='W', isomer_state='g', subscript_independent=True)
-    s += cs.latex_table_cross_section(element, '177W', independent=True, stack=stack, A = 178, el='W', isomer_state='g', subscript_independent=True)
-    s += cs.latex_table_cross_section(element, '176W', independent=True, stack=stack, A = 176, el='W', isomer_state='g', subscript_independent=True)
-    s += cs.latex_table_cross_section(element, '180Ta', independent=True, stack=stack, A = 180, el='Ta', isomer_state='g', subscript_independent=True)
-    s += cs.latex_table_cross_section(element, '178TAm1', independent=False, stack=stack, A = 178, el='Ta', isomer_state='m1', subscript_independent=False)
-    s += cs.latex_table_cross_section(element, '178TA', independent=False, stack=stack, A = 178, el='Ta', isomer_state='g', subscript_independent=False)
-    s += cs.latex_table_cross_section(element, '177TA', independent=False, stack=stack, A = 177, el='Ta', isomer_state='g', subscript_independent=False)
-    s += cs.latex_table_cross_section(element, '177TA', independent=True, stack=stack, A = 177, el='Ta', isomer_state='g', subscript_independent=True)
-    s += cs.latex_table_cross_section(element, '176TA', independent=False, stack=stack, A = 176, el='Ta', isomer_state='g', subscript_independent=False)
-    s += cs.latex_table_cross_section(element, '176TA', independent=True, stack=stack, A = 176, el='Ta', isomer_state='g', subscript_independent=True)
-    s += cs.latex_table_cross_section(element, '175TA', independent=False, stack=stack, A = 175, el='Ta', isomer_state='g', subscript_independent=False)
-    s += cs.latex_table_cross_section(element, '180HFm', independent=True, stack=stack, A = 180, el='Hf', isomer_state='m', subscript_independent=True)
-    s += cs.latex_table_cross_section(element, '175Hf', independent=False, stack=stack, A = 175, el='Hf', isomer_state='g', subscript_independent=False)
-    s += cs.latex_table_cross_section(element, '175Hf', independent=True, stack=stack, A = 175, el='Hf', isomer_state='g', subscript_independent=True)
-    s += cs.latex_table_cross_section(element, '173Hf', independent=False, stack=stack, A = 173, el='Hf', isomer_state='g', subscript_independent=False)
+    #s += cs.latex_table_cross_section(element, '181W', independent=True, stack=stack, A = 181, el='W', isomer_state='g', subscript_independent=True)
+    #s += cs.latex_table_cross_section(element, '179W', independent=False, stack=stack, A = 179, el='W', isomer_state='m+g', subscript_independent=False)
+    #s += cs.latex_table_cross_section(element, '178W', independent=True, stack=stack, A = 178, el='W', isomer_state='g', subscript_independent=True)
+    #s +=  "*****"
+    s += cs.latex_table_cross_section(element, '177W', independent=True, stack=stack, A = 177, el='W', isomer_state='g', subscript_independent=True)
+    #s +=  "*****"
+    #s += cs.latex_table_cross_section(element, '176W', independent=True, stack=stack, A = 176, el='W', isomer_state='g', subscript_independent=True)
+    #s += cs.latex_table_cross_section(element, '180Ta', independent=True, stack=stack, A = 180, el='Ta', isomer_state='g', subscript_independent=True)
+    #s += cs.latex_table_cross_section(element, '178TAm1', independent=False, stack=stack, A = 178, el='Ta', isomer_state='m1', subscript_independent=False)
+    #s += cs.latex_table_cross_section(element, '178TA', independent=False, stack=stack, A = 178, el='Ta', isomer_state='g', subscript_independent=False)
+    #s += cs.latex_table_cross_section(element, '177TA', independent=False, stack=stack, A = 177, el='Ta', isomer_state='g', subscript_independent=False)
+    #s += cs.latex_table_cross_section(element, '177TA', independent=True, stack=stack, A = 177, el='Ta', isomer_state='g', subscript_independent=True)
+    #s += cs.latex_table_cross_section(element, '176TA', independent=False, stack=stack, A = 176, el='Ta', isomer_state='g', subscript_independent=False)
+    #s += cs.latex_table_cross_section(element, '176TA', independent=True, stack=stack, A = 176, el='Ta', isomer_state='g', subscript_independent=True)
+    #s += cs.latex_table_cross_section(element, '175TA', independent=False, stack=stack, A = 175, el='Ta', isomer_state='g', subscript_independent=False)
+    #s += cs.latex_table_cross_section(element, '180HFm', independent=True, stack=stack, A = 180, el='Hf', isomer_state='m', subscript_independent=True)
+    #s += cs.latex_table_cross_section(element, '175Hf', independent=False, stack=stack, A = 175, el='Hf', isomer_state='g', subscript_independent=False)
+    #s += cs.latex_table_cross_section(element, '175Hf', independent=True, stack=stack, A = 175, el='Hf', isomer_state='g', subscript_independent=True)
+    #s += cs.latex_table_cross_section(element, '173Hf', independent=False, stack=stack, A = 173, el='Hf', isomer_state='g', subscript_independent=False)
     return s
 
 
@@ -505,9 +560,10 @@ def print_latex_ta(stack, element):
 # s = print_latex_cu('stack_30_MeV', 'Cu')
 # s = print_latex_ni('stack_55_MeV', 'Ni')
 # s = print_latex_ni('stack_30_MeV', 'Ni')
-# s = print_latex_ta('stack_55_MeV', 'Ta')
-# for line in s.split(r'\\'):
-#     print(line + r'\\')
+s = print_latex_ta('stack_55_MeV', 'Ta')
+# ås = print_latex_ta('stack_30_MeV', 'Ta')
+for line in s.split(r'\\'):
+    print(line + r'\\')
 
 
 
@@ -583,18 +639,18 @@ def print_latex_ta(stack, element):
 # A.one_step_decay('Ni', '57CO', compartment=None, plot_curve=True, min_half_lives=350, max_half_lives=10)
 # A.one_step_decay('Ni', '58CO', compartment=None, plot_curve=True, min_half_lives=80, max_half_lives=10)
 
-Cu_62Zn_monitor()
-Cu_63Zn_monitor()
-Cu_65Zn_monitor()
-Cu_61Cu_monitor()
-Cu_56Co_monitor()
-Cu_58Co_monitor()
-Ni_55Co_monitor()
-Ni_56Ni_monitor()
-Ni_56Co_monitor()
-Ni_57Ni_monitor()
-Ni_57Co_monitor()
-Ni_58Co_monitor()
+# Cu_62Zn_monitor()
+# Cu_63Zn_monitor()
+# Cu_65Zn_monitor()
+# Cu_61Cu_monitor()
+# Cu_56Co_monitor()
+# Cu_58Co_monitor()
+# Ni_55Co_monitor()
+# Ni_56Ni_monitor()
+# Ni_56Co_monitor()
+# Ni_57Ni_monitor()
+# Ni_57Co_monitor()
+# Ni_58Co_monitor()
 
 
 

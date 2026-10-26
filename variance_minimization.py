@@ -340,7 +340,7 @@ class   VarianceMinimization:
                 plt.legend(fontsize=9, loc='upper right',ncol=3)
                 plt.ylim(0,250)
                 plt.savefig(os.getcwd() + '/generatedfiles/varianceminimization/iaea25/manual/' + stack + '_' + str(dp_str) +'.pdf')
-                plt.show()
+                # plt.show()
                 plt.close()
             if method == 'p0' or method == 'p1':
                 energy, chi2, red_chi2 = self.get_chi2_values(stack, wa, bc, compartments, method)
@@ -408,6 +408,9 @@ varmin_30 = VarianceMinimization(dp_array, [cu_zn65, cu_zn63,cu_zn62, cu_cu61, n
 # varmin_55 = VarianceMinimization(dp_array, [cu_zn65, cu_zn63,cu_zn62, cu_co58, cu_co56, cu_cu61, ni_ni56, ni_ni57, ni_co55, ni_co56, ni_co57, ni_co58])
 varmin_55 = VarianceMinimization(dp_array, [cu_zn65, cu_zn63,cu_zn62, cu_co58, cu_co56, cu_cu61, ni_ni56, ni_ni57, ni_co55, ni_co56, ni_co57, ni_co58])
 
+# varmin_30.plot_chi_squared('stack_30_MeV', method='plot bc', compartments=None)
+# varmin_55.plot_chi_squared('stack_55_MeV', method='plot bc', compartments=None)
+
 # varmin_55.plot_chi_squared('stack_55_MeV', method='p0', compartments=['07'])
 # varmin_55.plot_chi_squared('stack_55_MeV', method='p0', compartments=['06'])
 # varmin_55.plot_chi_squared('stack_55_MeV', method='p0', compartments=['05'])
@@ -434,9 +437,6 @@ varmin_55 = VarianceMinimization(dp_array, [cu_zn65, cu_zn63,cu_zn62, cu_co58, c
 # varmin_55 = VarianceMinimization(dp_array, [cu_zn65, cu_zn63,cu_zn62, cu_co58, cu_cu61, ni_ni56, ni_ni57, ni_co55, ni_co56])
 
 
-
-# varmin_30.plot_chi_squared('stack_30_MeV', method='plot bc', compartments=None)
-# varmin_55.plot_chi_squared('stack_55_MeV', method='plot bc', compartments=None)
 # varmin_55.plot_chi_squared('stack_55_MeV', method='p0', compartments=['07']) 
 # varmin_55.plot_chi_squared('stack_55_MeV', method='p0', compartments=['06']) 
 # varmin_30.plot_chi_squared('stack_30_MeV', method='p0', compartments=['12'])

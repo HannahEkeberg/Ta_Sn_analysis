@@ -165,17 +165,23 @@ class WeightedAverageFlux:
         energy, flux = self.get_flux_energy_stack(element)
         mean_energy, unc_energy_left, unc_energy_right = self.flux_weighted_average_energy(energy, flux)
         flux_weighted_average_cross_section, unc_flux_weighted_average_cross_section = self.monitor_flux_weighted_average_cross_section(element, isotope)
+        # print("IN MONITOR REACTIONCPLOT")
+        # print(flux_weighted_average_cross_section)
         """
         plt.errorbar(mean_energy, flux_weighted_average_cross_section*1e27, marker='P', color='peru',linewidth=0.0001,
             xerr=[unc_energy_left, unc_energy_right], yerr=unc_flux_weighted_average_cross_section, elinewidth=1.0, capthick=1.0, capsize=3.0,
             label=None, linestyle='none')
         """
             # label='flux weighted average monitor cross section', linestyle='none')
+
+        
+        # df.to_csv(element + isotope + 'weighted_average.csv')
         plt.title(element + isotope)
         plt.title(element + '(p,x)' + isotope)
         plt.xlabel('Energy (MeV)')
         plt.ylabel('Cross section (mb)')
         plt.xlim(0,80)
+        return mean_energy, flux_weighted_average_cross_section
         # plt.show()
 
     def monitor_flux_weighted_average_cross_section(self, element, isotope):

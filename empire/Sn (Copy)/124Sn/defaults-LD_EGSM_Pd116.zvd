@@ -1,0 +1,59 @@
+#begin LSTTAB.CUR/u
+       fun: Exp RHO(U)=DN/DU of Pd116
+thick: 2  
+length:250
+//
+ 0.0 1.0
+   340260.00000000000        2.7270730699310985     
+   737840.00000000000        4.8356819723409767     
+   877580.00000000000        6.2287652676810890     
+   1066210.0000000000        14.131748198012795     
+   1109760.0000000000        13.380391644861218     
+   1373010.0000000000        5.0382642625675791     
+   1532300.0000000000        21.886585816702482     
+   1558970.0000000000        37.495313669936898     
+//
+#end LSTTAB.CUR/u
+#begin LSTTAB.CUR/c
+x-scale: auto      
+y-scale: auto    
+//
+#end LSTTAB.CUR/c
+#begin LSTTAB.CUR/u
+       fun: RHO(U)   at GS of Pd116 (EGSM)
+thick: 2  
+length:250
+//
+ 0.172E+07   2.67774E+01
+ 0.206E+07   5.24280E+01
+ 0.241E+07   1.00310E+02
+ 0.275E+07   1.88048E+02
+ 0.309E+07   3.46172E+02
+ 0.344E+07   6.26943E+02
+ 0.378E+07   1.11885E+03
+ 0.412E+07   1.97027E+03
+ 0.447E+07   3.42781E+03
+ 0.481E+07   5.89808E+03
+ 0.516E+07   1.00468E+04
+ 0.550E+07   1.69569E+04
+ 0.584E+07   2.83800E+04
+ 0.619E+07   4.71358E+04
+//
+#end LSTTAB.CUR/u
+ #begin aa/c
+ tit:  LEVEL DENSITY
+ tit2: Energy continuum starts at  1.56 MeV
+ x-unit:1000000, (MeV)
+ ix-unit: 1
+ y-unit:1, (1/MeV)
+ iy-unit: 1
+ X-SCALE: lin
+ Y-SCALE: log
+ X-GRID: 1
+ NOSTAT: 1
+ legend: 1
+ X: U
+ x-long: Excitation energy U 
+ Y: Level density     
+//
+ #end aa/c  

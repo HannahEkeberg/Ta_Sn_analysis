@@ -1,0 +1,62 @@
+#begin LSTTAB.CUR/u
+       fun: Exp RHO(U)=DN/DU of Y_092
+thick: 2  
+length:250
+//
+ 0.0 1.0
+   241560.00000000000        9.3755485843732593     
+   310000.00000000000        11.454702819510942     
+   430510.00000000000        5.5796895307082615     
+   780000.00000000000        19.949174190692371     
+   807000.00000000000        24.354117606823056     
+   892681.00000000000        10.869882860547833     
+   992000.00000000000        18.192178451826408     
+   1030000.0000000000        26.315790319872061     
+//
+#end LSTTAB.CUR/u
+#begin LSTTAB.CUR/c
+x-scale: auto      
+y-scale: auto    
+//
+#end LSTTAB.CUR/c
+#begin LSTTAB.CUR/u
+       fun: RHO(U)   at GS of Y_092 (EGSM)
+thick: 2  
+length:250
+//
+ 0.121E+07   3.29460E+01
+ 0.151E+07   9.23599E+01
+ 0.182E+07   2.47065E+02
+ 0.212E+07   5.49431E+02
+ 0.242E+07   7.82300E+02
+ 0.272E+07   1.09613E+03
+ 0.303E+07   1.51158E+03
+ 0.333E+07   2.05147E+03
+ 0.363E+07   2.73983E+03
+ 0.393E+07   3.60093E+03
+ 0.424E+07   4.65835E+03
+ 0.454E+07   5.93486E+03
+ 0.484E+07   7.45321E+03
+ 0.514E+07   9.23825E+03
+ 0.545E+07   1.13200E+04
+ 0.575E+07   1.37371E+04
+ 0.605E+07   1.65409E+04
+//
+#end LSTTAB.CUR/u
+ #begin aa/c
+ tit:  LEVEL DENSITY
+ tit2: Energy continuum starts at  1.03 MeV
+ x-unit:1000000, (MeV)
+ ix-unit: 1
+ y-unit:1, (1/MeV)
+ iy-unit: 1
+ X-SCALE: lin
+ Y-SCALE: log
+ X-GRID: 1
+ NOSTAT: 1
+ legend: 1
+ X: U
+ x-long: Excitation energy U 
+ Y: Level density     
+//
+ #end aa/c  

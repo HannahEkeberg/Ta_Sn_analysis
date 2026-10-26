@@ -85,7 +85,7 @@ params_old_monitors_30 = [
 # wabc_30_old_dp1_01_iaea = WeightedAverageBeamCurrent(7, 2, np.array([5, 1]), WeightedAverageFlux(stack_fluxes = flux_30_after, full_stack = full_stack_30, stack = 'stack_30_MeV', iaea_version='2017'), 'stack_30_MeV', params_old_monitors)#.weighted_average_beam_current('old_old_params_30')
 # wabc_55_old_dp1_01_iaea = WeightedAverageBeamCurrent(7, 2, np.array([5, 1]), WeightedAverageFlux(stack_fluxes = flux_55_after2, full_stack = full_stack_30, stack = 'stack_55_MeV', iaea_version='2017'), 'stack_55_MeV', params_old_monitors)#.weighted_average_beam_current('old_old_params_55')
 
-# wabc_55_after = WeightedAverageBeamCurrent(7, 2, np.array([5,6]), wa_55_after, 'stack_55_MeV', params_55_stack)#.weighted_average_beam_current('new_params_55')
+wabc_55_after = WeightedAverageBeamCurrent(7, 2, np.array([5,6]), wa_55_before, 'stack_55_MeV', params_55_stack)#.weighted_average_beam_current('new_params_55')
 # wabc_55_after1 = WeightedAverageBeamCurrent(7, 2, np.array([6,6]), wa_55_after, 'stack_55_MeV', params_all)#.weighted_average_beam_current('new_all_params_55')
 # wabc_55_after2 = WeightedAverageBeamCurrent(7, 2, np.array([5,1]), wa_55_after, 'stack_55_MeV', params_old_monitors)#.weighted_average_beam_current('new_old_params_55')
 
@@ -107,23 +107,23 @@ params_old_monitors_30 = [
 # plt.legend()
 # plt.show()
 
-# wabc_55_after.plot_beam_current_isotope('Cu', 'params_Cu_65Zn', color='peru', label='Cu 65Zn')
-# wabc_55_after.plot_beam_current_isotope('Cu', 'params_Cu_63Zn', color='blue', label='Cu 63Zn')
-# wabc_55_after.plot_beam_current_isotope('Cu', 'params_Cu_62Zn', color='yellow', label='Cu 62Zn')
-# wabc_55_after.plot_beam_current_isotope('Cu', 'params_Cu_61Cu', color='darkred', label='Cu 61Cu')
-# wabc_55_after.plot_beam_current_isotope('Cu', 'params_Cu_56Co', color='#a64d79', label='Cu 56Co')
-# wabc_55_after.plot_beam_current_isotope('Cu', 'params_Cu_58Co', color='#6aa84f', label='Cu 58Co')
-# wabc_55_after.plot_beam_current_isotope('Ni', 'params_Ni_57Ni', color='#3d85c6', label='Ni 57Ni')
-# wabc_55_after.plot_beam_current_isotope('Ni', 'params_Ni_56Ni', color='orange', label='Ni 56Ni')
-# wabc_55_after.plot_beam_current_isotope('Ni', 'params_Ni_58Co', color='green', label='Ni 58Co')
-# wabc_55_after.plot_beam_current_isotope('Ni', 'params_Ni_57Co', color='orchid', label='Ni 57Co')
-# wabc_55_after.plot_beam_current_isotope('Ni', 'params_Ni_56Co', color='hotpink', label='Ni 56Co')
-# wabc_55_after.plot_beam_current_isotope('Ni', 'params_Ni_55Co', color='royalblue', label='Ni 55Co')
+wabc_55_after.plot_beam_current_isotope('Cu', 'params_Cu_65Zn', color='peru', label='Cu 65Zn')
+wabc_55_after.plot_beam_current_isotope('Cu', 'params_Cu_63Zn', color='blue', label='Cu 63Zn')
+wabc_55_after.plot_beam_current_isotope('Cu', 'params_Cu_62Zn', color='yellow', label='Cu 62Zn')
+wabc_55_after.plot_beam_current_isotope('Cu', 'params_Cu_61Cu', color='darkred', label='Cu 61Cu')
+wabc_55_after.plot_beam_current_isotope('Cu', 'params_Cu_56Co', color='#a64d79', label='Cu 56Co')
+wabc_55_after.plot_beam_current_isotope('Cu', 'params_Cu_58Co', color='#6aa84f', label='Cu 58Co')
+wabc_55_after.plot_beam_current_isotope('Ni', 'params_Ni_57Ni', color='#3d85c6', label='Ni 57Ni')
+wabc_55_after.plot_beam_current_isotope('Ni', 'params_Ni_56Ni', color='orange', label='Ni 56Ni')
+wabc_55_after.plot_beam_current_isotope('Ni', 'params_Ni_58Co', color='green', label='Ni 58Co')
+wabc_55_after.plot_beam_current_isotope('Ni', 'params_Ni_57Co', color='orchid', label='Ni 57Co')
+wabc_55_after.plot_beam_current_isotope('Ni', 'params_Ni_56Co', color='hotpink', label='Ni 56Co')
+wabc_55_after.plot_beam_current_isotope('Ni', 'params_Ni_55Co', color='royalblue', label='Ni 55Co')
 # wabc_55_after1.plot_weighted_average('orange', 'params all')
 # wabc_55_old_dp1_01_iaea.plot_weighted_average('#a64d79', 'params old moni')
-# wabc_55_after.plot_weighted_average('darkred', 'params 55 stack')
-# plt.legend()
-# plt.show()
+wabc_55_after.plot_weighted_average('darkred', 'params 55 stack')
+plt.legend()
+plt.show()
 
 
 
@@ -195,6 +195,7 @@ def plot_weighted_average(dp, stack, note, color, params, number_of_compartments
     # wabc_old.weighted_average_beam_current('old')
     plot_params(params, wabc, color)
     wabc.plot_weighted_average(color, note)
+
     # wabc_old.plot_weighted_average(color='orange', note='iaea 17')
 
 
@@ -260,7 +261,7 @@ def save_figs_30MeV(dp_str):
         plt.legend(fontsize=6, loc='best', ncols=3)
         plt.title('30 MeV stack - ' + dp)
         plt.ylim(0,200)
-        plt.savefig('generatedfiles/varianceminimization/iaea25/beam_current_figs/allcurrents_stack_30_MeV_' + dp + '.pdf')
+        plt.savefig('generatedfiles/varianceminimization/iaea25/beam_current_figs_new/allcurrents_stack_30_MeV_' + dp + '.pdf')
         # plt.show()
         plt.close()
 
@@ -275,7 +276,7 @@ def save_figs_50MeV(dp_str):
         plt.title('50 MeV stack - ' + dp)
         plt.ylim(0,200)
         plt.legend(fontsize=6, loc='best', ncols=3)
-        plt.savefig('generatedfiles/varianceminimization/iaea25/beam_current_figs/allcurrents_stack_55_MeV_' + dp + '.pdf')
+        plt.savefig('generatedfiles/varianceminimization/iaea25/beam_current_figs_new/allcurrents_stack_55_MeV_' + dp + '.pdf')
         # plt.show()
         plt.close()
 
@@ -308,7 +309,9 @@ def plot_only_wabc():
 # plt.show()
 
 
-# plot_weighted_average('1.010', 'stack_55_MeV', 'dp 1.01', 'orange', params_all, 7, 2, [6,6], 'test.csv')
+plot_weighted_average('1.010', 'stack_55_MeV', 'dp 1.00', 'orange', params_all, 7, 2, [6,6], 'test.csv')
+plt.legend()
+plt.show()
 # plot_weighted_average('1.020', 'stack_55_MeV', 'dp 1.02', '#a64d79', params_all, 7, 2, [6,6], 'test.csv')
 # 1. Hent ut alle eksisterende "handles" (grafikk) og "labels" (tekst)
 
@@ -337,8 +340,13 @@ def plot_only_wabc():
 
 
 dp_array = np.array([0.990, 0.991, 1.003, 1.001, 1.021, 0.998, 1.013, 
-                    1.024, 1.070, 0.996, 1.050, 1.014, 
-                    0.900, 1.012, 1.110, 1.200, 1.007, 1.027, 1.040, 0.997, 1.008, 1.016, 1.022, 1.011, 1.025, 0.999, 0.994, 1.005, 1.009, 1.026, 1.080, 1.090, 0.970, 1.023, 1.029, 1.002, 1.019, 1.020, 1.006, 1.010, 0.993, 1.100, 0.950, 1.000, 1.015, 1.030, 0.992, 1.018, 0.800, 1.017, 1.028, 1.060, 1.004, 0.980, 0.960, 0.995])
+                    1.024, 1.070, 0.996, 1.050, 1.014, 0.900, 1.012, 
+                    1.110, 1.200, 1.007, 1.027, 1.040, 0.997, 1.008, 
+                    1.016, 1.022, 1.011, 1.025, 0.999, 0.994, 1.005, 
+                    1.009, 1.026, 1.080, 1.090, 0.970, 1.023, 1.029, 
+                    1.002, 1.019, 1.020, 1.006, 1.010, 0.993, 1.100, 
+                    0.950, 1.000, 1.015, 1.030, 0.992, 1.018, 0.800, 
+                    1.017, 1.028, 1.060, 1.004, 0.980, 0.960, 0.995])
 dp_str = []
 for dp in dp_array:
     dp_str.append(f"{dp:.3f}")
@@ -346,16 +354,19 @@ for dp in dp_array:
 # save_figs_30MeV(dp_str)
 # save_figs_50MeV(dp_str)
 
+
+
 # plot_only_wabc()
 
 
 ## 30 MeV 
-"""
-plot_weighted_average(dp='1.000', stack='stack_30_MeV', note='1.000', color='#7E0031', params=params_30_stack, number_of_compartments=7, number_of_monitor_foils=2, monitor_reactions_per_foil = [4,6], csv_filename=None)
-# plt.title('dp')
-plt.savefig('bc_Ni_57Ni.pdf')
-plt.show()
-"""
+
+# plot_weighted_average(dp='1.000', stack='stack_30_MeV', note='1.000', color='#7E0031', params=params_30_stack, number_of_compartments=7, number_of_monitor_foils=2, monitor_reactions_per_foil = [4,6], csv_filename=None)
+# # plt.title('dp')
+# plt.savefig('bc_Ni_57Ni.pdf')
+# plt.show()
+
+
 # plot_weighted_average(dp='1.006', stack='stack_30_MeV', note='1.006', color='#CCDAC2', params=params_30_stack, number_of_compartments=7, number_of_monitor_foils=2, monitor_reactions_per_foil = [4,6], csv_filename=None)
 # plot_weighted_average(dp='1.000', stack='stack_30_MeV', note='weighted average beam current', color='#7E0031', params=params_30_stack, number_of_compartments=7, number_of_monitor_foils=2, monitor_reactions_per_foil = [4,6], csv_filename='33_no_varmin')
 
@@ -366,6 +377,9 @@ plt.show()
 # plt.show()
 
 
+# plot_weighted_average(dp='1.016', stack='stack_55_MeV', note='1.016', color='#CCDAC2', params=params_55_stack, number_of_compartments=7, number_of_monitor_foils=2, monitor_reactions_per_foil = [5,6], csv_filename=None)
+# plt.legend(fontsize=7, loc='best', ncols=3)
+# plt.show()
 
 
 
@@ -373,9 +387,7 @@ plt.show()
 # plot_weighted_average(dp='1.000', stack='stack_55_MeV', note='1.000', color='#7E0031', params=params_all, number_of_compartments=7, number_of_monitor_foils=2, monitor_reactions_per_foil = [6,6], csv_filename='55_no_varmin')
 # plot_weighted_average(dp='1.016', stack='stack_55_MeV', note='1.016', color='#CCDAC2', params=params_all, number_of_compartments=7, number_of_monitor_foils=2, monitor_reactions_per_foil = [6,6], csv_filename=None)
 # plot_weighted_average(dp='1.016', stack='stack_55_MeV', note='weighted average beam current', color='#7E0031', params=params_all, number_of_compartments=7, number_of_monitor_foils=2, monitor_reactions_per_foil = [6,6], csv_filename=None)
-# plt.legend(fontsize=7, loc='best', ncols=3)
 # plt.savefig('55MeV_1.016.pdf')
-# plt.show()
 # plt.savefig('bc55_Cu_56Co.pdf')
 # plt.title('dp 1.000')
 # plt.show()
@@ -383,8 +395,8 @@ plt.show()
 # plt.title('dp 1.016')
 # plt.show()
 
-plot_iaea_17(dp='1.020', stack='stack_55_MeV', note='', color='#7E0031', params=params_old_monitors, number_of_compartments=7, number_of_monitor_foils=2, monitor_reactions_per_foil = [5,1], csv_filename='iaea17_55MeV_dp1.020')
-plot_iaea_17(dp='1.010', stack='stack_30_MeV', note='', color='#7E0031', params=params_old_monitors_30, number_of_compartments=7, number_of_monitor_foils=2, monitor_reactions_per_foil = [4,1], csv_filename='iaea17_30MeV_dp1.010')
+# plot_iaea_17(dp='1.020', stack='stack_55_MeV', note='', color='#7E0031', params=params_old_monitors, number_of_compartments=7, number_of_monitor_foils=2, monitor_reactions_per_foil = [5,1], csv_filename='iaea17_55MeV_dp1.020')
+# plot_iaea_17(dp='1.010', stack='stack_30_MeV', note='', color='#7E0031', params=params_old_monitors_30, number_of_compartments=7, number_of_monitor_foils=2, monitor_reactions_per_foil = [4,1], csv_filename='iaea17_30MeV_dp1.010')
 
 
 

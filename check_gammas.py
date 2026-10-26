@@ -472,10 +472,12 @@ def run_all(isotope, element='Ta', xrays=True):
 
 # 180TA 103.6,93.324
 gammas_180Ta = [103.6, 93.324]
+keep_selected_gammas(foil='Ta01', isotope='180Tag', gammas=gammas_180Ta, unmark_first=True)
+keep_selected_gammas(foil='Ta02', isotope='180Tag', gammas=gammas_180Ta, unmark_first=True)
+keep_selected_gammas(foil='Ta03', isotope='180Tag', gammas=gammas_180Ta, unmark_first=True)
 # keep_selected_gammas(foil='Ta01', isotope='180Tag', gammas=[103.6], unmark_first=True)
-# keep_selected_gammas(foil='Ta01', isotope='180Tag', gammas=gammas_180Ta, unmark_first=True)
-# keep_selected_gammas(foil='Ta02', isotope='180TAg', gammas=gammas_180Ta, unmark_first=True)
-# keep_selected_gammas(foil='Ta03', isotope='180TAg', gammas=gammas_180Ta, unmark_first=True)
+# keep_selected_gammas(foil='Ta02', isotope='180TAg', gammas=[103.6], unmark_first=True)
+# keep_selected_gammas(foil='Ta03', isotope='180TAg', gammas=[103.6], unmark_first=True)
 # keep_selected_gammas(foil='Ta04', isotope='180TAg', gammas=gammas_180Ta, unmark_first=True)
 # keep_selected_gammas(foil='Ta05', isotope='180TAg', gammas=gammas_180Ta, unmark_first=True)
 # keep_selected_gammas(foil='Ta06', isotope='180TAg', gammas=gammas_180Ta, unmark_first=True)

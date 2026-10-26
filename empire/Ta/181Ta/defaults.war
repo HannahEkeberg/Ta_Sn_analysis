@@ -1,0 +1,248 @@
+  WARNING!!!! HRTW has been turned off 
+  WARNING!!!! (It is not allowed for charged
+  WARNING!!!! particle induced reactions)
+  WARNING: NDEX in dimension.h is  101  recommended value is  160
+  WARNING: Element =172Ho  Z= 67
+  WARNING: ground-state has no assigned spin/parity 
+  WARNING: assuming a default 
+  WARNING: Element =164Eu  Z= 63
+  WARNING: ground-state has no assigned spin/parity 
+  WARNING: assuming a default 
+  WARNING: Element =162Eu  Z= 63
+  WARNING: ground-state has no assigned spin/parity 
+  WARNING: assuming a default 
+  WARNING: Element =160Pm  Z= 61
+  WARNING: ground-state has no assigned spin/parity 
+  WARNING: assuming a default 
+  WARNING: Element =158Pm  Z= 61
+  WARNING: ground-state has no assigned spin/parity 
+  WARNING: assuming a default 
+  WARNING:
+  WARNING: Element =154Nd  Z= 60
+  WARNING: excited state No.   6 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.0  1
+  WARNING:
+  WARNING: Element =154Nd  Z= 60
+  WARNING: excited state No.   8 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.0  1
+  WARNING:
+  WARNING: Element =149Pr  Z= 59
+  WARNING: excited state No.   2 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.5  1
+  WARNING:
+  WARNING: Element =149Pr  Z= 59
+  WARNING: excited state No.   3 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.5  1
+  WARNING:
+  WARNING: Element =149Pr  Z= 59
+  WARNING: excited state No.   5 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.5  1
+  WARNING:
+  WARNING: Element =149Pr  Z= 59
+  WARNING: excited state No.   7 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.5  1
+  WARNING:
+  WARNING: Element =149Pr  Z= 59
+  WARNING: excited state No.   8 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.5  1
+  WARNING:
+  WARNING: Element =149Pr  Z= 59
+  WARNING: excited state No.   9 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.5  1
+  WARNING:
+  WARNING: Element =149Pr  Z= 59
+  WARNING: excited state No.  11 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.5  1
+  WARNING:
+  WARNING: Element =149Pr  Z= 59
+  WARNING: excited state No.  12 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.5  1
+  WARNING:
+  WARNING: Element =149Pr  Z= 59
+  WARNING: excited state No.  13 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.5  1
+  WARNING:
+  WARNING: Element =149Pr  Z= 59
+  WARNING: excited state No.  14 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.5  1
+  WARNING: Element =156Pr  Z= 59
+  WARNING: ground-state has no assigned spin/parity 
+  WARNING: assuming a default 
+  WARNING:
+  WARNING: Element =150Ce  Z= 58
+  WARNING: excited state No.   8 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.0  1
+  WARNING: Element =170Tb  Z= 65
+  WARNING: ground-state has no assigned spin/parity 
+  WARNING: assuming a default 
+  WARNING: Element =166Eu  Z= 63
+  WARNING: ground-state has no assigned spin/parity 
+  WARNING: assuming a default 
+  WARNING: Element =162Pm  Z= 61
+  WARNING: ground-state has no assigned spin/parity 
+  WARNING: assuming a default 
+  WARNING: Element =158Pr  Z= 59
+  WARNING: ground-state has no assigned spin/parity 
+  WARNING: assuming a default 
+  WARNING: Element =154La  Z= 57
+  WARNING: ground-state has no assigned spin/parity 
+  WARNING: assuming a default 
+  WARNING: Element =152La  Z= 57
+  WARNING: ground-state has no assigned spin/parity 
+  WARNING: assuming a default 
+  WARNING:
+  WARNING: Element =146Ba  Z= 56
+  WARNING: excited state No.   9 has neither parity nor spin 
+  WARNING: assuming spin and parity  0.0  1
+  WARNING: Element =148Cs  Z= 55
+  WARNING: ground-state has no assigned spin/parity 
+  WARNING: assuming a default 
+  WARNING: Branching ratios for level           23  in          182 -W  are missing
+  WARNING: Conversion coeff for level           23  in          182 -W  are missing
+  WARNING: Branching ratios for level           20  in          181 -W  are missing
+  WARNING: Branching ratios for level           23  in          181 -W  are missing
+  WARNING: Branching ratios for level           28  in          181 -W  are missing
+  WARNING: Conversion coeff for level           20  in          181 -W  are missing
+  WARNING: Conversion coeff for level           23  in          181 -W  are missing
+  WARNING: Conversion coeff for level           28  in          181 -W  are missing
+  WARNING: Branching ratios for level            6  in          181 -Ta are missing
+  WARNING: Branching ratios for level            9  in          181 -Ta are missing
+  WARNING: Branching ratios for level           14  in          181 -Ta are missing
+  WARNING: Branching ratios for level           15  in          181 -Ta are missing
+  WARNING: Branching ratios for level           16  in          181 -Ta are missing
+  WARNING: Branching ratios for level           21  in          181 -Ta are missing
+  WARNING: Branching ratios for level           22  in          181 -Ta are missing
+  WARNING: Branching ratios for level           25  in          181 -Ta are missing
+  WARNING: Branching ratios for level           26  in          181 -Ta are missing
+  WARNING: Branching ratios for level           28  in          181 -Ta are missing
+  WARNING: Branching ratios for level           29  in          181 -Ta are missing
+  WARNING: Branching ratios for level           30  in          181 -Ta are missing
+  WARNING: Branching ratios for level           31  in          181 -Ta are missing
+  WARNING: Branching ratios for level           32  in          181 -Ta are missing
+  WARNING: Branching ratios for level           33  in          181 -Ta are missing
+  WARNING: Branching ratios for level           34  in          181 -Ta are missing
+  WARNING: Branching ratios for level           35  in          181 -Ta are missing
+  WARNING: Branching ratios for level           36  in          181 -Ta are missing
+  WARNING: Branching ratios for level           37  in          181 -Ta are missing
+  WARNING: Branching ratios for level           39  in          181 -Ta are missing
+  WARNING: Conversion coeff for level            6  in          181 -Ta are missing
+  WARNING: Conversion coeff for level            9  in          181 -Ta are missing
+  WARNING: Conversion coeff for level           14  in          181 -Ta are missing
+  WARNING: Conversion coeff for level           15  in          181 -Ta are missing
+  WARNING: Conversion coeff for level           16  in          181 -Ta are missing
+  WARNING: Conversion coeff for level           21  in          181 -Ta are missing
+  WARNING: Conversion coeff for level           22  in          181 -Ta are missing
+  WARNING: Conversion coeff for level           25  in          181 -Ta are missing
+  WARNING: Conversion coeff for level           26  in          181 -Ta are missing
+  WARNING: Conversion coeff for level           28  in          181 -Ta are missing
+  WARNING: Conversion coeff for level           29  in          181 -Ta are missing
+  WARNING: Conversion coeff for level           30  in          181 -Ta are missing
+  WARNING: Conversion coeff for level           31  in          181 -Ta are missing
+  WARNING: Conversion coeff for level           32  in          181 -Ta are missing
+  WARNING: Conversion coeff for level           33  in          181 -Ta are missing
+  WARNING: Conversion coeff for level           34  in          181 -Ta are missing
+  WARNING: Conversion coeff for level           35  in          181 -Ta are missing
+  WARNING: Conversion coeff for level           36  in          181 -Ta are missing
+  WARNING: Conversion coeff for level           37  in          181 -Ta are missing
+  WARNING: Conversion coeff for level           39  in          181 -Ta are missing
+  WARNING: NUMBER OF BINS 103 IN RESIDUAL NUCLEUS 174-Yb EXCEEDS DIMENSIONS 101
+  WARNING: EMAXr :   17.77; COULOMB BARRIER :   17.30
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of   9.000000  by 0.153878 to   8.846122 MeV
+  WARNING: NUMBER OF BINS 106 IN RESIDUAL NUCLEUS 170-Er EXCEEDS DIMENSIONS 101
+  WARNING: EMAXr :   20.46; COULOMB BARRIER :   16.91
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  11.000000  by 0.163248 to  10.836752 MeV
+  WARNING: NUMBER OF BINS 102 IN RESIDUAL NUCLEUS 170-Er EXCEEDS DIMENSIONS 101
+  WARNING: EMAXr :   22.34; COULOMB BARRIER :   16.91
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  15.000000  by 0.191555 to  14.808445 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  15.000000  by 0.182675 to  14.817325 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  17.000000  by 0.242677 to  16.757323 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  21.000000  by 0.267796 to  20.732204 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  21.000000  by 0.329185 to  20.670815 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  23.000000  by 0.267304 to  22.732696 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  23.000000  by 0.334177 to  22.665823 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  23.000000  by 0.262604 to  22.737396 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  25.000000  by 0.325798 to  24.674202 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  27.000000  by 0.377313 to  26.622687 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  32.000000  by 0.403549 to  31.596451 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  32.000000  by 0.366666 to  31.633334 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  32.000000  by 0.345419 to  31.654581 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  35.000000  by 0.400061 to  34.599939 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  35.000000  by 0.501644 to  34.498356 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  38.000000  by 0.422188 to  37.577812 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  41.000000  by 0.536311 to  40.463689 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  41.000000  by 0.565815 to  40.434185 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  44.000000  by 0.623305 to  43.376695 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  48.000000  by 0.651136 to  47.348864 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  48.000000  by 0.500021 to  47.499979 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  52.000000  by 0.533023 to  51.466977 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  52.000000  by 0.604382 to  51.395618 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  52.000000  by 0.697319 to  51.302681 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  60.000000  by 0.727682 to  59.272318 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  64.000000  by 0.646738 to  63.353262 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  64.000000  by 0.847892 to  63.152108 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  64.000000  by 0.858502 to  63.141498 MeV
+  WARNING: Sum of production XS (incl.fission)
+  WARNING: is not equal reaction cross section
+  WARNING:     difference:   1.64 % at E =   64.000     MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  68.000000  by 0.913576 to  67.086424 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  68.000000  by 0.765560 to  67.234440 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  68.000000  by 0.658560 to  67.341440 MeV
+  WARNING: Sum of production XS (incl.fission)
+  WARNING: is not equal reaction cross section
+  WARNING:     difference:   3.96 % at E =   68.000     MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  72.000000  by 0.960108 to  71.039892 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  72.000000  by 0.803039 to  71.196961 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  72.000000  by 0.712291 to  71.287709 MeV
+  WARNING: Sum of production XS (incl.fission)
+  WARNING: is not equal reaction cross section
+  WARNING:     difference:   6.92 % at E =   72.000     MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  76.000000  by 0.985305 to  75.014695 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  76.000000  by 0.741732 to  75.258268 MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  76.000000  by 1.021827 to  74.978173 MeV
+  WARNING: Sum of production XS (incl.fission)
+  WARNING: is not equal reaction cross section
+  WARNING:     difference:   9.58 % at E =   76.000     MeV
+ WARNING: Large continuum bin correction
+ WARNING: You may reduce your incident energy of  80.000000  by 0.987524 to  79.012476 MeV
+  WARNING: Sum of production XS (incl.fission)
+  WARNING: is not equal reaction cross section
+  WARNING:     difference:  10.89 % at E =   80.000     MeV
